@@ -3,24 +3,24 @@ import clsx from 'clsx';
 
 type Props = {
   value: string;
-  type: 'primary' | 'secondary';
   onClick: () => void;
+  type?: 'primary' | 'secondary';
   icon?: JSX.Element;
 };
 
-function Button(props: Props) {
+function Button({ value, onClick, type = 'primary', icon }: Props) {
   return (
     <button
-      onClick={props.onClick}
+      onClick={onClick}
       className={clsx(
-        'flex gap-1 hover:border-transparent hover:bg-green-500 px-3 py-4 rounded-full',
+        'flex min-w-[140px] items-center justify-center gap-1 rounded-full px-3 py-4 font-bold text-black hover:border-transparent hover:bg-green-500',
         {
-          'bg-green-400': props.type === 'primary',
-          'border border-green-900': props.type === 'secondary',
+          'bg-green-400': type === 'primary',
+          'border border-green-900': type === 'secondary',
         }
       )}
     >
-      {props.icon} {props.value}
+      {icon} {value}
     </button>
   );
 }
