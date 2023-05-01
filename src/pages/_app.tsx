@@ -2,6 +2,7 @@ import '@/styles/globals.css';
 import '@/i18n/config';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import '@/lib/firebase';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
