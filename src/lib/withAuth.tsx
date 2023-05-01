@@ -1,6 +1,6 @@
+import useGetAuth from '@/lib/useGetAuth';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import useGetAuth from '@/lib/useGetAuth';
 
 export function withAuth(WrappedComponent: any) {
   const WithAuth = (props: {}) => {

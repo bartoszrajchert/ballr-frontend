@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import Link from 'next/link';
 import Button from '@/components/Button';
-import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
 import useGetAuth from '@/lib/useGetAuth';
+import Link from 'next/link';
+import React, { useEffect } from 'react';
+import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
 
 function Navigation() {
   const auth = useGetAuth();

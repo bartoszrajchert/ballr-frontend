@@ -1,7 +1,7 @@
-import { useSignOut } from 'react-firebase-hooks/auth';
+import useGetAuth from '@/lib/useGetAuth';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import useGetAuth from '@/lib/useGetAuth';
+import { useSignOut } from 'react-firebase-hooks/auth';
 
 export default async function Logout() {
   const auth = useGetAuth();
