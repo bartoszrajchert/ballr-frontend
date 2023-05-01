@@ -4,6 +4,6 @@
 
 @layer base {
   body {
-    @apply text-black max-w-[1240px] m-auto;
+    @apply m-auto max-w-[1240px] text-black;
   }
 }

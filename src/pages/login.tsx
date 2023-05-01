@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import MainLayout from '@/layouts/MainLayout';
-import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
-import { useRouter } from 'next/router';
 import useGetAuth from '@/lib/useGetAuth';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 
 export default function Login() {
   const [email, setEmail] = useState('');

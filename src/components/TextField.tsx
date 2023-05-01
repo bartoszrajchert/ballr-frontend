@@ -1,5 +1,5 @@
-import React, { InputHTMLAttributes } from 'react';
 import { IconInfoCircle } from '@tabler/icons-react';
+import React, { InputHTMLAttributes } from 'react';
 
 type Props = {
   label?: string;

@@ -1,8 +1,8 @@
-import Head from 'next/head';
 import Button from '@/components/Button';
-import MainLayout from '@/layouts/MainLayout';
-import { useTranslation } from 'react-i18next';
 import TextField from '@/components/TextField';
+import MainLayout from '@/layouts/MainLayout';
+import Head from 'next/head';
+import { useTranslation } from 'react-i18next';
 
 export default function Home() {
   const { t } = useTranslation();
