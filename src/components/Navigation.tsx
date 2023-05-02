@@ -84,11 +84,18 @@ function Navigation({ focusMode }: Props) {
         )}
 
         {!loading && user && (
-          <li>
-            <a className="link" onClick={signOut}>
-              Wyloguj się
-            </a>
-          </li>
+          <>
+            <li>
+              <Link className="link" href="/settings">
+                Profil
+              </Link>
+            </li>
+            <li>
+              <a className="link" onClick={signOut}>
+                Wyloguj się
+              </a>
+            </li>
+          </>
         )}
       </ul>
     </div>
@@ -143,11 +150,18 @@ function Navigation({ focusMode }: Props) {
               )}
 
               {!loading && user && (
-                <li>
-                  <a className="link" onClick={signOut}>
-                    Wyloguj się
-                  </a>
-                </li>
+                <>
+                  <li>
+                    <Link className="link" href="/settings">
+                      Profil
+                    </Link>
+                  </li>
+                  <li>
+                    <a className="link" onClick={signOut}>
+                      Wyloguj się
+                    </a>
+                  </li>
+                </>
               )}
             </ul>
           </div>

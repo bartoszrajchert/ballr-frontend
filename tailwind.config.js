@@ -32,12 +32,18 @@ module.exports = {
         },
       },
       fontSize: {
-        'heading-h1': '40px',
+        'heading-h1': [
+          '40px',
+          { fontWeight: 'bold', lineHeight: '135%', letterSpacing: '0.02em' },
+        ],
         'heading-h2': [
           '32px',
           { fontWeight: 'bold', lineHeight: '135%', letterSpacing: '0.02em' },
         ],
-        'heading-h3': '28px',
+        'heading-h3': [
+          '28px',
+          { fontWeight: 'bold', lineHeight: '135%', letterSpacing: '0.02em' },
+        ],
         'heading-h4': ['24px', { fontWeight: 'bold' }],
         'heading-h5': ['20px', { fontWeight: 'bold' }],
         'heading-title-desktop': [
