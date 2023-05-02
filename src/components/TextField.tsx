@@ -14,7 +14,7 @@ function TextField({ helperText, ...props }: Props) {
       {props.label && <label className="text-p-small">{props.label}</label>}
       <div className="overflow-auto rounded-2 border border-green-900">
         <span className="icon leading-icon">{props.leadingIcon}</span>
-        <input className="h-[48px] rounded-2 px-4" {...props} />
+        <input className="h-[48px] w-full rounded-2 px-4" {...props} />
         <span className="icon trailing-icon">{props.trailingIcon}</span>
       </div>
       {helperText && (

@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
@@ -32,20 +33,30 @@ module.exports = {
       },
       fontSize: {
         'heading-h1': '40px',
-        'heading-h2': '32px',
+        'heading-h2': [
+          '32px',
+          { fontWeight: 'bold', lineHeight: '135%', letterSpacing: '0.02em' },
+        ],
         'heading-h3': '28px',
-        'heading-h4': '24px',
-        'heading-h5': '20px',
-        'heading-title-desktop': ['56px', { lineHeight: '56px' }],
+        'heading-h4': ['24px', { fontWeight: 'bold' }],
+        'heading-h5': ['20px', { fontWeight: 'bold' }],
+        'heading-title-desktop': [
+          '56px',
+          { lineHeight: '56px', fontWeight: '900', letterSpacing: '-0.07em' },
+        ],
         'heading-title-mobile': ['48px', { lineHeight: '40px' }],
         'p-large': ['18px', { lineHeight: '140%' }],
         'p-medium': ['16px', { lineHeight: '140%' }],
         base: ['16px', { lineHeight: '140%' }],
         'p-small': ['14px', { lineHeight: '140%' }],
         'p-xsmall': ['12px', { lineHeight: '140%' }],
+        'label-large': ['18px', { lineHeight: '140%', fontWeight: 'bold' }],
+        'label-medium': ['16px', { lineHeight: '140%', fontWeight: 'bold' }],
+        'label-small': ['14px', { lineHeight: '140%', fontWeight: 'bold' }],
+        'label-xsmall': ['12px', { lineHeight: '140%', fontWeight: 'bold' }],
       },
       fontFamily: {
-        satoshi: 'Satoshi',
+        sans: ['Satoshi', 'sans-serif'],
       },
       borderRadius: {
         none: '0',
@@ -54,6 +65,9 @@ module.exports = {
         3: '12px',
         4: '16px',
         full: '9999px',
+      },
+      aspectRatio: {
+        '9/16': '9 / 16',
       },
     },
   },

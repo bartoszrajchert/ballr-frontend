@@ -1,5 +1,7 @@
-import MainLayout from '@/layouts/MainLayout';
+import TextField from '@/components/TextField';
+import AuthFormLayout from '@/layouts/AuthFormLayout';
 import useGetAuth from '@/lib/useGetAuth';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
@@ -13,41 +15,54 @@ export default function Login() {
   const router = useRouter();
 
   return (
-    <MainLayout>
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          signInWithEmailAndPassword(email, password).then((res) => {
-            if (res?.user) router.push('/');
-          });
-        }}
-      >
-        <label>
-          Email:
-          <input
+    <AuthFormLayout
+      header="Zaloguj się Ballerze"
+      subheader={
+        <>
+          Nie masz konta?{' '}
+          <Link className="link --underline" href={'/register'}>
+            Zarejestruj się
+          </Link>
+        </>
+      }
+      onSubmit={(event) => {
+        event.preventDefault();
+        signInWithEmailAndPassword(email, password).then((res) => {
+          if (res?.user) router.push('/');
+        });
+      }}
+      inputChildren={
+        <>
+          <TextField
+            label="Podaj swój adres email"
             type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
           />
-        </label>
-        <label>
-          Password:
-          <input
+          <TextField
+            label="Podaj swoje hasło"
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
-        </label>
-        <button type="submit">Login</button>
-      </form>
-      <br />
-      <hr />
-      <br />
-      <>
-        {error && <p className="error">{error.message}</p>}
-        {user && <p className="error">User {user.user.uid} is logged in</p>}
-        {loading && <p className="error">Loading...</p>}
-      </>
-    </MainLayout>
+        </>
+      }
+      footerChildren={
+        <>
+          Problem z logowaniem?{' '}
+          <Link className="link --underline" href="/">
+            Przypomnij hasło
+          </Link>{' '}
+        </>
+      }
+      infoChildren={
+        <>
+          {error && <p className="error">{error.message}</p>}
+          {user && <p className="error">User {user.user.uid} is logged in</p>}
+          {loading && <p className="error">Loading...</p>}
+        </>
+      }
+      buttonValue="Zaloguj się"
+    />
   );
 }

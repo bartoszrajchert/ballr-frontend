@@ -4,14 +4,15 @@ import React from 'react';
 
 type Props = {
   children: JSX.Element | JSX.Element[];
+  focusMode?: boolean;
 };
 
 function MainLayout(props: Props) {
   return (
     <main>
-      <Navigation />
+      <Navigation focusMode={props.focusMode} />
       {props.children}
-      <Footer />
+      {!props.focusMode && <Footer />}
     </main>
   );
 }
