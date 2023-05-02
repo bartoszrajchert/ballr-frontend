@@ -31,15 +31,13 @@ function Navigation({ focusMode }: Props) {
   };
 
   useEffect(() => {
-    // component is mounted and window is available
     handleWindowResize();
     window.addEventListener('resize', handleWindowResize);
-    // unsubscribe from the event on component unmount
     return () => window.removeEventListener('resize', handleWindowResize);
   }, []);
 
   // @ts-ignore
-  const isHamburger = fullConfig.theme.screens.sm <= width + 'px';
+  const isHamburger = Number(fullConfig.theme.screens.md.slice(0, -2)) > width;
 
   const menu = focusMode ? (
     <div>
