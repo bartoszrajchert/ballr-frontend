@@ -1,5 +1,8 @@
+import TextField from '@/components/TextField';
+import AuthFormLayout from '@/layouts/AuthFormLayout';
 import MainLayout from '@/layouts/MainLayout';
 import useGetAuth from '@/lib/useGetAuth';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
@@ -7,47 +10,76 @@ import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [repeatPassword, setRepeatPassword] = useState('');
   const auth = useGetAuth();
   const [createUserWithEmailAndPassword, user, loading, error] =
     useCreateUserWithEmailAndPassword(auth);
   const router = useRouter();
 
   return (
-    <MainLayout>
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          createUserWithEmailAndPassword(email, password).then((res) => {
-            if (res?.user) router.push('/');
-          });
-        }}
-      >
-        <label>
-          Email:
-          <input
+    <AuthFormLayout
+      header="Stwórz konto Ballerze"
+      subheader={
+        <>
+          Masz już konto?{' '}
+          <Link className="link --underline" href="/login">
+            Zaloguj się
+          </Link>
+        </>
+      }
+      onSubmit={(event) => {
+        event.preventDefault();
+
+        // TODO: Handle it in a better way
+        if (password !== repeatPassword)
+          return alert('Hasła nie są takie same');
+
+        createUserWithEmailAndPassword(email, password).then((res) => {
+          if (res?.user) router.push('/');
+        });
+      }}
+      inputChildren={
+        <>
+          <TextField
+            label="Podaj swój adres email"
             type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
           />
-        </label>
-        <label>
-          Password:
-          <input
+          <TextField
+            label="Podaj swoje hasło"
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
-        </label>
-        <button type="submit">Register</button>
-      </form>
-      <br />
-      <hr />
-      <br />
-      <>
-        {error && <p className="error">{error.message}</p>}
-        {user && <p className="error">User {user.user.uid} is logged in</p>}
-        {loading && <p className="error">Loading...</p>}
-      </>
-    </MainLayout>
+          <TextField
+            label="Powtórz swoje hasło"
+            type="password"
+            value={repeatPassword}
+            onChange={(event) => setRepeatPassword(event.target.value)}
+          />
+        </>
+      }
+      buttonValue="Zarejestruj się"
+      footerChildren={
+        <>
+          Rejestrując się akceptujesz nasz{' '}
+          <Link className="link --underline" href="/">
+            Regulamin
+          </Link>{' '}
+          oraz{' '}
+          <Link className="link --underline" href="/">
+            Politykę prywatności
+          </Link>
+        </>
+      }
+      infoChildren={
+        <>
+          {error && <p className="error">{error.message}</p>}
+          {user && <p className="error">User {user.user.uid} is logged in</p>}
+          {loading && <p className="error">Loading...</p>}
+        </>
+      }
+    />
   );
 }

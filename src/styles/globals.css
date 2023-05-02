@@ -4,6 +4,32 @@
 
 @layer base {
   body {
-    @apply m-auto max-w-[1240px] text-black;
+    @apply mx-8 max-w-[1240px] text-black antialiased xl:m-auto;
+  }
+
+  .link {
+    @apply relative cursor-pointer whitespace-nowrap text-label-medium before:absolute before:bottom-0 before:left-0 before:right-0 before:block before:h-0.5 before:translate-y-1 before:bg-transparent before:transition-all hover:before:translate-y-0.5 hover:before:bg-green-900;
+  }
+
+  .link.--underline {
+    @apply before:bg-green-900;
+  }
+
+  .centered {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@supports (font-variation-settings: normal) {
+  @font-face {
+    font-family: 'Satoshi';
+    font-style: normal;
+    font-weight: 400 900;
+    font-display: swap;
+    src: url('/fonts/Satoshi-Variable.ttf') format('truetype-variations');
+    font-face-name: 'Regular';
   }
 }
