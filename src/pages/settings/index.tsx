@@ -1,8 +1,12 @@
 import BigButton from '@/components/BigButton';
 import MainLayout from '@/layouts/MainLayout';
+import { withAuth } from '@/lib/withAuth';
+import { useRouter } from 'next/router';
 import React from 'react';
 
 const Settings = () => {
+  const router = useRouter();
+
   return (
     <MainLayout>
       <h1 className="mb-10 mt-4 text-center text-heading-h2 sm:my-14 sm:text-heading-h1">
@@ -40,7 +44,7 @@ const Settings = () => {
           <BigButton
             title="Bezpieczeństwo"
             description="Ustawienia hasła i prywatności"
-            onClick={() => console.log('test')}
+            onClick={() => router.push('/settings/security')}
           />
         </div>
       </div>
@@ -57,4 +61,4 @@ const SectionDescription = (props: { title: string; description: string }) => {
   );
 };
 
-export default Settings;
+export default withAuth(Settings);
