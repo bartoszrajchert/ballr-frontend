@@ -50,7 +50,7 @@ export default function Login() {
       footerChildren={
         <>
           Problem z logowaniem?{' '}
-          <Link className="link --underline" href="/">
+          <Link className="link --underline" href="/recoverPassword">
             Przypomnij hasło
           </Link>{' '}
         </>
