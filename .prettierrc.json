@@ -3,9 +3,8 @@
   "tabWidth": 2,
   "semi": true,
   "singleQuote": true,
-  "importOrder": [
-    "^[./]"
-  ],
+  "importOrder": ["^[./]"],
+  "endOfLine": "lf",
   "plugins": [
     "@trivago/prettier-plugin-sort-imports",
     "prettier-plugin-tailwindcss"
