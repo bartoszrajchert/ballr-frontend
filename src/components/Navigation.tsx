@@ -1,6 +1,7 @@
 import Button from '@/components/Button';
 import useGetAuth from '@/lib/useGetAuth';
 import { IconMenu2, IconX } from '@tabler/icons-react';
+import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -39,6 +40,8 @@ function Navigation({ focusMode }: Props) {
   // @ts-ignore
   const isHamburger = Number(fullConfig.theme.screens.md.slice(0, -2)) > width;
 
+  const isActive = (href: string) => router.pathname === href;
+
   const menu = focusMode ? (
     <div>
       <IconX onClick={() => router.push('/')} />
@@ -47,17 +50,32 @@ function Navigation({ focusMode }: Props) {
     <div>
       <ul className="flex items-center gap-6 text-green-900 ">
         <li>
-          <Link className="link" href="/">
+          <Link
+            className={clsx('link', {
+              'before:bg-green-900': isActive('/'),
+            })}
+            href="/"
+          >
             Strona główna
           </Link>
         </li>
         <li>
-          <Link className="link" href="/">
+          <Link
+            className={clsx('link', {
+              'before:bg-green-900': isActive('/activities'),
+            })}
+            href="/activities"
+          >
             Zajęcia
           </Link>
         </li>
         <li>
-          <Link className="link" href="/">
+          <Link
+            className={clsx('link', {
+              'before:bg-green-900': isActive('/add-facility'),
+            })}
+            href="/"
+          >
             Dodaj obiekt
           </Link>
         </li>
@@ -86,7 +104,12 @@ function Navigation({ focusMode }: Props) {
         {!loading && user && (
           <>
             <li>
-              <Link className="link" href="/settings">
+              <Link
+                className={clsx('link', {
+                  'before:bg-green-900': isActive('/settings'),
+                })}
+                href="/settings"
+              >
                 Profil
               </Link>
             </li>
