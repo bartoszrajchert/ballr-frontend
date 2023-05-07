@@ -1,4 +1,5 @@
 import Button from '@/components/Button';
+import Header from '@/components/Header';
 import TextField from '@/components/TextField';
 import MainLayout from '@/layouts/MainLayout';
 import useGetAuth from '@/lib/useGetAuth';
@@ -15,9 +16,7 @@ const Security = () => {
 
   return (
     <MainLayout>
-      <h1 className="mb-10 mt-4 text-center text-heading-h2 sm:my-14 sm:text-heading-h1">
-        Edytuj konto
-      </h1>
+      <Header value="Bezpieczeństwo" />
       <form
         className="mx-auto mb-14 sm:max-w-[400px]"
         onSubmit={(event) => {
