@@ -1,4 +1,5 @@
 import BigButton from '@/components/BigButton';
+import Header from '@/components/Header';
 import MainLayout from '@/layouts/MainLayout';
 import { withAuth } from '@/lib/withAuth';
 import { useRouter } from 'next/router';
@@ -9,9 +10,7 @@ const Settings = () => {
 
   return (
     <MainLayout>
-      <h1 className="mb-10 mt-4 text-center text-heading-h2 sm:my-14 sm:text-heading-h1">
-        Edytuj konto
-      </h1>
+      <Header value="Ustawienia" />
       <div className="mb-14">
         <SectionDescription
           title="Zajęcia"
