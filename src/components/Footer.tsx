@@ -1,12 +1,17 @@
 import FullWidthBackgroundColor from '@/components/FullWidthBackgroundColor';
+import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import logo from '../../public/logo.svg';
 
-function Footer() {
+type Props = {
+  margin?: boolean;
+};
+
+function Footer({ margin = true }: Props) {
   return (
-    <footer className="relative">
+    <footer className={clsx('relative', { 'mt-14': margin })}>
       <div className="flex flex-col gap-10 py-8 sm:flex-row sm:justify-between">
         <div>
           <p className="pb-4 text-label-medium">Dla Ciebie</p>
