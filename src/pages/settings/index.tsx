@@ -29,7 +29,7 @@ const Settings = () => {
           />
         </div>
       </div>
-      <div className="mb-14">
+      <div>
         <SectionDescription
           title="Twój profil"
           description="Zmień ustawienia profilu"
