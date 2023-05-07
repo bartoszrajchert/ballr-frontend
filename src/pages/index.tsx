@@ -2,8 +2,11 @@ import Button from '@/components/Button';
 import FullWidthBackgroundColor from '@/components/FullWidthBackgroundColor';
 import TextField from '@/components/TextField';
 import MainLayout from '@/layouts/MainLayout';
+import useGetAuth from '@/lib/useGetAuth';
 import Head from 'next/head';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { useTranslation } from 'react-i18next';
 import medivocerSport from '../../public/medicover-sport.png';
 import multisport from '../../public/multisport.png';
@@ -11,6 +14,8 @@ import footballImage1 from '../../public/prapoth-panchuea-_lTF9zrF1PY-unsplash.j
 
 export default function Home() {
   const { t } = useTranslation();
+  const auth = useGetAuth();
+  const [user, loading, error] = useAuthState(auth);
 
   return (
     <>
@@ -72,11 +77,15 @@ export default function Home() {
               <p>Rezerwuj i graj ze swoją drużyną za pomocą kilku kliknięć!</p>
             </div>
             <div className="flex justify-center">
-              <Button
-                value="Zarejestruj się"
-                type="primary-dark"
-                onClick={() => console.log('Zarejestruj się')}
-              />
+              {user ? (
+                <Link href={'/create-team'}>
+                  <Button value="Stwórz drużynę" type="primary-dark" />
+                </Link>
+              ) : (
+                <Link href={'/register'}>
+                  <Button value="Zarejestruj się" type="primary-dark" />
+                </Link>
+              )}
             </div>
           </div>
           <FullWidthBackgroundColor color="bg-green-200" />
