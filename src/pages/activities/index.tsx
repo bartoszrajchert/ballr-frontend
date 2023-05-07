@@ -11,12 +11,13 @@ function Activities() {
   return (
     <MainLayout>
       <Header value="Zajęcia" />
-      <div className="flex gap-5">
+      <div className="flex flex-col gap-5 lg:flex-row">
         <aside>
           <p className="mb-8 text-heading-h3">Filtry</p>
           <Form />
         </aside>
         <div className="w-full space-y-4">
+          <ActivityTile />
           <ActivityTile />
           <ActivityTile />
           <ActivityTile />
@@ -29,35 +30,38 @@ function Activities() {
 function Form() {
   const { register, handleSubmit } = useForm();
   const onSubmit = (data: any) => console.log(data);
+  const rowInputClass = 'flex flex-col gap-2 sm:flex-row';
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
       <TextField label="Lokalizacja" {...register('location')} />
       <TextField label="Obiekt" {...register('object')} />
-      <div className="flex gap-2">
+      <div className={rowInputClass}>
         <TextField label="Cena od" {...register('price_from')} />
         <TextField label="Cena do" {...register('price_to')} />
       </div>
-      <div className="flex gap-2">
+      <div className={rowInputClass}>
         <TextField label="Data od" type="date" {...register('date_from')} />
         <TextField label="Data do" type="date" {...register('date_to')} />
       </div>
-      <div className="flex gap-2">
+      <div className={rowInputClass}>
         <TextField label="Godzina od" type="time" {...register('time_from')} />
         <TextField label="Godzina do" type="time" {...register('time_to')} />
       </div>
       {/* TODO: Add gender */}
       {/* TODO: Add level */}
       {/* TODO: Add referee */}
-      <Button value="Szukaj" isSubmit />
+      <div className="mt-4 w-full">
+        <Button value="Szukaj" isSubmit fullWidth />
+      </div>
     </form>
   );
 }
 
 function ActivityTile() {
   return (
-    <div className="flex w-full cursor-pointer gap-5 rounded-2xl border border-gray-300 bg-grey-100 p-4 hover:bg-green-100">
-      <div className="relative h-full w-[220px]">
+    <div className="flex w-full cursor-pointer flex-col gap-5 rounded-2xl border border-gray-300 bg-grey-100 p-4 hover:bg-green-100 sm:flex-row">
+      <div className="relative h-full w-full sm:w-[220px]">
         <Image
           className="aspect-video rounded-2xl bg-green-900 object-cover"
           src={footballImage1}
@@ -65,7 +69,7 @@ function ActivityTile() {
           alt=""
         />
       </div>
-      <div className="flex flex-col justify-between">
+      <div className="flex flex-col justify-between gap-3">
         <div>
           <h3 className="mb-1 text-label-medium">Warszawa, Zwyciężców 44</h3>
           <p>29.03 • 19:30</p>
