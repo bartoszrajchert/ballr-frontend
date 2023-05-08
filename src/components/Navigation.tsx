@@ -24,11 +24,20 @@ function Navigation({ focusMode }: Props) {
   // TODO: check - is from our website
   const router = useRouter();
 
-  const [width, setWidth] = useState(0);
+  const calculateIsHamburger = () => {
+    if (typeof window === 'undefined') return null;
+
+    // @ts-ignore
+    return Number(fullConfig.theme.screens.md.slice(0, -2)) > window.innerWidth;
+  };
+
+  const [isHamburger, setIsHamburger] = useState<boolean | null>(
+    calculateIsHamburger()
+  );
   const [isHamburgerMenuOpen, setIsHamburgerMenuOpen] = useState(false);
 
   const handleWindowResize = () => {
-    setWidth(window.innerWidth);
+    setIsHamburger(calculateIsHamburger());
   };
 
   useEffect(() => {
@@ -37,10 +46,91 @@ function Navigation({ focusMode }: Props) {
     return () => window.removeEventListener('resize', handleWindowResize);
   }, []);
 
-  // @ts-ignore
-  const isHamburger = Number(fullConfig.theme.screens.md.slice(0, -2)) > width;
-
   const isActive = (href: string) => router.pathname === href;
+
+  const mainLinks = (
+    <>
+      <li>
+        <Link
+          className={clsx('link', {
+            'before:bg-green-900': isActive('/'),
+          })}
+          href="/"
+        >
+          Strona główna
+        </Link>
+      </li>
+      <li>
+        <Link
+          className={clsx('link', {
+            'before:bg-green-900': isActive('/activities'),
+          })}
+          href="/activities"
+        >
+          Zajęcia
+        </Link>
+      </li>
+      <li>
+        <Link
+          className={clsx('link', {
+            'before:bg-green-900': isActive('/add-facility'),
+          })}
+          href="/"
+        >
+          Dodaj obiekt
+        </Link>
+      </li>
+      {/* TODO: Only for test purposes. Delete it */}
+      <li>
+        <Link className="link" href="/protectedPage">
+          Protected Page
+        </Link>
+      </li>
+    </>
+  );
+
+  const userLinks = (
+    <>
+      {!loading && !user && (
+        <>
+          <li>
+            <Link className="link" href="/login">
+              Zaloguj się
+            </Link>
+          </li>
+          <li>
+            <Link href="/register">
+              <Button
+                value="Rejestracja"
+                type="primary"
+                onClick={() => console.log('test')}
+              />
+            </Link>
+          </li>
+        </>
+      )}
+
+      {!loading && user && (
+        <>
+          <li>
+            <Link
+              className={clsx('link', {
+                'before:bg-green-900': isActive('/settings'),
+              })}
+              href="/settings"
+            >
+              Profil
+            </Link>
+          </li>
+          <li>
+            <a className="link" onClick={signOut}>
+              Wyloguj się
+            </a>
+          </li>
+        </>
+      )}
+    </>
+  );
 
   const menu = focusMode ? (
     <div>
@@ -49,83 +139,9 @@ function Navigation({ focusMode }: Props) {
   ) : (
     <div>
       <ul className="flex items-center gap-6 text-green-900 ">
-        <li>
-          <Link
-            className={clsx('link', {
-              'before:bg-green-900': isActive('/'),
-            })}
-            href="/"
-          >
-            Strona główna
-          </Link>
-        </li>
-        <li>
-          <Link
-            className={clsx('link', {
-              'before:bg-green-900': isActive('/activities'),
-            })}
-            href="/activities"
-          >
-            Zajęcia
-          </Link>
-        </li>
-        <li>
-          <Link
-            className={clsx('link', {
-              'before:bg-green-900': isActive('/add-facility'),
-            })}
-            href="/"
-          >
-            Dodaj obiekt
-          </Link>
-        </li>
-        {/* TODO: Only for test purposes. Delete it */}
-        <li>
-          <Link className="link" href="/protectedPage">
-            Protected Page
-          </Link>
-        </li>
-
+        {mainLinks}
         {loading && <p>Loading...</p>}
-
-        {!loading && !user && (
-          <>
-            <li>
-              <Link className="link" href="/login">
-                Zaloguj się
-              </Link>
-            </li>
-            <li>
-              <Link href="/register">
-                <Button
-                  value="Rejestracja"
-                  type="primary"
-                  onClick={() => console.log('test')}
-                />
-              </Link>
-            </li>
-          </>
-        )}
-
-        {!loading && user && (
-          <>
-            <li>
-              <Link
-                className={clsx('link', {
-                  'before:bg-green-900': isActive('/settings'),
-                })}
-                href="/settings"
-              >
-                Profil
-              </Link>
-            </li>
-            <li>
-              <a className="link" onClick={signOut}>
-                Wyloguj się
-              </a>
-            </li>
-          </>
-        )}
+        {userLinks}
       </ul>
     </div>
   );
@@ -140,58 +156,10 @@ function Navigation({ focusMode }: Props) {
             onClick={() => setIsHamburgerMenuOpen(!isHamburgerMenuOpen)}
           />
           <div className="centered">
-            <ul className="flex flex-col gap-4">
-              <li>
-                <Link className="link" href="/">
-                  Strona główna
-                </Link>
-              </li>
-              <li>
-                <Link className="link" href="/">
-                  Zajęcia
-                </Link>
-              </li>
-              <li>
-                <Link className="link" href="/">
-                  Dodaj obiekt
-                </Link>
-              </li>
-
+            <ul className="flex flex-col items-center gap-6">
+              {mainLinks}
               {loading && <p>Loading...</p>}
-
-              {!loading && !user && (
-                <>
-                  <li>
-                    <Link className="link" href="/login">
-                      Zaloguj się
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/register">
-                      <Button
-                        value="Rejestracja"
-                        type="primary"
-                        onClick={() => console.log('test')}
-                      />
-                    </Link>
-                  </li>
-                </>
-              )}
-
-              {!loading && user && (
-                <>
-                  <li>
-                    <Link className="link" href="/settings">
-                      Profil
-                    </Link>
-                  </li>
-                  <li>
-                    <a className="link" onClick={signOut}>
-                      Wyloguj się
-                    </a>
-                  </li>
-                </>
-              )}
+              {userLinks}
             </ul>
           </div>
         </div>
