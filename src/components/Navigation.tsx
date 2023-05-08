@@ -79,6 +79,12 @@ function Navigation({ focusMode }: Props) {
             Dodaj obiekt
           </Link>
         </li>
+        {/* TODO: Only for test purposes. Delete it */}
+        <li>
+          <Link className="link" href="/protectedPage">
+            Protected Page
+          </Link>
+        </li>
 
         {loading && <p>Loading...</p>}
 
