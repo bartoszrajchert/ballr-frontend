@@ -2,12 +2,10 @@ import Footer from '@/components/Footer';
 import FullWidthBackgroundColor from '@/components/FullWidthBackgroundColor';
 import Navigation from '@/components/Navigation';
 import useGetAuth from '@/lib/useGetAuth';
+import useSendEmailVerificationWithToast from '@/lib/useSendEmailVerificationWithToast';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
-import {
-  useAuthState,
-  useSendEmailVerification,
-} from 'react-firebase-hooks/auth';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 type Props = {
   children: JSX.Element | JSX.Element[];
@@ -29,13 +27,10 @@ function MainLayout(props: Props) {
 function VerifyEmailBanner() {
   const auth = useGetAuth();
   const [user, loading, error] = useAuthState(auth);
-  const [
-    sendEmailVerification,
-    sendingEmailVerification,
-    errorEmailVerification,
-  ] = useSendEmailVerification(auth);
   const router = useRouter();
   const isEmailNotVerified = !loading && user && !user?.emailVerified;
+  const sendEmailVerificationWithToast =
+    useSendEmailVerificationWithToast(auth);
 
   // TODO: Optimize this, works after second route change
   useEffect(() => {
@@ -58,7 +53,7 @@ function VerifyEmailBanner() {
         <div className="relative flex h-[48px] w-full items-center justify-center text-center text-white">
           <p
             className="link --underline before:!bg-white"
-            onClick={sendEmailVerification}
+            onClick={sendEmailVerificationWithToast}
           >
             Kliknij tutaj aby zweryfikować swój email.
           </p>
