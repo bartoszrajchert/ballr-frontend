@@ -133,7 +133,7 @@ function Navigation({ focusMode }: Props) {
   );
 
   const menu = focusMode ? (
-    <div>
+    <div className="cursor-pointer">
       <IconX onClick={() => router.push('/')} />
     </div>
   ) : (
