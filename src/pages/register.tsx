@@ -1,11 +1,13 @@
 import TextField from '@/components/TextField';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
-import MainLayout from '@/layouts/MainLayout';
 import useGetAuth from '@/lib/useGetAuth';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import {
+  useCreateUserWithEmailAndPassword,
+  useSendEmailVerification,
+} from 'react-firebase-hooks/auth';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -14,6 +16,11 @@ export default function Login() {
   const auth = useGetAuth();
   const [createUserWithEmailAndPassword, user, loading, error] =
     useCreateUserWithEmailAndPassword(auth);
+  const [
+    sendEmailVerification,
+    sendingEmailVerification,
+    errorEmailVerification,
+  ] = useSendEmailVerification(auth);
   const router = useRouter();
 
   return (
@@ -35,7 +42,10 @@ export default function Login() {
           return alert('Hasła nie są takie same');
 
         createUserWithEmailAndPassword(email, password).then((res) => {
-          if (res?.user) router.push('/');
+          if (res?.user) {
+            sendEmailVerification();
+            router.push('/');
+          }
         });
       }}
       inputChildren={
