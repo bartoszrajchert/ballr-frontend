@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply mx-8 max-w-[1240px] text-black antialiased xl:m-auto;
+    @apply mx-8 max-w-[1240px] text-black antialiased xl:m-auto overflow-x-hidden;
   }
 
   .link {
