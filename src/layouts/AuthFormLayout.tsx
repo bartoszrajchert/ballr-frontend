@@ -15,7 +15,7 @@ type Props = {
 
 const AuthFormLayout = (props: Props) => {
   return (
-    <MainLayout focusMode>
+    <MainLayout>
       <div className="sm:centered mt-6 sm:min-w-[400px]">
         <div className="mb-10 space-y-2 text-center">
           <h1 className="text-heading-h2 text-green-900">{props.header}</h1>
