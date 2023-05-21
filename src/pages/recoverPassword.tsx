@@ -3,15 +3,36 @@ import AuthFormLayout from '@/layouts/AuthFormLayout';
 import useGetAuth from '@/lib/useGetAuth';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React from 'react';
 import { useSendPasswordResetEmail } from 'react-firebase-hooks/auth';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+
+type FormData = {
+  email: string;
+};
 
 function RecoverPassword() {
   const auth = useGetAuth();
-  const [email, setEmail] = useState('');
   const [sendPasswordResetEmail, sending, error] =
     useSendPasswordResetEmail(auth);
   const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
+  const onSubmit = async (data: FormData) => {
+    const success = await sendPasswordResetEmail(
+      data.email,
+      actionCodeSettings
+    );
+    if (success) {
+      toast.info('Wysłano email z linkiem do zmiany hasła');
+      await router.push('/login');
+    }
+  };
 
   const actionCodeSettings = {
     url: `${process.env.NEXT_PUBLIC_BASE_URL}/login`,
@@ -23,25 +44,19 @@ function RecoverPassword() {
       subheader={
         <>Po wysłaniu formularza otrzymasz email z linkiem do zmiany hasła.</>
       }
-      onSubmit={async (event) => {
-        event.preventDefault();
-        const success = await sendPasswordResetEmail(email, actionCodeSettings);
-        if (success) {
-          // TODO: add toast notification later
-          await router.push('/login');
-        }
-      }}
+      onSubmit={handleSubmit(onSubmit)}
       inputChildren={
         <>
           <TextField
             label="Podaj swój adres email"
             type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            errorText={errors.email && 'Email jest wymagany'}
+            {...register('email', { required: true })}
           />
         </>
       }
       buttonValue="Wyślij email ze zmianą hasła"
+      buttonDisabled={sending}
       footerChildren={
         <>
           Przypomniałeś sobie hasło?{' '}
@@ -50,12 +65,7 @@ function RecoverPassword() {
           </Link>
         </>
       }
-      infoChildren={
-        <>
-          {error && <p className="error">{error.message}</p>}
-          {sending && <p className="error">Sending...</p>}
-        </>
-      }
+      errorMessage={error?.message}
     />
   );
 }
