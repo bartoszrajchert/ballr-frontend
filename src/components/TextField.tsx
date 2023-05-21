@@ -1,23 +1,35 @@
-import { IconInfoCircle } from '@tabler/icons-react';
+import { IconExclamationCircle, IconInfoCircle } from '@tabler/icons-react';
+import clsx from 'clsx';
 import React, { InputHTMLAttributes } from 'react';
 
 type Props = {
   label?: string;
   helperText?: string;
+  errorText?: string;
   leadingIcon?: JSX.Element;
   trailingIcon?: JSX.Element;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 const TextField = React.forwardRef<HTMLInputElement, Props>(
-  ({ helperText, ...props }, ref) => {
+  ({ helperText, errorText, ...props }, ref) => {
     return (
-      <div className="w-full space-y-1">
+      <div
+        className={clsx('w-full space-y-1', {
+          'text-red': errorText,
+        })}
+      >
         {props.label && <label className="text-p-small">{props.label}</label>}
-        <div className="overflow-auto rounded-2 border border-green-900">
+        <div className={'overflow-auto'}>
           <span className="icon leading-icon">{props.leadingIcon}</span>
           <input
             ref={ref}
-            className="h-[48px] w-full rounded-2 px-4"
+            className={clsx(
+              'h-[48px] w-full rounded-2 px-4 shadow-border-1px outline-none hover:shadow-border-2px focus:shadow-border-3px focus-visible:shadow-border-3px',
+              {
+                '!shadow-red': errorText,
+                '!shadow-green-900': !errorText,
+              }
+            )}
             {...props}
           />
           <span className="icon trailing-icon">{props.trailingIcon}</span>
@@ -26,6 +38,12 @@ const TextField = React.forwardRef<HTMLInputElement, Props>(
           <div className="flex gap-1">
             <IconInfoCircle size={20} />
             <small className="text-p-small">{helperText}</small>
+          </div>
+        )}
+        {errorText && (
+          <div className="flex gap-1 text-red">
+            <IconExclamationCircle size={20} />
+            <small className="text-p-small">{errorText}</small>
           </div>
         )}
       </div>
