@@ -1,13 +1,12 @@
 import TextField from '@/components/TextField';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
 import useGetAuth from '@/lib/useGetAuth';
+import useSendEmailVerificationWithToast from '@/lib/useSendEmailVerificationWithToast';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import {
-  useCreateUserWithEmailAndPassword,
-  useSendEmailVerification,
-} from 'react-firebase-hooks/auth';
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { toast } from 'react-toastify';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -16,12 +15,9 @@ export default function Login() {
   const auth = useGetAuth();
   const [createUserWithEmailAndPassword, user, loading, error] =
     useCreateUserWithEmailAndPassword(auth);
-  const [
-    sendEmailVerification,
-    sendingEmailVerification,
-    errorEmailVerification,
-  ] = useSendEmailVerification(auth);
   const router = useRouter();
+  const sendEmailVerificationWithToast =
+    useSendEmailVerificationWithToast(auth);
 
   return (
     <AuthFormLayout
@@ -41,10 +37,11 @@ export default function Login() {
         if (password !== repeatPassword)
           return alert('Hasła nie są takie same');
 
-        createUserWithEmailAndPassword(email, password).then((res) => {
+        createUserWithEmailAndPassword(email, password).then(async (res) => {
           if (res?.user) {
-            sendEmailVerification();
-            router.push('/');
+            await router.push('/');
+            toast.info('Konto zostało utworzone');
+            await sendEmailVerificationWithToast();
           }
         });
       }}

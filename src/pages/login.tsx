@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { toast } from 'react-toastify';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -27,8 +28,11 @@ export default function Login() {
       }
       onSubmit={(event) => {
         event.preventDefault();
-        signInWithEmailAndPassword(email, password).then((res) => {
-          if (res?.user) router.push('/');
+        signInWithEmailAndPassword(email, password).then(async (res) => {
+          if (res?.user) {
+            toast.info('Zalogowano pomyślnie');
+            await router.push('/');
+          }
         });
       }}
       inputChildren={
