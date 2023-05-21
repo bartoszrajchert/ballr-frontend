@@ -4,20 +4,41 @@ import useGetAuth from '@/lib/useGetAuth';
 import useSendEmailVerificationWithToast from '@/lib/useSendEmailVerificationWithToast';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
+type FormData = {
+  email: string;
+  password: string;
+  repeatPassword: string;
+};
+
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
   const auth = useGetAuth();
-  const [createUserWithEmailAndPassword, user, loading, error] =
+  const [createUserWithEmailAndPassword, _, loading, error] =
     useCreateUserWithEmailAndPassword(auth);
   const router = useRouter();
   const sendEmailVerificationWithToast =
     useSendEmailVerificationWithToast(auth);
+
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+  } = useForm<FormData>();
+  const onSubmit = (data: FormData) => {
+    createUserWithEmailAndPassword(data.email, data.password).then(
+      async (res) => {
+        if (res?.user) {
+          await router.push('/');
+          toast.info('Konto zostało utworzone');
+          await sendEmailVerificationWithToast();
+        }
+      }
+    );
+  };
 
   return (
     <AuthFormLayout
@@ -30,44 +51,37 @@ export default function Login() {
           </Link>
         </>
       }
-      onSubmit={(event) => {
-        event.preventDefault();
-
-        // TODO: Handle it in a better way
-        if (password !== repeatPassword)
-          return alert('Hasła nie są takie same');
-
-        createUserWithEmailAndPassword(email, password).then(async (res) => {
-          if (res?.user) {
-            await router.push('/');
-            toast.info('Konto zostało utworzone');
-            await sendEmailVerificationWithToast();
-          }
-        });
-      }}
+      onSubmit={handleSubmit(onSubmit)}
       inputChildren={
         <>
           <TextField
             label="Podaj swój adres email"
             type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            errorText={errors.email && 'Email jest wymagany'}
+            {...register('email', { required: true })}
           />
           <TextField
             label="Podaj swoje hasło"
             type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            errorText={errors.password && 'Hasło jest wymagane'}
+            {...register('password', { required: true })}
           />
           <TextField
             label="Powtórz swoje hasło"
             type="password"
-            value={repeatPassword}
-            onChange={(event) => setRepeatPassword(event.target.value)}
+            errorText={errors.repeatPassword && 'Hasła muszą być takie same'}
+            {...register('repeatPassword', {
+              required: true,
+              validate: (value) => {
+                const { password } = getValues();
+                return password === value || 'Passwords should match!';
+              },
+            })}
           />
         </>
       }
       buttonValue="Zarejestruj się"
+      buttonDisabled={loading}
       footerChildren={
         <>
           Rejestrując się akceptujesz nasz{' '}
@@ -80,13 +94,7 @@ export default function Login() {
           </Link>
         </>
       }
-      infoChildren={
-        <>
-          {error && <p className="error">{error.message}</p>}
-          {user && <p className="error">User {user.user.uid} is logged in</p>}
-          {loading && <p className="error">Loading...</p>}
-        </>
-      }
+      errorMessage={error?.message}
     />
   );
 }
