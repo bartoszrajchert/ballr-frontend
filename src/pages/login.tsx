@@ -3,17 +3,34 @@ import AuthFormLayout from '@/layouts/AuthFormLayout';
 import useGetAuth from '@/lib/useGetAuth';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
+type FormData = {
+  email: string;
+  password: string;
+};
+
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const auth = useGetAuth();
-  const [signInWithEmailAndPassword, user, loading, error] =
+  const [signInWithEmailAndPassword, _, loading, error] =
     useSignInWithEmailAndPassword(auth);
   const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
+  const onSubmit = (data: FormData) => {
+    signInWithEmailAndPassword(data.email, data.password).then(async (res) => {
+      if (res?.user) {
+        await router.push('/');
+        toast.info('Zalogowano pomyślnie');
+      }
+    });
+  };
 
   return (
     <AuthFormLayout
@@ -26,28 +43,20 @@ export default function Login() {
           </Link>
         </>
       }
-      onSubmit={(event) => {
-        event.preventDefault();
-        signInWithEmailAndPassword(email, password).then(async (res) => {
-          if (res?.user) {
-            toast.info('Zalogowano pomyślnie');
-            await router.push('/');
-          }
-        });
-      }}
+      onSubmit={handleSubmit(onSubmit)}
       inputChildren={
         <>
           <TextField
             label="Podaj swój adres email"
             type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            errorText={errors.email && 'Email jest wymagany'}
+            {...register('email', { required: true })}
           />
           <TextField
             label="Podaj swoje hasło"
             type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            errorText={errors.password && 'Hasło jest wymagane'}
+            {...register('password', { required: true })}
           />
         </>
       }
@@ -59,14 +68,9 @@ export default function Login() {
           </Link>{' '}
         </>
       }
-      infoChildren={
-        <>
-          {error && <p className="error">{error.message}</p>}
-          {user && <p className="error">User {user.user.uid} is logged in</p>}
-          {loading && <p className="error">Loading...</p>}
-        </>
-      }
       buttonValue="Zaloguj się"
+      buttonDisabled={loading}
+      errorMessage={error?.message}
     />
   );
 }

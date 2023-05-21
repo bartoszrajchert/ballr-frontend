@@ -9,7 +9,8 @@ type Props = {
   inputChildren: JSX.Element | JSX.Element[];
   buttonValue: string;
   footerChildren: JSX.Element | JSX.Element[];
-  infoChildren: JSX.Element | JSX.Element[]; // TODO: delete
+  errorMessage?: string;
+  buttonDisabled?: boolean;
 };
 
 const AuthFormLayout = (props: Props) => {
@@ -23,14 +24,18 @@ const AuthFormLayout = (props: Props) => {
         <form onSubmit={props.onSubmit}>
           <div className="space-y-6">
             <div className="space-y-4">{props.inputChildren}</div>
-            <Button value={props.buttonValue} isSubmit fullWidth />
+            <Button
+              value={props.buttonValue}
+              isSubmit
+              fullWidth
+              disabled={props.buttonDisabled}
+            />
+            {props.errorMessage && (
+              <p className="text-red">{props.errorMessage}</p>
+            )}
           </div>
-          <p className="mt-14 text-center">{props.footerChildren}</p>
+          <p className="mt-10 text-center">{props.footerChildren}</p>
         </form>
-        <br />
-        <hr />
-        <br />
-        <>{props.infoChildren}</>
       </div>
     </MainLayout>
   );
