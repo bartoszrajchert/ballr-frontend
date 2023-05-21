@@ -32,7 +32,6 @@ jobs:
         
     - name: Zip artifact for deployment
       run: zip -9 -q -r --symlinks ballr-frontend-release.zip .next package.json node_modules
-      # run: zip -9 -q -r --symlinks ballr-frontend-release.zip ./ # left in case the test above fails
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v3
@@ -54,6 +53,9 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: node-app
+        
+    - name: Unzip artifact for deployment
+      run: unzip -q ballr-frontend-release.zip
 
     - name: 'Deploy to Azure WebApp'
       id: deploy-to-webapp
