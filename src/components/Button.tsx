@@ -8,6 +8,7 @@ type Props = {
   icon?: JSX.Element;
   isSubmit?: boolean;
   fullWidth?: boolean;
+  disabled?: boolean;
 };
 
 function Button({
@@ -17,6 +18,7 @@ function Button({
   icon,
   isSubmit,
   fullWidth,
+  disabled,
 }: Props) {
   return (
     <button
@@ -28,9 +30,11 @@ function Button({
           'bg-green-900 text-green-300 hover:bg-black': type === 'primary-dark',
           'border border-green-900 hover:bg-green-500': type === 'secondary',
           'w-full': fullWidth,
+          '!bg-grey-300 !text-black': disabled,
         }
       )}
       type={isSubmit ? 'submit' : 'button'}
+      disabled={disabled}
     >
       {icon} {value}
     </button>
