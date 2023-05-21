@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
+import { toast } from 'react-toastify';
 import resolveConfig from 'tailwindcss/resolveConfig';
 import logo from '../../public/logo.svg';
 import tailwindConfig from '../../tailwind.config.js';
@@ -19,10 +20,24 @@ type Props = {
 
 function Navigation({ focusMode }: Props) {
   const auth = useGetAuth();
-  const [user, loading, error] = useAuthState(auth);
-  const [signOut, loadingSignOut, errorSignOut] = useSignOut(auth);
+  const [user, authLoading, authError] = useAuthState(auth);
+  const [signOut, _, errorSignOut] = useSignOut(auth);
   // TODO: check - is from our website
   const router = useRouter();
+
+  useEffect(() => {
+    if (authError) {
+      toast.error(`Wystąpił błąd: ${authError.message}`);
+    }
+    if (errorSignOut) {
+      toast.error(`Wystąpił błąd: ${errorSignOut.message}`);
+    }
+  }, [authError, errorSignOut]);
+
+  const signOutHandler = async () => {
+    await signOut();
+    toast.success('Wylogowano pomyślnie');
+  };
 
   const calculateIsHamburger = () => {
     if (typeof window === 'undefined') return null;
@@ -91,7 +106,7 @@ function Navigation({ focusMode }: Props) {
 
   const userLinks = (
     <>
-      {!loading && !user && (
+      {!authLoading && !user && (
         <>
           <li>
             <Link className="link" href="/login">
@@ -100,17 +115,13 @@ function Navigation({ focusMode }: Props) {
           </li>
           <li>
             <Link href="/register">
-              <Button
-                value="Rejestracja"
-                type="primary"
-                onClick={() => console.log('test')}
-              />
+              <Button value="Rejestracja" type="primary" />
             </Link>
           </li>
         </>
       )}
 
-      {!loading && user && (
+      {!authLoading && user && (
         <>
           <li>
             <Link
@@ -123,7 +134,7 @@ function Navigation({ focusMode }: Props) {
             </Link>
           </li>
           <li>
-            <a className="link" onClick={signOut}>
+            <a className="link" onClick={signOutHandler}>
               Wyloguj się
             </a>
           </li>
@@ -140,7 +151,7 @@ function Navigation({ focusMode }: Props) {
     <div>
       <ul className="flex items-center gap-6 text-green-900 ">
         {mainLinks}
-        {loading && <p>Loading...</p>}
+        {authLoading && <p>Loading...</p>}
         {userLinks}
       </ul>
     </div>
@@ -158,7 +169,7 @@ function Navigation({ focusMode }: Props) {
           <div className="centered">
             <ul className="flex flex-col items-center gap-6">
               {mainLinks}
-              {loading && <p>Loading...</p>}
+              {authLoading && <p>Loading...</p>}
               {userLinks}
             </ul>
           </div>
