@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: ballr-frontend
+  AZURE_WEBAPP_NAME: ballr
   AZURE_WEBAPP_PACKAGE_PATH: '.'
   NODE_VERSION: '16.x'
 
@@ -31,7 +31,7 @@ jobs:
         npm run test --if-present
         
     - name: Zip artifact for deployment
-      run: zip ballr-frontend-release.zip ./* -r
+      run: zip -q ballr-frontend-release.zip ./* -r
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v3
@@ -55,7 +55,7 @@ jobs:
         name: node-app
         
     - name: Unzip artifact for deployment
-      run: unzip ballr-frontend-release.zip
+      run: unzip -q ballr-frontend-release.zip
 
     - name: 'Deploy to Azure WebApp'
       id: deploy-to-webapp
