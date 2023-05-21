@@ -75,6 +75,11 @@ module.exports = {
       aspectRatio: {
         '9/16': '9 / 16',
       },
+      boxShadow: {
+        'border-1px': 'inset 0 0 0 1px',
+        'border-2px': 'inset 0 0 0 2px',
+        'border-3px': 'inset 0 0 0 3px',
+      },
     },
   },
   plugins: [],
