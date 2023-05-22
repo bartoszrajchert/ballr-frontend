@@ -24,7 +24,7 @@ function Button({
     <button
       onClick={onClick}
       className={clsx(
-        'flex items-center justify-center gap-1 rounded-full px-4 py-3 font-bold text-black hover:border-transparent',
+        'flex items-center justify-center gap-1 rounded-full px-4 py-3 font-bold text-black transition-colors hover:border-transparent',
         {
           'bg-green-400 hover:bg-green-500': type === 'primary',
           'bg-green-900 text-green-300 hover:bg-black': type === 'primary-dark',
