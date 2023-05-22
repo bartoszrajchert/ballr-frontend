@@ -8,11 +8,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
 import { toast } from 'react-toastify';
-import resolveConfig from 'tailwindcss/resolveConfig';
 import logo from '../../public/logo.svg';
-import tailwindConfig from '../../tailwind.config.js';
-
-const fullConfig = resolveConfig(tailwindConfig);
 
 type Props = {
   focusMode?: boolean;
@@ -25,6 +21,8 @@ function Navigation({ focusMode }: Props) {
   // TODO: check - is from our website
   const router = useRouter();
 
+  const [isHamburgerMenuOpen, setIsHamburgerMenuOpen] = useState(false);
+
   useEffect(() => {
     if (authError) {
       toast.error(`Wystąpił błąd: ${authError.message}`);
@@ -34,32 +32,20 @@ function Navigation({ focusMode }: Props) {
     }
   }, [authError, errorSignOut]);
 
+  useEffect(() => {
+    const closeHamburgerMenu = () => setIsHamburgerMenuOpen(false);
+
+    router.events.on('routeChangeComplete', closeHamburgerMenu);
+
+    return () => {
+      router.events.off('routeChangeComplete', closeHamburgerMenu);
+    };
+  }, [router.events]);
+
   const signOutHandler = async () => {
     await signOut();
     toast.success('Wylogowano pomyślnie');
   };
-
-  const calculateIsHamburger = () => {
-    if (typeof window === 'undefined') return null;
-
-    // @ts-ignore
-    return Number(fullConfig.theme.screens.md.slice(0, -2)) > window.innerWidth;
-  };
-
-  const [isHamburger, setIsHamburger] = useState<boolean | null>(
-    calculateIsHamburger()
-  );
-  const [isHamburgerMenuOpen, setIsHamburgerMenuOpen] = useState(false);
-
-  const handleWindowResize = () => {
-    setIsHamburger(calculateIsHamburger());
-  };
-
-  useEffect(() => {
-    handleWindowResize();
-    window.addEventListener('resize', handleWindowResize);
-    return () => window.removeEventListener('resize', handleWindowResize);
-  }, []);
 
   const isActive = (href: string) => router.pathname === href;
 
@@ -97,7 +83,7 @@ function Navigation({ focusMode }: Props) {
       </li>
       {/* TODO: Only for test purposes. Delete it */}
       <li>
-        <Link className="link" href="/protectedPage">
+        <Link className="link" href="/protected-page">
           Protected Page
         </Link>
       </li>
@@ -144,11 +130,11 @@ function Navigation({ focusMode }: Props) {
   );
 
   const menu = focusMode ? (
-    <div className="cursor-pointer">
+    <div className="hidden cursor-pointer lg:block">
       <IconX onClick={() => router.push('/')} />
     </div>
   ) : (
-    <div>
+    <div className="hidden lg:block">
       <ul className="flex items-center gap-6 text-green-900 ">
         {mainLinks}
         {authLoading && <p>Loading...</p>}
@@ -158,7 +144,7 @@ function Navigation({ focusMode }: Props) {
   );
 
   const hamburgerMenu = (
-    <div className="relative">
+    <div className="relative lg:hidden">
       <IconMenu2 onClick={() => setIsHamburgerMenuOpen(!isHamburgerMenuOpen)} />
       {isHamburgerMenuOpen && (
         <div className="fixed bottom-0 left-0 right-0 top-0 z-10 bg-white">
@@ -185,7 +171,8 @@ function Navigation({ focusMode }: Props) {
           <Image src={logo} alt="logo" height={22} />
         </Link>
       </div>
-      {isHamburger ? hamburgerMenu : menu}
+      {hamburgerMenu}
+      {menu}
     </nav>
   );
 }
