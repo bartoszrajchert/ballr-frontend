@@ -12,7 +12,7 @@ type FormData = {
   email: string;
 };
 
-function RecoverPassword() {
+function ForgotPassword() {
   const auth = useGetAuth();
   const [sendPasswordResetEmail, sending, error] =
     useSendPasswordResetEmail(auth);
@@ -70,4 +70,4 @@ function RecoverPassword() {
   );
 }
 
-export default RecoverPassword;
+export default ForgotPassword;
