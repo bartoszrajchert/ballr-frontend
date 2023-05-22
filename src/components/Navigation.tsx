@@ -131,7 +131,11 @@ function Navigation({ focusMode }: Props) {
 
   const menu = focusMode ? (
     <div className="hidden cursor-pointer lg:block">
-      <IconX onClick={() => router.push('/')} />
+      <Button
+        icon={<IconX />}
+        onClick={() => router.push('/')}
+        type="tertiary"
+      />
     </div>
   ) : (
     <div className="hidden lg:block">

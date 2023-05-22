@@ -2,9 +2,9 @@ import clsx from 'clsx';
 import React from 'react';
 
 type Props = {
-  value: string;
+  value?: string;
   onClick?: () => void;
-  type?: 'primary' | 'primary-dark' | 'secondary';
+  type?: 'primary' | 'primary-dark' | 'secondary' | 'tertiary';
   icon?: JSX.Element;
   isSubmit?: boolean;
   fullWidth?: boolean;
@@ -29,6 +29,8 @@ function Button({
           'bg-green-400 hover:bg-green-500': type === 'primary',
           'bg-green-900 text-green-300 hover:bg-black': type === 'primary-dark',
           'border border-green-900 hover:bg-green-500': type === 'secondary',
+          'hover:bg-grey-200': type === 'tertiary',
+          '!px-3': icon && !value,
           'w-full': fullWidth,
           '!bg-grey-300 !text-black': disabled,
         }
