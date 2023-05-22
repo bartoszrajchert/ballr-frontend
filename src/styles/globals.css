@@ -22,14 +22,3 @@
     transform: translate(-50%, -50%);
   }
 }
-
-@supports (font-variation-settings: normal) {
-  @font-face {
-    font-family: 'Satoshi';
-    font-style: normal;
-    font-weight: 400 900;
-    font-display: swap;
-    src: url('/fonts/Satoshi-Variable.ttf') format('truetype-variations');
-    font-face-name: 'Regular';
-  }
-}
