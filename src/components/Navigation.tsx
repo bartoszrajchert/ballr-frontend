@@ -44,6 +44,7 @@ function Navigation({ focusMode }: Props) {
 
   const signOutHandler = async () => {
     await signOut();
+    await router.push('/');
     toast.success('Wylogowano pomyślnie');
   };
 
