@@ -1,20 +1,21 @@
 import MainLayout from '@/layouts/MainLayout';
-import useSWRWithToken from '@/lib/useSWRWithToken';
+import { fetcher } from '@/lib/fetchers';
 import { withAuth } from '@/lib/withAuth';
+import useSWR from 'swr';
 
 /**
  * This is a protected page. It will redirect to /login if the user is not logged in.
  * TODO: Delete this page.
  */
 function ProtectedPage() {
-  const { data, tokenError, tokenLoading, error } =
-    useSWRWithToken('/api/user');
+  const { data, isLoading, error } = useSWR('/cities', fetcher);
 
   return (
     <MainLayout>
-      <>{tokenError && <p>Error: {JSON.stringify(tokenError)}</p>}</>
-      <>{tokenLoading && <p>Loading...</p>}</>
-      <p>This page is protected. Data: {JSON.stringify(data)}</p>
+      <>{error && <p>Error: {JSON.stringify(error)}</p>}</>
+      <>{isLoading && <p>Loading...</p>}</>
+      <p>This page is protected.</p>
+      <p>Cities: {JSON.stringify(data)}</p>
       <>{error && <p>Data error: {JSON.stringify(error.message)}</p>}</>
     </MainLayout>
   );
