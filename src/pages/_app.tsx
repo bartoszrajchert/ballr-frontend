@@ -15,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const focusModePaths = ['/login', '/register', '/forgot-password'];
 const font = localFont({
-  src: '../../public/fonts/Satoshi-Variable.ttf',
+  src: '../../public/fonts/Satoshi-Variable.woff2',
   variable: '--font-satoshi',
 });
 
