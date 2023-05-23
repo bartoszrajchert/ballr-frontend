@@ -44,5 +44,8 @@
   "lint-staged": {
     "*{.js,.jsx,.ts,.tsx,.json}": "npm run format",
     "src/**/*{.js,.jsx,.ts,.tsx}": "eslint --fix"
-  }
+  },
+  "browserslist": [
+    "defaults"
+  ]
 }
