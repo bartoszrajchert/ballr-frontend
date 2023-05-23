@@ -30,19 +30,19 @@ export default function RequestsTestPage() {
         <strong>Matches: </strong>
         {JSON.stringify(dataMatches)}
         {isLoadingMatches}
-        {errorMatches}
+        {JSON.stringify(errorMatches)}
       </div>
       <div>
         <strong>Genders: </strong>
         {JSON.stringify(dataGenders)}
         {isLoadingGenders}
-        {errorGenders}
+        {JSON.stringify(errorGenders)}
       </div>
       <div>
         <strong>Users: </strong>
         {JSON.stringify(dataUsers)}
         {isLoadingUsers}
-        {errorUsers}
+        {JSON.stringify(errorUsers)}
       </div>
     </div>
   );
