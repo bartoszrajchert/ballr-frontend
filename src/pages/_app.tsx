@@ -2,6 +2,7 @@ import Footer from '@/components/Footer';
 import Navigation from '@/components/Navigation';
 import VerifyEmailBanner from '@/components/VerifyEmailBanner';
 import '@/i18n/config';
+import initAxios from '@/lib/axios';
 import '@/lib/firebase';
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
@@ -17,6 +18,8 @@ const font = localFont({
   src: '../../public/fonts/Satoshi-Variable.ttf',
   variable: '--font-satoshi',
 });
+
+initAxios();
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
