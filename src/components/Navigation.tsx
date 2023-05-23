@@ -65,21 +65,41 @@ function Navigation({ focusMode }: Props) {
       <li>
         <Link
           className={clsx('link', {
-            'before:bg-green-900': isActive('/activities'),
+            'before:bg-green-900': isActive('/matches'),
           })}
-          href="/activities"
+          href="/matches"
         >
-          Zajęcia
+          Mecze
         </Link>
       </li>
       <li>
         <Link
           className={clsx('link', {
-            'before:bg-green-900': isActive('/add-facility'),
+            'before:bg-green-900': isActive('/facilities'),
           })}
-          href="/"
+          href="/facilities"
         >
-          Dodaj obiekt
+          Obiekty
+        </Link>
+      </li>
+      <li>
+        <Link
+          className={clsx('link', {
+            'before:bg-green-900': isActive('/tournaments'),
+          })}
+          href="/tournaments"
+        >
+          Turnieje
+        </Link>
+      </li>
+      <li>
+        <Link
+          className={clsx('link', {
+            'before:bg-green-900': isActive('/teams'),
+          })}
+          href="/teams"
+        >
+          Teams
         </Link>
       </li>
       {/* TODO: Only for test purposes. Delete it */}
