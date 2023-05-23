@@ -88,6 +88,12 @@ function Navigation({ focusMode }: Props) {
           Protected Page
         </Link>
       </li>
+      {/* TODO: Only for test purposes. Delete it */}
+      <li>
+        <Link className="link" href="/requests-test-page">
+          Request test page
+        </Link>
+      </li>
     </>
   );
 
