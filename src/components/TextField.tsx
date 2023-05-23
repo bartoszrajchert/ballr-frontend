@@ -1,3 +1,4 @@
+import Label from '@/components/Label';
 import { IconExclamationCircle, IconInfoCircle } from '@tabler/icons-react';
 import clsx from 'clsx';
 import React, { InputHTMLAttributes } from 'react';
@@ -18,11 +19,14 @@ const TextField = React.forwardRef<HTMLInputElement, Props>(
           'text-red': errorText,
         })}
       >
-        {props.label && <label className="text-p-small">{props.label}</label>}
+        {props.label && props.name && (
+          <Label value={props.label} htmlFor={props.name} />
+        )}
         <div className={'overflow-auto'}>
           <span className="icon leading-icon">{props.leadingIcon}</span>
           <input
             ref={ref}
+            id={props.name}
             className={clsx(
               'h-[48px] w-full appearance-none rounded-2 px-4 shadow-border-1px outline-none transition-shadow hover:shadow-border-2px focus:shadow-border-3px focus-visible:shadow-border-3px',
               {
