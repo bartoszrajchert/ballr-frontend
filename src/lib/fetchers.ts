@@ -1,15 +1,5 @@
-import { User } from '@firebase/auth';
+import axios from 'axios';
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-async function fetchWithToken(url: string, user: User | null | undefined) {
-  const token = await user?.getIdToken();
-
-  if (!token) return null;
-
-  return fetch(url, { headers: { Authorization: `Bearer ${token}` } }).then(
-    (res) => res.json()
-  );
-}
-
-export { fetcher, fetchWithToken };
+export { fetcher };
