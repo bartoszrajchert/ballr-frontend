@@ -1,4 +1,5 @@
 import Button from '@/components/Button';
+import Checkbox from '@/components/Checkbox';
 import Header from '@/components/Header';
 import TextField from '@/components/TextField';
 import MainLayout from '@/layouts/MainLayout';
@@ -7,10 +8,10 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import footballImage1 from '../../../public/prapoth-panchuea-_lTF9zrF1PY-unsplash.jpg';
 
-function Activities() {
+function Matches() {
   return (
     <MainLayout>
-      <Header value="Zajęcia" />
+      <Header value="Mecze" />
       <div className="flex flex-col gap-5 lg:flex-row">
         <aside>
           <p className="mb-8 text-heading-h3">Filtry</p>
@@ -28,18 +29,19 @@ function Activities() {
 }
 
 function Form() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, control } = useForm();
   const onSubmit = (data: any) => console.log(data);
   const rowInputClass = 'flex flex-col gap-2 sm:flex-row';
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-      <TextField label="Lokalizacja" {...register('location')} />
-      <TextField label="Obiekt" {...register('object')} />
-      <div className={rowInputClass}>
-        <TextField label="Cena od" {...register('price_from')} />
-        <TextField label="Cena do" {...register('price_to')} />
-      </div>
+      <TextField label="Lokalizacja" {...register('city_id')} />
+      <TextField label="Obiekt" {...register('facility_id')} />
+      <TextField
+        label="Ilość graczy"
+        type="number"
+        {...register('number_of_players')}
+      />
       <div className={rowInputClass}>
         <TextField label="Data od" type="date" {...register('date_from')} />
         <TextField label="Data do" type="date" {...register('date_to')} />
@@ -48,9 +50,17 @@ function Form() {
         <TextField label="Godzina od" type="time" {...register('time_from')} />
         <TextField label="Godzina do" type="time" {...register('time_to')} />
       </div>
-      {/* TODO: Add gender */}
-      {/* TODO: Add level */}
-      {/* TODO: Add referee */}
+      <TextField label="Karta beneficyjna" {...register('benefit_id')} />
+      <Checkbox
+        label="Otwarte dla sędziów"
+        name="open_for_referee"
+        control={control}
+      />
+      <Checkbox
+        label="Tylko dla drużyn"
+        name="for_team_only"
+        control={control}
+      />
       <div className="mt-4 w-full">
         <Button value="Szukaj" isSubmit fullWidth />
       </div>
@@ -90,4 +100,4 @@ function Tag() {
   );
 }
 
-export default Activities;
+export default Matches;
