@@ -8,7 +8,7 @@ type Props = {
 
 function MainLayout({ footerMargin = true, ...props }: Props) {
   return (
-    <main className={clsx({ 'mb-14': footerMargin })}>{props.children}</main>
+    <div className={clsx({ 'mb-14': footerMargin })}>{props.children}</div>
   );
 }
 

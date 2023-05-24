@@ -1,5 +1,6 @@
 import Button from '@/components/Button';
 import Checkbox from '@/components/Checkbox';
+import Dropdown from '@/components/Dropdown';
 import Header from '@/components/Header';
 import TextField from '@/components/TextField';
 import MainLayout from '@/layouts/MainLayout';
@@ -35,8 +36,8 @@ function Form() {
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-      <TextField label="Lokalizacja" {...register('city_id')} />
-      <TextField label="Obiekt" {...register('facility_id')} />
+      <Dropdown label="Lokalizacja" name="city_id" control={control} />
+      <Dropdown label="Obiekt" name="facility_id" control={control} />
       <TextField
         label="Ilość graczy"
         type="number"
@@ -50,7 +51,7 @@ function Form() {
         <TextField label="Godzina od" type="time" {...register('time_from')} />
         <TextField label="Godzina do" type="time" {...register('time_to')} />
       </div>
-      <TextField label="Karta beneficyjna" {...register('benefit_id')} />
+      <Dropdown label="Karta beneficyjna" name="benefit_id" control={control} />
       <Checkbox
         label="Otwarte dla sędziów"
         name="open_for_referee"
