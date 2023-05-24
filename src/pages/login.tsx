@@ -26,7 +26,8 @@ export default function Login() {
   const onSubmit = (data: FormData) => {
     signInWithEmailAndPassword(data.email, data.password).then(async (res) => {
       if (res?.user) {
-        await router.push('/');
+        const redirect = (router.query.redirect as string) ?? '';
+        await router.push(`/${redirect}`);
         toast.info('Zalogowano pomyślnie');
       }
     });
@@ -38,7 +39,13 @@ export default function Login() {
       subheader={
         <>
           Nie masz konta?{' '}
-          <Link className="link --underline" href={'/register'}>
+          <Link
+            className="link --underline"
+            href={{
+              pathname: '/register',
+              query: { redirect: router.query.redirect },
+            }}
+          >
             Zarejestruj się
           </Link>
         </>
@@ -63,7 +70,13 @@ export default function Login() {
       footerChildren={
         <>
           Problem z logowaniem?{' '}
-          <Link className="link --underline" href="/forgot-password">
+          <Link
+            className="link --underline"
+            href={{
+              pathname: '/forgot-password',
+              query: { redirect: router.query.redirect },
+            }}
+          >
             Przypomnij hasło
           </Link>{' '}
         </>
