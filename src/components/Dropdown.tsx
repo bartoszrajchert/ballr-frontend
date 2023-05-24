@@ -10,6 +10,7 @@ type Props = {
   data: { label: string; value: string }[];
   label?: string;
   resetField?: () => void;
+  placeholder?: string;
 };
 
 const Dropdown = (props: Props) => {
@@ -32,10 +33,10 @@ const Dropdown = (props: Props) => {
               >
                 <Select.Value asChild>
                   <span>
-                    {
-                      props.data.find((data) => data.value === field.value)
-                        ?.label
-                    }
+                    {props.data.find((data) => data.value === field.value)
+                      ?.label ?? (
+                      <span className="text-grey-600">{props.placeholder}</span>
+                    )}
                   </span>
                 </Select.Value>
 
