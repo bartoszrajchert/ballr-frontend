@@ -19,7 +19,7 @@ const Checkbox = (props: Props) => {
         <div className="flex items-center gap-2">
           <RadixCheckbox.Root
             {...field}
-            checked={field.value}
+            checked={String(field.value) === 'true'}
             onCheckedChange={field.onChange}
             id={props.name}
             className=" flex h-[24px] w-[24px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-border-2px !shadow-green-900 outline-none transition-shadow hover:shadow-border-3px"

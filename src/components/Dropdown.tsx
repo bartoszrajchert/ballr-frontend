@@ -49,6 +49,7 @@ const Dropdown = (props: Props) => {
                     <IconChevronUp />
                   </Select.ScrollUpButton>
                   <Select.Viewport className="p-1">
+                    <SelectItem value="">-- Puste --</SelectItem>
                     {props.data.map((item) => (
                       <SelectItem key={item.value} value={item.value}>
                         {item.label}
