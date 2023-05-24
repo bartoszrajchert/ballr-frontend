@@ -1,6 +1,5 @@
 import MainLayout from '@/layouts/MainLayout';
 import { fetcher } from '@/lib/fetchers';
-import { withAuth } from '@/lib/withAuth';
 import useSWR from 'swr';
 
 /**
@@ -21,4 +20,4 @@ function ProtectedPage() {
   );
 }
 
-export default withAuth(ProtectedPage);
+export default ProtectedPage;
