@@ -4,11 +4,16 @@ import VerifyEmailBanner from '@/components/VerifyEmailBanner';
 import '@/i18n/config';
 import initAxios from '@/lib/axios';
 import '@/lib/firebase';
+import useGetAuth from '@/lib/useGetAuth';
 import '@/styles/globals.css';
+import '@/styles/page-loader.css';
+import { onIdTokenChanged } from '@firebase/auth';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
-import React from 'react';
+import { Router, useRouter } from 'next/router';
+import nookies from 'nookies';
+import NProgress from 'nprogress';
+import React, { useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -19,6 +24,35 @@ initAxios();
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const focusMode = focusModePaths.includes(router.pathname);
+  const auth = useGetAuth();
+
+  useEffect(() => {
+    const unsubscribe = onIdTokenChanged(auth, async (user) => {
+      if (user) {
+        nookies.set(undefined, 'token', await user.getIdToken(), { path: '/' });
+      } else {
+        nookies.set(undefined, 'token', '', { path: '/' });
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [auth]);
+
+  useEffect(() => {
+    NProgress.configure({ showSpinner: false });
+
+    Router.events.on('routeChangeStart', (url) => {
+      NProgress.start();
+    });
+
+    Router.events.on('routeChangeComplete', (url) => {
+      NProgress.done(false);
+    });
+
+    return () => {};
+  }, []);
 
   return (
     <>
