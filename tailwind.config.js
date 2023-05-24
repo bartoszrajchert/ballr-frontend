@@ -62,7 +62,7 @@ module.exports = {
         'label-xsmall': ['12px', { lineHeight: '140%', fontWeight: 'bold' }],
       },
       fontFamily: {
-        sans: ['var(--font-satoshi)'],
+        sans: ['Satoshi', 'sans-serif'],
       },
       borderRadius: {
         none: '0',
