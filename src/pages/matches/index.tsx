@@ -93,7 +93,8 @@ function Form() {
 
   useEffect(() => {
     reset(router.query);
-  }, [reset, router.query]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
