@@ -47,7 +47,7 @@ function Matches({ fallback }: Props) {
 
 function MatchesContainer() {
   const router = useRouter();
-  const { data: matches, isLoading } = useSWR<Match[]>(
+  const { data: matches, isLoading } = useSWR<MatchesData[]>(
     `/matches?${queryString.stringify(router.query, {
       skipEmptyString: true,
       skipNull: true,
@@ -61,7 +61,7 @@ function MatchesContainer() {
   return (
     <>
       {matches?.map((match) => (
-        <MatchTile key={match.id} {...match} />
+        <MatchTile key={match.match.id} {...match} />
       ))}
 
       {isLoading && <p>Ładowanie...</p>}
@@ -161,15 +161,18 @@ function Form() {
   );
 }
 
-function MatchTile(props: Match) {
-  const startDate = new Date(props.start_date).toLocaleDateString('pl-PL', {
+function MatchTile(props: MatchesData) {
+  const match = props.match;
+  const startDate = new Date(
+    match.reservation?.start_time ?? ''
+  ).toLocaleDateString('pl-PL', {
     year: 'numeric',
     month: 'long',
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
   });
-  const { city, street, postcode } = props.reservation?.field?.facility ?? {};
+  const { city, street, postcode } = match.reservation?.field?.facility ?? {};
 
   return (
     <div className="flex w-full cursor-pointer flex-col gap-5 rounded-2xl border border-gray-300 bg-grey-100 p-4 hover:bg-green-100 sm:flex-row">
@@ -189,9 +192,14 @@ function MatchTile(props: Match) {
           <p>{startDate}</p>
         </div>
         <div className="flex gap-1">
-          <Tag text={`TODO/${props.num_of_players.toString()}`} />
-          {props.open_for_referee && <Tag text="Otwarte dla sędziów" />}
-          {props.for_team_only && <Tag text="Tylko dla drużyn" />}
+          <Tag
+            text={`${props.signed_users?.toString()}/${match.num_of_players?.toString()} Graczy`}
+          />
+          {match.open_for_referee && <Tag text="Otwarte dla sędziów" />}
+          {match.for_team_only && <Tag text="Tylko dla drużyn" />}
+          {props.benefits?.map((benefit) => (
+            <Tag key={benefit} text={benefit} />
+          ))}
         </div>
       </div>
     </div>
