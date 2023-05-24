@@ -1,13 +1,20 @@
 import Button from '@/components/Button';
+import Dropdown from '@/components/Dropdown';
 import FullWidthBackgroundColor from '@/components/FullWidthBackgroundColor';
-import TextField from '@/components/TextField';
 import MainLayout from '@/layouts/MainLayout';
+import { fetcher } from '@/lib/fetchers';
 import useGetAuth from '@/lib/useGetAuth';
+import { AxiosError } from 'axios';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import queryString from 'query-string';
+import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import useSWR from 'swr';
 import medivocerSport from '../../public/medicover-sport.png';
 import multisport from '../../public/multisport.png';
 import footballImage1 from '../../public/prapoth-panchuea-_lTF9zrF1PY-unsplash.jpg';
@@ -34,10 +41,7 @@ export default function Home() {
           <p className="text-center text-heading-h4 text-white sm:text-left">
             Wyszukaj zajęcia po lokalizacji
           </p>
-          <div className="flex w-full flex-col gap-2 rounded-2xl bg-white px-8 py-4 sm:w-fit sm:flex-row sm:rounded-full">
-            <TextField placeholder="Lokalizacja" />
-            <Button value="Szukaj" onClick={() => console.log('Szukaj')} />
-          </div>
+          <MatchForm />
         </div>
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <p className="text-heading-h5">Honorujemy</p>
@@ -94,3 +98,52 @@ export default function Home() {
     </>
   );
 }
+
+const MatchForm = () => {
+  const router = useRouter();
+  const { control, handleSubmit } = useForm();
+  const { data: cities, error } = useSWR<City[]>('/cities', fetcher, {
+    revalidateOnFocus: false,
+  });
+
+  const onSubmit = async (data: any) => {
+    await router.push(
+      `/matches?${queryString.stringify(data, {
+        skipEmptyString: true,
+        skipNull: true,
+      })}`
+    );
+  };
+
+  return (
+    <form
+      className="flex w-full flex-col items-center justify-center gap-2 rounded-2xl bg-white px-8 py-4 sm:w-fit sm:flex-row sm:rounded-full"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      {!error && (
+        <>
+          <div className="min-w-[200px]">
+            <Dropdown
+              placeholder="Wybierz miasto"
+              name="city_id"
+              control={control}
+              data={
+                cities?.map((city) => ({
+                  label: city.Name,
+                  value: city.id.toString(),
+                })) || []
+              }
+            />
+          </div>
+          <Button value="Szukaj" isSubmit />
+        </>
+      )}
+      {error && (
+        <p>
+          Wystąpił błąd podczas pobierania miast:{' '}
+          {(error as AxiosError).response?.status}
+        </p>
+      )}
+    </form>
+  );
+};
