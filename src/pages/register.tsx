@@ -32,7 +32,8 @@ export default function Login() {
     createUserWithEmailAndPassword(data.email, data.password).then(
       async (res) => {
         if (res?.user) {
-          await router.push('/');
+          const redirect = (router.query.redirect as string) ?? '';
+          await router.push(`/${redirect}`);
           toast.info('Konto zostało utworzone');
           await sendEmailVerificationWithToast();
         }
@@ -46,7 +47,13 @@ export default function Login() {
       subheader={
         <>
           Masz już konto?{' '}
-          <Link className="link --underline" href="/login">
+          <Link
+            className="link --underline"
+            href={{
+              pathname: '/login',
+              query: { redirect: router.query.redirect },
+            }}
+          >
             Zaloguj się
           </Link>
         </>

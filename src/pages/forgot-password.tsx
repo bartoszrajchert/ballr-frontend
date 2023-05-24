@@ -30,7 +30,8 @@ function ForgotPassword() {
     );
     if (success) {
       toast.info('Wysłano email z linkiem do zmiany hasła');
-      await router.push('/login');
+      const redirect = (router.query.redirect as string) ?? '';
+      await router.push(`/${redirect}`);
     }
   };
 
@@ -60,7 +61,13 @@ function ForgotPassword() {
       footerChildren={
         <>
           Przypomniałeś sobie hasło?{' '}
-          <Link className="link --underline" href="/login">
+          <Link
+            className="link --underline"
+            href={{
+              pathname: '/login',
+              query: { redirect: router.query.redirect },
+            }}
+          >
             Zaloguj się
           </Link>
         </>
