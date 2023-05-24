@@ -150,3 +150,9 @@ interface Match {
   opponent_team?: Team;
   winner_team?: Team;
 }
+
+interface MatchesData {
+  match: Match;
+  benefits: string[];
+  signed_users: number;
+}
