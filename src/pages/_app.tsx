@@ -25,7 +25,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <div className={`${font.variable} font-sans`}>
+      <main>
         <VerifyEmailBanner />
         <Navigation focusMode={focusMode} />
         <Component {...pageProps} />
@@ -42,7 +42,7 @@ export default function App({ Component, pageProps }: AppProps) {
           pauseOnHover
           theme="light"
         />
-      </div>
+      </main>
     </>
   );
 }
