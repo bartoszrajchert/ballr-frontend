@@ -3,8 +3,20 @@
 @tailwind utilities;
 
 @layer base {
+  @font-face {
+    font-family: 'Satoshi';
+    src: url('/fonts/Satoshi-Variable.woff2') format('woff2-variations');
+    font-weight: 125 950;
+    font-stretch: 75% 125%;
+    font-style: normal;
+  }
+
   body {
-    @apply mx-8 max-w-[1240px] overflow-x-hidden text-black antialiased xl:m-auto;
+    @apply overflow-x-hidden text-black antialiased;
+  }
+
+  main {
+    @apply mx-8 max-w-[1240px] xl:m-auto;
   }
 
   .link {

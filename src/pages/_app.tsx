@@ -6,7 +6,6 @@ import initAxios from '@/lib/axios';
 import '@/lib/firebase';
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
-import localFont from 'next/font/local';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -14,10 +13,6 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const focusModePaths = ['/login', '/register', '/forgot-password'];
-const font = localFont({
-  src: '../../public/fonts/Satoshi-Variable.woff2',
-  variable: '--font-satoshi',
-});
 
 initAxios();
 
