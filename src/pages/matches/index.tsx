@@ -5,7 +5,6 @@ import Header from '@/components/Header';
 import TextField from '@/components/TextField';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcher, fetcherBackend } from '@/lib/fetchers';
-import { IconTrash, IconTrashX } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -94,7 +93,7 @@ function Form() {
 
   useEffect(() => {
     reset(router.query);
-  }, []);
+  }, [reset, router.query]);
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
@@ -169,8 +168,7 @@ function MatchTile(props: Match) {
     hour: '2-digit',
     minute: '2-digit',
   });
-  const { name, city, street, postcode } =
-    props.reservation?.field?.facility ?? {};
+  const { city, street, postcode } = props.reservation?.field?.facility ?? {};
 
   return (
     <div className="flex w-full cursor-pointer flex-col gap-5 rounded-2xl border border-gray-300 bg-grey-100 p-4 hover:bg-green-100 sm:flex-row">

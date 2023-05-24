@@ -43,11 +43,11 @@ export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     NProgress.configure({ showSpinner: false });
 
-    Router.events.on('routeChangeStart', (url) => {
+    Router.events.on('routeChangeStart', () => {
       NProgress.start();
     });
 
-    Router.events.on('routeChangeComplete', (url) => {
+    Router.events.on('routeChangeComplete', () => {
       NProgress.done(false);
     });
 

@@ -19,7 +19,7 @@ async function tokenInterceptor(config: InternalAxiosRequestConfig) {
 }
 
 const getUserToken = async () => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const unsub = onAuthStateChanged(getAuth(), async (user) => {
       if (user) {
         const token = await getIdToken(user);
