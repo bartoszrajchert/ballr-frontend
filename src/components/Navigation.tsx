@@ -1,3 +1,4 @@
+import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
 import useGetAuth from '@/lib/useGetAuth';
 import { IconMenu2, IconX } from '@tabler/icons-react';
@@ -18,8 +19,8 @@ function Navigation({ focusMode }: Props) {
   const auth = useGetAuth();
   const [user, authLoading, authError] = useAuthState(auth);
   const [signOut, _, errorSignOut] = useSignOut(auth);
-  // TODO: check - is from our website
   const router = useRouter();
+  const [openProfileMenu, setOpenProfileMenu] = useState(false);
 
   const [isHamburgerMenuOpen, setIsHamburgerMenuOpen] = useState(false);
 
@@ -136,21 +137,38 @@ function Navigation({ focusMode }: Props) {
 
       {!authLoading && user && (
         <>
-          <li>
-            <Link
-              className={clsx('link', {
-                'before:bg-green-900': isActive('/settings'),
-              })}
-              href="/settings"
-            >
-              Profil
-            </Link>
-          </li>
-          <li>
-            <a className="link" onClick={signOutHandler}>
-              Wyloguj się
-            </a>
-          </li>
+          <button onClick={() => setOpenProfileMenu(!openProfileMenu)}>
+            <Avatar firstName="Jan" lastName="Kowalski" />
+          </button>
+          {openProfileMenu && (
+            <div>
+              <li>
+                <Link
+                  className={clsx('link', {
+                    'before:bg-green-900': isActive('/profile'),
+                  })}
+                  href="/profile/1"
+                >
+                  Profil
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className={clsx('link', {
+                    'before:bg-green-900': isActive('/settings'),
+                  })}
+                  href="/settings"
+                >
+                  Ustawienia
+                </Link>
+              </li>
+              <li>
+                <a className="link" onClick={signOutHandler}>
+                  Wyloguj się
+                </a>
+              </li>
+            </div>
+          )}
         </>
       )}
     </>
