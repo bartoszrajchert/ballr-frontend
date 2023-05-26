@@ -12,6 +12,7 @@ export async function middleware(req: NextRequest) {
     if (!token) {
       const url = new URL(ROUTES.LOGIN, req.url);
       url.searchParams.set(QUERY_PARAMS.REDIRECT, pathname);
+      url.searchParams.set(QUERY_PARAMS.CANCEL_REDIRECT, 'true');
       return NextResponse.redirect(url);
     }
   }

@@ -44,9 +44,7 @@ export default function Login() {
             className="link --underline"
             href={{
               pathname: ROUTES.REGISTER,
-              query: {
-                [QUERY_PARAMS.REDIRECT]: router.query[QUERY_PARAMS.REDIRECT],
-              },
+              query: router.query,
             }}
           >
             Zarejestruj się
@@ -77,9 +75,7 @@ export default function Login() {
             className="link --underline"
             href={{
               pathname: ROUTES.FORGOT_PASSWORD,
-              query: {
-                [QUERY_PARAMS.REDIRECT]: router.query[QUERY_PARAMS.REDIRECT],
-              },
+              query: router.query,
             }}
           >
             Przypomnij hasło
