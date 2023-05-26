@@ -1,6 +1,7 @@
 import BigButton from '@/components/BigButton';
 import Header from '@/components/Header';
 import MainLayout from '@/layouts/MainLayout';
+import { ROUTES } from '@/lib/routes';
 import { withAuth } from '@/lib/withAuth';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -43,7 +44,7 @@ const Settings = () => {
           <BigButton
             title="Bezpieczeństwo"
             description="Ustawienia hasła i prywatności"
-            onClick={() => router.push('/settings/security')}
+            onClick={() => router.push(ROUTES.SETTINGS_SECURITY)}
           />
         </div>
       </div>

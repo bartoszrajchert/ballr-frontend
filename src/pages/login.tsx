@@ -1,5 +1,6 @@
 import TextField from '@/components/TextField';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
+import { QUERY_PARAMS, ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -26,8 +27,8 @@ export default function Login() {
   const onSubmit = (data: FormData) => {
     signInWithEmailAndPassword(data.email, data.password).then(async (res) => {
       if (res?.user) {
-        const redirect = (router.query.redirect as string) ?? '';
-        await router.push(`/${redirect}`);
+        const redirect = (router.query.redirect as string) ?? ROUTES.HOME;
+        await router.push(redirect);
         toast.info('Zalogowano pomyślnie');
       }
     });
@@ -42,8 +43,10 @@ export default function Login() {
           <Link
             className="link --underline"
             href={{
-              pathname: '/register',
-              query: { redirect: router.query.redirect },
+              pathname: ROUTES.REGISTER,
+              query: {
+                [QUERY_PARAMS.REDIRECT]: router.query[QUERY_PARAMS.REDIRECT],
+              },
             }}
           >
             Zarejestruj się
@@ -73,8 +76,10 @@ export default function Login() {
           <Link
             className="link --underline"
             href={{
-              pathname: '/forgot-password',
-              query: { redirect: router.query.redirect },
+              pathname: ROUTES.FORGOT_PASSWORD,
+              query: {
+                [QUERY_PARAMS.REDIRECT]: router.query[QUERY_PARAMS.REDIRECT],
+              },
             }}
           >
             Przypomnij hasło

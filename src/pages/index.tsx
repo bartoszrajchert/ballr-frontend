@@ -3,6 +3,7 @@ import Dropdown from '@/components/Dropdown';
 import FullWidthBackgroundColor from '@/components/FullWidthBackgroundColor';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcher } from '@/lib/fetchers';
+import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
 import { AxiosError } from 'axios';
 import Head from 'next/head';
@@ -86,7 +87,7 @@ export default function Home() {
                   <Button value="Stwórz drużynę" type="primary-dark" />
                 </Link>
               ) : (
-                <Link href={'/register'}>
+                <Link href={ROUTES.REGISTER}>
                   <Button value="Zarejestruj się" type="primary-dark" />
                 </Link>
               )}
@@ -102,13 +103,17 @@ export default function Home() {
 const MatchForm = () => {
   const router = useRouter();
   const { control, handleSubmit } = useForm();
-  const { data: cities, error } = useSWR<City[]>('/cities', fetcher, {
-    revalidateOnFocus: false,
-  });
+  const { data: cities, error } = useSWR<City[]>(
+    BACKEND_ROUTES.CITIES,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
+  );
 
   const onSubmit = async (data: any) => {
     await router.push(
-      `/matches?${queryString.stringify(data, {
+      `${ROUTES.MATCHES}?${queryString.stringify(data, {
         skipEmptyString: true,
         skipNull: true,
       })}`
