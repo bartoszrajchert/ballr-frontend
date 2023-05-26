@@ -1,11 +1,18 @@
 import Avatar from '@/components/Avatar';
+import Button from '@/components/Button';
 import Header from '@/components/Header';
 import TextInformation from '@/components/TextInformation';
 import MainLayout from '@/layouts/MainLayout';
+import useGetAuth from '@/lib/useGetAuth';
+import { IconPencil } from '@tabler/icons-react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 export default function ProfileId() {
   const router = useRouter();
+  const auth = useGetAuth();
+  const [user, authLoading] = useAuthState(auth);
   const { id } = router.query;
 
   return (
@@ -14,6 +21,11 @@ export default function ProfileId() {
         <div className="flex items-center justify-center gap-4">
           <Avatar firstName="Jan" lastName="Kowalski" size={59} />
           <h1 className="text-heading-h2">Jan Kowalski</h1>
+          {id === user?.uid && !authLoading && (
+            <Link href="/settings">
+              <Button icon={<IconPencil />} type="tertiary" />
+            </Link>
+          )}
         </div>
       </Header>
       <section>
