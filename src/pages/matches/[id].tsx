@@ -25,13 +25,9 @@ export default function MatchId({ fallback }: { fallback: any }) {
 const Content = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { data: match, isLoading } = useSWR<Match>(
-    `${ROUTES.MATCHES}/${id}`,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-    }
-  );
+  const { data: match } = useSWR<Match>(`${ROUTES.MATCHES}/${id}`, fetcher, {
+    revalidateOnFocus: false,
+  });
 
   const { user_name: refereeName, user_last_name: refereeLastName } =
     match?.users?.find((user) => user.is_referee) ?? {};
