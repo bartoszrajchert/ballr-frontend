@@ -363,12 +363,7 @@ const NavigationItemTrigger = ({
 }) => {
   return (
     <NavigationMenuPrimitive.Item value={label}>
-      <NavigationMenuPrimitive.Trigger
-        className={clsx(
-          'rounded-md px-3 py-2 hover:bg-grey-200',
-          'focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75'
-        )}
-      >
+      <NavigationMenuPrimitive.Trigger className="rounded-md px-3 py-2 hover:bg-grey-200">
         {label}
       </NavigationMenuPrimitive.Trigger>
 
@@ -399,10 +394,7 @@ const NavigationDetailedLinks = ({ data }: { data: LinkData[] }) => {
           <NavigationMenuPrimitive.Link key={index} asChild>
             <NextLink
               key={index}
-              className={clsx(
-                'w-full rounded-md px-4 py-3 hover:bg-gray-200',
-                'focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75'
-              )}
+              className="w-full rounded-md px-4 py-3 hover:bg-gray-200"
               href={item.href}
             >
               <span className="text-label-medium">{item.label}</span>
