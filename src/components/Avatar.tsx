@@ -1,7 +1,10 @@
+import clsx from 'clsx';
+
 type Props = {
   firstName: string;
   lastName: string;
   size?: number;
+  className?: string;
 };
 
 const Avatar = (props: Props) => {
@@ -10,7 +13,10 @@ const Avatar = (props: Props) => {
 
   return (
     <div
-      className="flex items-center justify-center rounded-full bg-green-200"
+      className={clsx(
+        'flex items-center justify-center rounded-full bg-green-200',
+        props.className
+      )}
       style={{
         height: size,
         width: size,

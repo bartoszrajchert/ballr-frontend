@@ -393,7 +393,7 @@ const NavigationItemTrigger = ({
  */
 const NavigationDetailedLinks = ({ data }: { data: LinkData[] }) => {
   return (
-    <div className="w-[16rem] p-3 lg:w-[24rem]">
+    <div className="w-[16rem] p-3 lg:w-[28rem]">
       <div className="flex w-full flex-col space-y-2">
         {data.map((item, index) => (
           <NavigationMenuPrimitive.Link key={index} asChild>
