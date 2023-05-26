@@ -18,8 +18,8 @@ export default function ProfileId() {
   return (
     <MainLayout>
       <Header>
-        <div className="flex items-center justify-center gap-4">
-          <Avatar firstName="Jan" lastName="Kowalski" size={59} />
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          <Avatar firstName="Jan" lastName="Kowalski" size={60} />
           <h1 className="text-heading-h2">Jan Kowalski</h1>
           {id === user?.uid && !authLoading && (
             <Link href="/settings">
@@ -30,7 +30,7 @@ export default function ProfileId() {
       </Header>
       <section>
         <h2 className="mb-7 text-heading-h3">Informacje</h2>
-        <div className="flex w-full gap-5">
+        <div className="flex w-full flex-col gap-5 sm:flex-row">
           <TextInformation
             header="Data urodzenia"
             body="20 styczeń 1999"
