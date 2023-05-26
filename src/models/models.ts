@@ -117,15 +117,16 @@ interface UserTeam {
 }
 
 interface UserMatch {
-  user_id: number;
-  match_id: number;
   is_match_creator: boolean;
   is_referee: boolean;
   is_mvp: boolean;
   is_rated: boolean;
-  rating?: number;
-  user?: User;
-  match?: Match;
+  rating: number;
+  user_id: number;
+  user_name: string;
+  user_last_name: string;
+  user_score: number;
+  user_email: string;
 }
 
 interface Match {
@@ -149,6 +150,13 @@ interface Match {
   team?: Team;
   opponent_team?: Team;
   winner_team?: Team;
+  users?: UserMatch[];
+  weather?: Weather;
+}
+
+interface Weather {
+  temp: number;
+  description: string;
 }
 
 interface MatchesData {
