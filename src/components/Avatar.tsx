@@ -6,7 +6,7 @@ type Props = {
 
 const Avatar = (props: Props) => {
   const initials = `${props.firstName[0]}${props.lastName[0]}`;
-  const size = props.size ? props.size : 50;
+  const size = props.size ? props.size : 48;
 
   return (
     <div
