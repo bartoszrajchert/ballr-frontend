@@ -23,7 +23,7 @@ import footballImage1 from '../../public/prapoth-panchuea-_lTF9zrF1PY-unsplash.j
 export default function Home() {
   const { t } = useTranslation();
   const auth = useGetAuth();
-  const [user, loading, error] = useAuthState(auth);
+  const [user] = useAuthState(auth);
 
   return (
     <>
