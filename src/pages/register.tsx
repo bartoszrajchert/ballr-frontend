@@ -1,5 +1,6 @@
 import TextField from '@/components/TextField';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
+import { QUERY_PARAMS, ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
 import useSendEmailVerificationWithToast from '@/lib/useSendEmailVerificationWithToast';
 import Link from 'next/link';
@@ -32,8 +33,8 @@ export default function Login() {
     createUserWithEmailAndPassword(data.email, data.password).then(
       async (res) => {
         if (res?.user) {
-          const redirect = (router.query.redirect as string) ?? '';
-          await router.push(`/${redirect}`);
+          const redirect = (router.query.redirect as string) ?? ROUTES.HOME;
+          await router.push(redirect);
           toast.info('Konto zostało utworzone');
           await sendEmailVerificationWithToast();
         }
@@ -50,8 +51,10 @@ export default function Login() {
           <Link
             className="link --underline"
             href={{
-              pathname: '/login',
-              query: { redirect: router.query.redirect },
+              pathname: ROUTES.LOGIN,
+              query: {
+                [QUERY_PARAMS.REDIRECT]: router.query[QUERY_PARAMS.REDIRECT],
+              },
             }}
           >
             Zaloguj się
@@ -91,7 +94,7 @@ export default function Login() {
       buttonDisabled={loading}
       footerChildren={
         <>
-          Rejestrując się akceptujesz nasz{' '}
+          Rejestrując się akceptujesz nasz {/* TODO: Links */}
           <Link className="link --underline" href="/">
             Regulamin
           </Link>{' '}

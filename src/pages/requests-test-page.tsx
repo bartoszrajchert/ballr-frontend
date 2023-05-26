@@ -1,4 +1,5 @@
 import { fetcher } from '@/lib/fetchers';
+import { BACKEND_ROUTES } from '@/lib/routes';
 import React from 'react';
 import useSWR from 'swr';
 
@@ -10,19 +11,19 @@ export default function RequestsTestPage() {
     data: dataMatches,
     isLoading: isLoadingMatches,
     error: errorMatches,
-  } = useSWR('/matches', fetcher);
+  } = useSWR(BACKEND_ROUTES.MATCHES, fetcher);
 
   const {
     data: dataGenders,
     isLoading: isLoadingGenders,
     error: errorGenders,
-  } = useSWR('/genders', fetcher);
+  } = useSWR(BACKEND_ROUTES.GENDERS, fetcher);
 
   const {
     data: dataUsers,
     isLoading: isLoadingUsers,
     error: errorUsers,
-  } = useSWR('/users', fetcher);
+  } = useSWR(BACKEND_ROUTES.USERS, fetcher);
 
   return (
     <div className="space-y-3">
