@@ -5,9 +5,11 @@ import Header from '@/components/Header';
 import TextField from '@/components/TextField';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcher, fetcherBackend } from '@/lib/fetchers';
+import { getAddressFromFacility, getLocaleDateString } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
 import React, { useEffect } from 'react';
@@ -37,7 +39,7 @@ function Matches({ fallback }: Props) {
             <p className="mb-8 text-heading-h3">Filtry</p>
             <Form />
           </aside>
-          <div className="w-full space-y-4">
+          <div className="flex w-full flex-col gap-4">
             <MatchesContainer />
           </div>
         </div>
@@ -172,46 +174,39 @@ function Form() {
 
 function MatchTile(props: MatchesData) {
   const match = props.match;
-  const startDate = new Date(
-    match.reservation?.start_time ?? ''
-  ).toLocaleDateString('pl-PL', {
-    year: 'numeric',
-    month: 'long',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-  const { city, street, postcode } = match.reservation?.field?.facility ?? {};
+  const startDate = getLocaleDateString(match.reservation?.start_time);
 
   return (
-    <div className="flex w-full cursor-pointer flex-col gap-5 rounded-2xl border border-gray-300 bg-grey-100 p-4 hover:bg-green-100 sm:flex-row">
-      <div className="relative h-full w-full sm:w-[220px]">
-        <Image
-          className="aspect-video rounded-2xl bg-green-900 object-cover"
-          src={footballImage1}
-          quality={20}
-          alt=""
-        />
-      </div>
-      <div className="flex flex-col justify-between gap-3">
-        <div>
-          <h3 className="mb-1 text-label-medium">
-            {street}, {city?.Name} {postcode}
-          </h3>
-          <p>{startDate}</p>
-        </div>
-        <div className="flex gap-1">
-          <Tag
-            text={`${props.signed_users?.toString()}/${match.num_of_players?.toString()} Graczy`}
+    <Link href={`${ROUTES.MATCHES}/${match.id}`}>
+      <div className="flex w-full cursor-pointer flex-col gap-5 rounded-2xl border border-gray-300 bg-grey-100 p-4 hover:bg-green-100 sm:flex-row">
+        <div className="relative h-full w-full sm:w-[220px]">
+          <Image
+            className="aspect-video rounded-2xl bg-green-900 object-cover"
+            src={footballImage1}
+            quality={20}
+            alt=""
           />
-          {match.open_for_referee && <Tag text="Otwarte dla sędziów" />}
-          {match.for_team_only && <Tag text="Tylko dla drużyn" />}
-          {props.benefits?.map((benefit) => (
-            <Tag key={benefit} text={benefit} />
-          ))}
+        </div>
+        <div className="flex flex-col justify-between gap-3">
+          <div>
+            <h3 className="mb-1 text-label-medium">
+              {getAddressFromFacility(match.reservation?.field?.facility)}
+            </h3>
+            <p>{startDate}</p>
+          </div>
+          <div className="flex gap-1">
+            <Tag
+              text={`${props.signed_users?.toString()}/${match.num_of_players?.toString()} Graczy`}
+            />
+            {match.open_for_referee && <Tag text="Otwarte dla sędziów" />}
+            {match.for_team_only && <Tag text="Tylko dla drużyn" />}
+            {props.benefits?.map((benefit) => (
+              <Tag key={benefit} text={benefit} />
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
