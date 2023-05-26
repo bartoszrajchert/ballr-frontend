@@ -67,7 +67,7 @@ function ForgotPassword() {
             className="link --underline"
             href={{
               pathname: '/login',
-              query: { [QUERY_PARAMS.REDIRECT]: router.query.redirect },
+              query: router.query,
             }}
           >
             Zaloguj się
