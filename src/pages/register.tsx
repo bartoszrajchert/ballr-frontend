@@ -52,9 +52,7 @@ export default function Login() {
             className="link --underline"
             href={{
               pathname: ROUTES.LOGIN,
-              query: {
-                [QUERY_PARAMS.REDIRECT]: router.query[QUERY_PARAMS.REDIRECT],
-              },
+              query: router.query,
             }}
           >
             Zaloguj się

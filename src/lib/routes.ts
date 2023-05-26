@@ -36,6 +36,7 @@ enum BACKEND_ROUTES {
 
 enum QUERY_PARAMS {
   REDIRECT = 'redirect',
+  CANCEL_REDIRECT = 'cancelRedirect', // Used to cancel redirect when user doesn't have access to the page
 }
 
 export { ROUTES, BACKEND_ROUTES, QUERY_PARAMS };

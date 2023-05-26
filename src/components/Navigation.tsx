@@ -105,6 +105,21 @@ const navigationContent: CategoryContent = {
       },
     ],
   },
+  testPages: {
+    title: 'Test Pages',
+    links: [
+      {
+        label: 'Protected Page',
+        desc: 'Page that requires authentication',
+        href: ROUTES.PROTECTED_PAGE,
+      },
+      {
+        label: 'Requests Test Page',
+        desc: 'Page that tests requests',
+        href: ROUTES.REQUESTS_TEST_PAGE,
+      },
+    ],
+  },
 };
 
 function Navigation({ focusMode }: Props) {
@@ -378,7 +393,7 @@ const NavigationItemTrigger = ({
  */
 const NavigationDetailedLinks = ({ data }: { data: LinkData[] }) => {
   return (
-    <div className="w-[16rem] p-3 lg:w-[20rem]">
+    <div className="w-[16rem] p-3 lg:w-[24rem]">
       <div className="flex w-full flex-col space-y-2">
         {data.map((item, index) => (
           <NavigationMenuPrimitive.Link key={index} asChild>
@@ -406,13 +421,15 @@ const NavigationDetailedLinks = ({ data }: { data: LinkData[] }) => {
  */
 const FocusModeButton = () => {
   const router = useRouter();
-  const redirect = (router.query.redirect as string) ?? ROUTES.HOME;
+  const redirect =
+    (router.query[QUERY_PARAMS.REDIRECT] as string) ?? ROUTES.HOME;
+  const isCancelRedirect = router.query[QUERY_PARAMS.CANCEL_REDIRECT] as string;
 
   return (
     <div className="hidden cursor-pointer lg:block">
       <Button
         icon={<IconX />}
-        onClick={() => router.push(redirect)}
+        onClick={() => router.push(isCancelRedirect ? ROUTES.HOME : redirect)}
         type="tertiary"
       />
     </div>
