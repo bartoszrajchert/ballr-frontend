@@ -335,7 +335,7 @@ const UserMenu = () => {
       {!authLoading && user && (
         <div className="flex items-center gap-2">
           <NextLink href={`${ROUTES.PROFILE}/${user.uid}`}>
-            <Avatar firstName="Jan" lastName="Kowalski" />
+            <Avatar firstName="Jan" lastName="Kowalski" clickable />
           </NextLink>
           <Button
             icon={<IconLogout />}
