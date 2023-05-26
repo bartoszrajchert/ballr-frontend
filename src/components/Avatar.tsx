@@ -5,6 +5,7 @@ type Props = {
   lastName: string;
   size?: number;
   className?: string;
+  clickable?: boolean;
 };
 
 const Avatar = (props: Props) => {
@@ -15,6 +16,10 @@ const Avatar = (props: Props) => {
     <div
       className={clsx(
         'flex items-center justify-center rounded-full bg-green-200',
+        {
+          'cursor-pointer shadow-border-1px shadow-green-400 transition-colors hover:bg-green-300':
+            props.clickable,
+        },
         props.className
       )}
       style={{
