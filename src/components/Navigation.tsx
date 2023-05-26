@@ -312,7 +312,7 @@ const UserMenu = () => {
             href={{
               pathname: ROUTES.LOGIN,
               query: {
-                [QUERY_PARAMS.REDIRECT]: router.pathname,
+                [QUERY_PARAMS.REDIRECT]: router.asPath,
               },
             }}
           >
@@ -323,7 +323,7 @@ const UserMenu = () => {
               href={{
                 pathname: ROUTES.REGISTER,
                 query: {
-                  [QUERY_PARAMS.REDIRECT]: router.pathname,
+                  [QUERY_PARAMS.REDIRECT]: router.asPath,
                 },
               }}
             >
