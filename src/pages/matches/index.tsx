@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import TextField from '@/components/TextField';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcher, fetcherBackend } from '@/lib/fetchers';
+import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -48,7 +49,7 @@ function Matches({ fallback }: Props) {
 function MatchesContainer() {
   const router = useRouter();
   const { data: matches, isLoading } = useSWR<MatchesData[]>(
-    `/matches?${queryString.stringify(router.query, {
+    `${ROUTES.MATCHES}?${queryString.stringify(router.query, {
       skipEmptyString: true,
       skipNull: true,
     })}`,
@@ -79,17 +80,25 @@ function Form() {
     });
   const rowInputClass = 'flex flex-col gap-2 sm:flex-row';
 
-  const { data: cities } = useSWR<City[]>('/cities', fetcher, {
+  const { data: cities } = useSWR<City[]>(BACKEND_ROUTES.CITIES, fetcher, {
     revalidateOnFocus: false,
   });
 
-  const { data: facilities } = useSWR<Facility[]>('/facilities', fetcher, {
-    revalidateOnFocus: false,
-  });
+  const { data: facilities } = useSWR<Facility[]>(
+    BACKEND_ROUTES.FACILITIES,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
+  );
 
-  const { data: benefits } = useSWR<Benefit[]>('/benefits', fetcher, {
-    revalidateOnFocus: false,
-  });
+  const { data: benefits } = useSWR<Benefit[]>(
+    BACKEND_ROUTES.BENEFITS,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
+  );
 
   useEffect(() => {
     reset(router.query);
@@ -215,16 +224,16 @@ function Tag({ text }: { text: string }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const cities = await fetcherBackend('/cities', context);
-  const facilities = await fetcherBackend('/facilities', context);
-  const benefits = await fetcherBackend('/benefits', context);
+  const cities = await fetcherBackend(BACKEND_ROUTES.CITIES, context);
+  const facilities = await fetcherBackend(BACKEND_ROUTES.FACILITIES, context);
+  const benefits = await fetcherBackend(BACKEND_ROUTES.BENEFITS, context);
 
   return {
     props: {
       fallback: {
-        '/cities': cities || null,
-        '/facilities': facilities || null,
-        '/benefits': benefits || null,
+        [BACKEND_ROUTES.CITIES]: cities || null,
+        [BACKEND_ROUTES.FACILITIES]: facilities || null,
+        [BACKEND_ROUTES.BENEFITS]: benefits || null,
       },
     },
   };

@@ -1,5 +1,6 @@
 import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
+import { ROUTES, QUERY_PARAMS } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
 import {
@@ -20,6 +21,7 @@ import {
   useSignOut,
 } from 'react-firebase-hooks/auth';
 import { toast } from 'react-toastify';
+import { UrlObject } from 'url';
 import logo from '../../public/logo.svg';
 
 type Props = {
@@ -29,7 +31,7 @@ type Props = {
 type LinkData = {
   label: string;
   desc: string;
-  href: string;
+  href: ROUTES;
 };
 
 type CategoryContent = {
@@ -49,12 +51,12 @@ const navigationContent: CategoryContent = {
       {
         label: 'Stwórz nowy mecz',
         desc: 'Zaproś znajomych i rozegrajcie mecz',
-        href: '/matches/create',
+        href: ROUTES.MATCHES_CREATE,
       },
       {
         label: 'Przeglądaj mecze',
         desc: 'Przeglądaj mecze i dołącz do nich',
-        href: '/matches',
+        href: ROUTES.MATCHES,
       },
     ],
   },
@@ -64,12 +66,12 @@ const navigationContent: CategoryContent = {
       {
         label: 'Stwórz nowy obiekt',
         desc: 'Zaproś znajomych i rozegrajcie mecz',
-        href: '/facilities/create',
+        href: ROUTES.FACILITIES_CREATE,
       },
       {
         label: 'Przeglądaj obiekty',
         desc: 'Przeglądaj mecze i dołącz do nich',
-        href: '/facilities',
+        href: ROUTES.FACILITIES,
       },
     ],
   },
@@ -79,12 +81,12 @@ const navigationContent: CategoryContent = {
       {
         label: 'Stwórz nowy turniej',
         desc: 'Zaproś znajomych i rozegrajcie mecz',
-        href: '/tournaments/create',
+        href: ROUTES.TOURNAMENTS_CREATE,
       },
       {
         label: 'Przeglądaj turnieje',
         desc: 'Przeglądaj mecze i dołącz do nich',
-        href: '/tournaments',
+        href: ROUTES.TOURNAMENTS,
       },
     ],
   },
@@ -94,12 +96,12 @@ const navigationContent: CategoryContent = {
       {
         label: 'Stwórz nową drużynę',
         desc: 'Rozgrywaj mecze ze swoimi ulubionymi ludźmi i stówrz drużynę marzeń',
-        href: '/teams/create',
+        href: ROUTES.TEAMS_CREATE,
       },
       {
         label: 'Przeglądaj drużyny',
         desc: 'Dołącz do drużyny i graj mecze w zgranym zespole',
-        href: '/teams',
+        href: ROUTES.TEAMS,
       },
     ],
   },
@@ -110,7 +112,7 @@ function Navigation({ focusMode }: Props) {
     <nav className="flex w-full py-4">
       <div className="flex w-full justify-between">
         <div className="flex h-[48px] w-[250px] items-center">
-          <NextLink href="/">
+          <NextLink href={ROUTES.HOME}>
             <Image src={logo} alt="logo" height={22} />
           </NextLink>
         </div>
@@ -283,7 +285,7 @@ const UserMenu = () => {
 
   const signOutHandler = async () => {
     await signOut();
-    await router.push('/');
+    await router.push(ROUTES.HOME);
     toast.success('Wylogowano pomyślnie');
   };
 
@@ -291,9 +293,25 @@ const UserMenu = () => {
     <div className="flex justify-end lg:w-[250px]">
       {!authLoading && !user && (
         <ul className="flex items-center gap-6 text-green-900 ">
-          <Link href={`/login`}>Zaloguj się</Link>
+          <Link
+            href={{
+              pathname: ROUTES.LOGIN,
+              query: {
+                [QUERY_PARAMS.REDIRECT]: router.pathname,
+              },
+            }}
+          >
+            Zaloguj się
+          </Link>
           <li>
-            <NextLink href={`/register`}>
+            <NextLink
+              href={{
+                pathname: ROUTES.REGISTER,
+                query: {
+                  [QUERY_PARAMS.REDIRECT]: router.pathname,
+                },
+              }}
+            >
               <Button value="Rejestracja" type="primary" />
             </NextLink>
           </li>
@@ -301,7 +319,7 @@ const UserMenu = () => {
       )}
       {!authLoading && user && (
         <div className="flex items-center gap-2">
-          <NextLink href={`/profile/${user.uid}`}>
+          <NextLink href={`${ROUTES.PROFILE}/${user.uid}`}>
             <Avatar firstName="Jan" lastName="Kowalski" />
           </NextLink>
           <Button
@@ -388,12 +406,13 @@ const NavigationDetailedLinks = ({ data }: { data: LinkData[] }) => {
  */
 const FocusModeButton = () => {
   const router = useRouter();
+  const redirect = (router.query.redirect as string) ?? ROUTES.HOME;
 
   return (
     <div className="hidden cursor-pointer lg:block">
       <Button
         icon={<IconX />}
-        onClick={() => router.push('/')}
+        onClick={() => router.push(redirect)}
         type="tertiary"
       />
     </div>
@@ -409,11 +428,11 @@ const Link = ({
   href,
   children,
 }: {
-  href: string;
+  href: UrlObject;
   children: string | JSX.Element;
 }) => {
   const router = useRouter();
-  const isActive = router.asPath === href;
+  const isActive = router.asPath === href.pathname;
 
   return (
     <li>

@@ -3,6 +3,7 @@ import Button from '@/components/Button';
 import Header from '@/components/Header';
 import TextInformation from '@/components/TextInformation';
 import MainLayout from '@/layouts/MainLayout';
+import { ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
 import { IconPencil } from '@tabler/icons-react';
 import Link from 'next/link';
@@ -22,7 +23,7 @@ export default function ProfileId() {
           <Avatar firstName="Jan" lastName="Kowalski" size={60} />
           <h1 className="text-heading-h2">Jan Kowalski</h1>
           {id === user?.uid && !authLoading && (
-            <Link href="/settings">
+            <Link href={ROUTES.SETTINGS}>
               <Button icon={<IconPencil />} type="tertiary" />
             </Link>
           )}

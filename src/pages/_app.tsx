@@ -3,7 +3,9 @@ import Navigation from '@/components/Navigation';
 import VerifyEmailBanner from '@/components/VerifyEmailBanner';
 import '@/i18n/config';
 import initAxios from '@/lib/axios';
+import { COOKIES } from '@/lib/cookies';
 import '@/lib/firebase';
+import { ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
 import '@/styles/globals.css';
 import '@/styles/page-loader.css';
@@ -17,21 +19,23 @@ import React, { useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const focusModePaths = ['/login', '/register', '/forgot-password'];
+const focusModePaths = [ROUTES.LOGIN, ROUTES.REGISTER, ROUTES.FORGOT_PASSWORD];
 
 initAxios();
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const focusMode = focusModePaths.includes(router.pathname);
+  const focusMode = focusModePaths.includes(router.pathname as ROUTES);
   const auth = useGetAuth();
 
   useEffect(() => {
     const unsubscribe = onIdTokenChanged(auth, async (user) => {
       if (user) {
-        nookies.set(undefined, 'token', await user.getIdToken(), { path: '/' });
+        nookies.set(undefined, COOKIES.TOKEN, await user.getIdToken(), {
+          path: '/',
+        });
       } else {
-        nookies.set(undefined, 'token', '', { path: '/' });
+        nookies.set(undefined, COOKIES.TOKEN, '', { path: '/' });
       }
     });
 
@@ -50,8 +54,6 @@ export default function App({ Component, pageProps }: AppProps) {
     Router.events.on('routeChangeComplete', () => {
       NProgress.done(false);
     });
-
-    return () => {};
   }, []);
 
   return (

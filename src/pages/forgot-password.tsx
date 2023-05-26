@@ -1,5 +1,6 @@
 import TextField from '@/components/TextField';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
+import { QUERY_PARAMS, ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -30,13 +31,14 @@ function ForgotPassword() {
     );
     if (success) {
       toast.info('Wysłano email z linkiem do zmiany hasła');
-      const redirect = (router.query.redirect as string) ?? '';
-      await router.push(`/${redirect}`);
+      const redirect =
+        (router.query[QUERY_PARAMS.REDIRECT] as string) ?? ROUTES.HOME;
+      await router.push(redirect);
     }
   };
 
   const actionCodeSettings = {
-    url: `${process.env.NEXT_PUBLIC_BASE_URL}/login`,
+    url: `${process.env.NEXT_PUBLIC_BASE_URL}${ROUTES.LOGIN}`,
   };
 
   return (
@@ -65,7 +67,7 @@ function ForgotPassword() {
             className="link --underline"
             href={{
               pathname: '/login',
-              query: { redirect: router.query.redirect },
+              query: { [QUERY_PARAMS.REDIRECT]: router.query.redirect },
             }}
           >
             Zaloguj się
