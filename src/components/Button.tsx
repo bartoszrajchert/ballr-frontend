@@ -24,11 +24,12 @@ function Button({
     <button
       onClick={onClick}
       className={clsx(
-        'flex items-center justify-center gap-1 rounded-full px-4 py-3 font-bold text-black transition-colors hover:border-transparent',
+        'flex items-center justify-center gap-1 rounded-full px-4 py-3 font-bold text-black transition-colors',
         {
           'bg-green-400 hover:bg-green-500': type === 'primary',
           'bg-green-900 text-green-300 hover:bg-black': type === 'primary-dark',
-          'border border-green-900 hover:bg-green-500': type === 'secondary',
+          'shadow-border-1px shadow-green-900 hover:bg-green-500 hover:shadow-green-500':
+            type === 'secondary',
           'hover:bg-grey-200': type === 'tertiary',
           '!px-3': icon && !value,
           'w-full': fullWidth,
