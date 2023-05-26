@@ -27,7 +27,8 @@ export default function Login() {
   const onSubmit = (data: FormData) => {
     signInWithEmailAndPassword(data.email, data.password).then(async (res) => {
       if (res?.user) {
-        const redirect = (router.query.redirect as string) ?? ROUTES.HOME;
+        const redirect =
+          (router.query[QUERY_PARAMS.REDIRECT] as string) ?? ROUTES.HOME;
         await router.push(redirect);
         toast.info('Zalogowano pomyślnie');
       }
