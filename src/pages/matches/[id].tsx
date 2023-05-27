@@ -2,18 +2,32 @@ import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
 import TextInformation from '@/components/TextInformation';
 import MainLayout from '@/layouts/MainLayout';
-import { fetcher, fetcherBackend } from '@/lib/fetchers';
+import { fetcherBackend } from '@/lib/fetchers';
 import { getAddressFromFacility, getLocaleDateString } from '@/lib/helpers';
 import { ROUTES } from '@/lib/routes';
+import { addUserToMatch } from '@/repository/match.repository';
 import { IconCalendarEvent, IconInfoCircle } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 import useSWR, { SWRConfig } from 'swr';
 import footballImage1 from '../../../public/prapoth-panchuea-_lTF9zrF1PY-unsplash.jpg';
 
+enum MatchStatus {
+  UPCOMING = 'upcoming',
+  IN_PROGRESS = 'in_progress',
+  COMPLETED = 'completed',
+}
+
+/**
+ * TODO: mock data
+ * TODO: team add
+ * @param fallback
+ * @constructor
+ */
 export default function MatchId({ fallback }: { fallback: any }) {
   return (
     <SWRConfig value={{ fallback }}>
@@ -25,12 +39,47 @@ export default function MatchId({ fallback }: { fallback: any }) {
 const Content = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { data: match } = useSWR<Match>(`${ROUTES.MATCHES}/${id}`, fetcher, {
-    revalidateOnFocus: false,
-  });
+  const { data: match } = useSWR<Match>(`${ROUTES.MATCHES}/${id}`);
+  const [matchStatus, setMatchStatus] = React.useState<MatchStatus | null>(
+    null
+  );
+
+  useEffect(() => {
+    if (match?.reservation?.start_time) {
+      const startTime = new Date('2023-05-25T14:41:24');
+      const currentTime = new Date();
+
+      if (startTime < currentTime) {
+        setMatchStatus(MatchStatus.COMPLETED);
+      } else if (startTime > currentTime) {
+        setMatchStatus(MatchStatus.IN_PROGRESS);
+      } else {
+        setMatchStatus(MatchStatus.UPCOMING);
+      }
+    }
+  }, [match]);
+
+  const submitAddUser = async (isReferee: boolean) => {
+    if (!id) return;
+
+    addUserToMatch(String(id), isReferee)
+      .then(() => {
+        toast.success('Zapisano na mecz');
+      })
+      .catch((err) => {
+        toast.error('Nie udało się zapisać na mecz');
+        console.error(err);
+      });
+  };
 
   const { user_name: refereeName, user_last_name: refereeLastName } =
     match?.users?.find((user) => user.is_referee) ?? {};
+
+  const {
+    user_name: mvpName,
+    user_last_name: mvpLastName,
+    user_score: mvpScore,
+  } = match?.users?.find((user) => user.is_mvp) ?? {};
 
   return (
     <MainLayout>
@@ -43,10 +92,10 @@ const Content = () => {
             alt=""
           />
           <div className="my-auto space-y-6 lg:px-10">
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-2">
               <div>
                 <Link
-                  className="link"
+                  className="link --underline"
                   href={`${ROUTES.FACILITIES}/${match?.reservation?.field?.facility_id}`}
                 >
                   {match?.reservation?.field?.facility?.name ?? 'Error'}
@@ -69,15 +118,59 @@ const Content = () => {
               </div>
             </div>
             <div className="flex flex-col gap-2 lg:flex-row">
-              <Button value="Zapisz się jako zawodnik" fullWidth />
-              <Button
-                value="Zapisz się jako sędzia"
-                type="secondary"
-                fullWidth
-              />
+              {matchStatus === MatchStatus.UPCOMING && (
+                <>
+                  <Button
+                    value="Zapisz się jako zawodnik"
+                    fullWidth
+                    onClick={() => submitAddUser(false)}
+                    disabled={match?.users?.length === match?.num_of_players}
+                  />
+                  <Button
+                    value="Zapisz się jako sędzia"
+                    type="secondary"
+                    onClick={() => submitAddUser(false)}
+                    disabled={match?.users?.some((user) => user.is_referee)}
+                    fullWidth
+                  />
+                </>
+              )}
+              {matchStatus === MatchStatus.IN_PROGRESS && (
+                <p className="text-heading-h3">Mecz w trakcie</p>
+              )}
+              {matchStatus === MatchStatus.COMPLETED && (
+                <p className="text-heading-h3 text-green-700">
+                  Mecz zakończony
+                </p>
+              )}
             </div>
           </div>
         </section>
+        {matchStatus === MatchStatus.COMPLETED && (
+          <section>
+            <h3 className="mb-7 text-heading-h3">Wynik</h3>
+            <div className="flex w-full flex-col flex-wrap gap-2 sm:flex-row">
+              {match?.for_team_only && (
+                <>
+                  <TextInformation
+                    header={`Wynik drużyny ${match?.team?.name}`}
+                    body={match?.score?.toString() ?? 'Pending'}
+                  />
+                  <TextInformation
+                    header={`Wynik drużyny ${match?.opponent_team?.name}`}
+                    body={match?.opponent_score?.toString() ?? 'Pending'}
+                  />
+                </>
+              )}
+              <TextInformation
+                header="MVP"
+                body={
+                  mvpName ? `${mvpName} ${mvpLastName} - ${mvpScore}` : 'Brak'
+                }
+              />
+            </div>
+          </section>
+        )}
         <section>
           <h3 className="mb-7 text-heading-h3">Informacje</h3>
           <div className="flex w-full flex-col flex-wrap gap-2 sm:flex-row">
@@ -161,7 +254,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       fallback: {
-        [`${ROUTES.MATCHES}/${id}`]: match,
+        [`${ROUTES.MATCHES}/${id}`]: match ?? null,
       },
     },
   };
