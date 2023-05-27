@@ -11,6 +11,7 @@ type Props = {
   label?: string;
   resetField?: () => void;
   placeholder?: string;
+  onValueChange?: (value: string) => void;
 };
 
 const Dropdown = (props: Props) => {
@@ -24,7 +25,10 @@ const Dropdown = (props: Props) => {
           <div className="flex gap-1">
             <Select.Root
               value={field.value}
-              onValueChange={field.onChange}
+              onValueChange={(event) => {
+                field.onChange(event);
+                props.onValueChange?.(event);
+              }}
               name={field.name}
             >
               <Select.Trigger
