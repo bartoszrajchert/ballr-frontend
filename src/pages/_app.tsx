@@ -5,6 +5,7 @@ import VerifyEmailBanner from '@/components/VerifyEmailBanner';
 import '@/i18n/config';
 import initAxios from '@/lib/axios';
 import { COOKIES } from '@/lib/cookies';
+import { globalFetcher } from '@/lib/fetchers';
 import '@/lib/firebase';
 import { ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
@@ -19,6 +20,7 @@ import NProgress from 'nprogress';
 import React, { useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { SWRConfig } from 'swr';
 
 const focusModePaths = [ROUTES.LOGIN, ROUTES.REGISTER, ROUTES.FORGOT_PASSWORD];
 
@@ -63,24 +65,31 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <AxiosAuthInterceptor>
-        <main>
-          <VerifyEmailBanner />
-          <Navigation focusMode={focusMode} />
-          <Component {...pageProps} />
-          {!focusMode && <Footer />}
-          <ToastContainer
-            position="bottom-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-          />
-        </main>
+        <SWRConfig
+          value={{
+            fetcher: globalFetcher,
+            revalidateOnFocus: false,
+          }}
+        >
+          <main>
+            <VerifyEmailBanner />
+            <Navigation focusMode={focusMode} />
+            <Component {...pageProps} />
+            {!focusMode && <Footer />}
+            <ToastContainer
+              position="bottom-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
+          </main>
+        </SWRConfig>
       </AxiosAuthInterceptor>
     </>
   );

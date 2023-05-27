@@ -2,7 +2,6 @@ import Button from '@/components/Button';
 import Dropdown from '@/components/Dropdown';
 import FullWidthBackgroundColor from '@/components/FullWidthBackgroundColor';
 import MainLayout from '@/layouts/MainLayout';
-import { fetcher } from '@/lib/fetchers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
 import { AxiosError } from 'axios';
@@ -103,13 +102,7 @@ export default function Home() {
 const MatchForm = () => {
   const router = useRouter();
   const { control, handleSubmit } = useForm();
-  const { data: cities, error } = useSWR<City[]>(
-    BACKEND_ROUTES.CITIES,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-    }
-  );
+  const { data: cities, error } = useSWR<City[]>(BACKEND_ROUTES.CITIES);
 
   const onSubmit = async (data: any) => {
     await router.push(
