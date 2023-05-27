@@ -71,17 +71,13 @@ function MatchesContainer() {
 
 function Form() {
   const router = useRouter();
-  const { register, handleSubmit, control, reset } = useForm();
-  const onSubmit = (data: any) =>
-    router.push({ query: data }, undefined, {
-      shallow: true,
-    });
-  const rowInputClass = 'flex flex-col gap-2 sm:flex-row';
+  const { register, handleSubmit, control, reset, getValues } = useForm();
+  const [cityId, setCityId] = React.useState<string>('');
 
   const { data: cities } = useSWR<City[]>(BACKEND_ROUTES.CITIES);
-
-  const { data: facilities } = useSWR<Facility[]>(BACKEND_ROUTES.FACILITIES);
-
+  const { data: facilities } = useSWR<Facility[]>(
+    `${BACKEND_ROUTES.FACILITIES}?${cityId && `city_id=${cityId}`}`
+  );
   const { data: benefits } = useSWR<Benefit[]>(BACKEND_ROUTES.BENEFITS);
 
   useEffect(() => {
@@ -89,12 +85,22 @@ function Form() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const onSubmit = (data: any) =>
+    router.push({ query: data }, undefined, {
+      shallow: true,
+    });
+
+  const rowInputClass = 'flex flex-col gap-2 sm:flex-row';
+
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
       <Dropdown
         label="Lokalizacja"
         name="city_id"
         control={control}
+        onValueChange={(value) => {
+          setCityId(value);
+        }}
         data={
           cities?.map((city) => ({
             label: city.Name,
