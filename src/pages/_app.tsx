@@ -1,3 +1,4 @@
+import AxiosAuthInterceptor from '@/components/AxiosAuthInterceptor';
 import Footer from '@/components/Footer';
 import Navigation from '@/components/Navigation';
 import VerifyEmailBanner from '@/components/VerifyEmailBanner';
@@ -61,24 +62,26 @@ export default function App({ Component, pageProps }: AppProps) {
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <main>
-        <VerifyEmailBanner />
-        <Navigation focusMode={focusMode} />
-        <Component {...pageProps} />
-        {!focusMode && <Footer />}
-        <ToastContainer
-          position="bottom-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-      </main>
+      <AxiosAuthInterceptor>
+        <main>
+          <VerifyEmailBanner />
+          <Navigation focusMode={focusMode} />
+          <Component {...pageProps} />
+          {!focusMode && <Footer />}
+          <ToastContainer
+            position="bottom-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
+        </main>
+      </AxiosAuthInterceptor>
     </>
   );
 }
