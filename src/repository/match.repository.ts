@@ -9,8 +9,5 @@ export async function addUserToMatch(
     .post(`${ROUTES.MATCHES}/${matchId}/users`, {
       is_referee: isReferee,
     })
-    .then((res) => {
-      console.log('look here', res);
-      return res;
-    });
+    .then((res) => res);
 }
