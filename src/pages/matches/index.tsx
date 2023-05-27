@@ -4,7 +4,7 @@ import Dropdown from '@/components/Dropdown';
 import Header from '@/components/Header';
 import TextField from '@/components/TextField';
 import MainLayout from '@/layouts/MainLayout';
-import { fetcher, fetcherBackend } from '@/lib/fetchers';
+import { fetcherBackend } from '@/lib/fetchers';
 import { getAddressFromFacility, getLocaleDateString } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { GetServerSideProps } from 'next';
@@ -54,11 +54,7 @@ function MatchesContainer() {
     `${ROUTES.MATCHES}?${queryString.stringify(router.query, {
       skipEmptyString: true,
       skipNull: true,
-    })}`,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-    }
+    })}`
   );
 
   return (
@@ -82,25 +78,11 @@ function Form() {
     });
   const rowInputClass = 'flex flex-col gap-2 sm:flex-row';
 
-  const { data: cities } = useSWR<City[]>(BACKEND_ROUTES.CITIES, fetcher, {
-    revalidateOnFocus: false,
-  });
+  const { data: cities } = useSWR<City[]>(BACKEND_ROUTES.CITIES);
 
-  const { data: facilities } = useSWR<Facility[]>(
-    BACKEND_ROUTES.FACILITIES,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-    }
-  );
+  const { data: facilities } = useSWR<Facility[]>(BACKEND_ROUTES.FACILITIES);
 
-  const { data: benefits } = useSWR<Benefit[]>(
-    BACKEND_ROUTES.BENEFITS,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-    }
-  );
+  const { data: benefits } = useSWR<Benefit[]>(BACKEND_ROUTES.BENEFITS);
 
   useEffect(() => {
     reset(router.query);

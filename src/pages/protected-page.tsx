@@ -1,5 +1,4 @@
 import MainLayout from '@/layouts/MainLayout';
-import { fetcher } from '@/lib/fetchers';
 import { BACKEND_ROUTES } from '@/lib/routes';
 import useSWR from 'swr';
 
@@ -8,7 +7,7 @@ import useSWR from 'swr';
  * TODO: Delete this page.
  */
 function ProtectedPage() {
-  const { data, isLoading, error } = useSWR(BACKEND_ROUTES.CITIES, fetcher);
+  const { data, isLoading, error } = useSWR(BACKEND_ROUTES.CITIES);
 
   return (
     <MainLayout>

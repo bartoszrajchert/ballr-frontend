@@ -3,7 +3,8 @@ import axios from 'axios';
 import { GetServerSidePropsContext } from 'next';
 import nookies from 'nookies';
 
-const fetcher = (url: BACKEND_ROUTES) => axios.get(url).then((res) => res.data);
+const globalFetcher = (url: BACKEND_ROUTES) =>
+  axios.get(url).then((res) => res.data);
 
 const fetcherBackend = (
   url: BACKEND_ROUTES | string,
@@ -19,4 +20,4 @@ const fetcherBackend = (
     });
 };
 
-export { fetcher, fetcherBackend };
+export { globalFetcher, fetcherBackend };
