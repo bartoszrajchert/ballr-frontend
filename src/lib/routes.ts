@@ -9,6 +9,7 @@ enum ROUTES {
 
   FACILITIES = '/facilities',
   FACILITIES_CREATE = '/facilities/create',
+  FIELDS = '/fields',
 
   TOURNAMENTS = '/tournaments',
   TOURNAMENTS_CREATE = '/tournaments/create',
@@ -32,6 +33,7 @@ enum BACKEND_ROUTES {
   CITIES = '/cities',
   FACILITIES = '/facilities',
   BENEFITS = '/benefits',
+  RESERVATIONS = '/reservations',
 }
 
 enum QUERY_PARAMS {
