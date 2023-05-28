@@ -1,5 +1,5 @@
 export function getAddressFromFacility(facility?: Facility) {
-  return `${facility?.street}, ${facility?.postcode} ${facility?.city?.Name}`;
+  return `${facility?.street}, ${facility?.postcode} ${facility?.city?.name}`;
 }
 
 export function getLocaleDateString(date?: string) {

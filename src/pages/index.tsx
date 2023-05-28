@@ -127,7 +127,7 @@ const MatchForm = () => {
               control={control}
               data={
                 cities?.map((city) => ({
-                  label: city.Name,
+                  label: city.name,
                   value: city.id.toString(),
                 })) || []
               }
