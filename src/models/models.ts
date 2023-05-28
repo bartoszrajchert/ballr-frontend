@@ -41,6 +41,9 @@ interface Facility {
   close_time: string;
   city: City;
   id: number;
+
+  fields?: Field[]; // By id
+  benefits?: Benefit[]; // By id
 }
 
 interface BenefitFacility {
