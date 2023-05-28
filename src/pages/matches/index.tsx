@@ -86,7 +86,7 @@ function MatchesContainer() {
 
 function Form() {
   const router = useRouter();
-  const { register, handleSubmit, control, reset, getValues } = useForm();
+  const { register, handleSubmit, control, reset } = useForm();
   const [cityId, setCityId] = React.useState<string>('');
 
   const { data: cities } = useSWR<City[]>(BACKEND_ROUTES.CITIES);
@@ -104,8 +104,6 @@ function Form() {
     router.push({ query: data }, undefined, {
       shallow: true,
     });
-
-  const rowInputClass = 'flex flex-col gap-2 sm:flex-row';
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
@@ -139,11 +137,11 @@ function Form() {
         type="number"
         {...register('number_of_players')}
       />
-      <div className={rowInputClass}>
+      <div className="row-input">
         <TextField label="Data od" type="date" {...register('date_from')} />
         <TextField label="Data do" type="date" {...register('date_to')} />
       </div>
-      <div className={rowInputClass}>
+      <div className="row-input">
         <TextField label="Godzina od" type="time" {...register('time_from')} />
         <TextField label="Godzina do" type="time" {...register('time_to')} />
       </div>

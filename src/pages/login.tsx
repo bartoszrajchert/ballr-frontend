@@ -1,5 +1,6 @@
 import TextField from '@/components/TextField';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
+import { getFieldErrorText } from '@/lib/helpers';
 import { QUERY_PARAMS, ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
 import Link from 'next/link';
@@ -58,13 +59,13 @@ export default function Login() {
           <TextField
             label="Podaj swój adres email"
             type="email"
-            errorText={errors.email && 'Email jest wymagany'}
+            errorText={getFieldErrorText('email', errors)}
             {...register('email', { required: true })}
           />
           <TextField
             label="Podaj swoje hasło"
             type="password"
-            errorText={errors.password && 'Hasło jest wymagane'}
+            errorText={getFieldErrorText('password', errors)}
             {...register('password', { required: true })}
           />
         </>
