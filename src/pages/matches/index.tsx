@@ -3,19 +3,17 @@ import Checkbox from '@/components/Checkbox';
 import Dropdown from '@/components/Dropdown';
 import Header from '@/components/Header';
 import TextField from '@/components/TextField';
+import Tile from '@/components/Tile';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
 import { getAddressFromFacility, getLocaleDateString } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { GetServerSideProps } from 'next';
-import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import useSWR, { SWRConfig } from 'swr';
-import footballImage1 from '../../../public/prapoth-panchuea-_lTF9zrF1PY-unsplash.jpg';
 
 type Props = {
   fallback: any;
@@ -35,7 +33,7 @@ function Matches({ fallback }: Props) {
       <MainLayout>
         <Header value="Mecze" />
         <div className="flex flex-col gap-5 lg:flex-row">
-          <aside>
+          <aside className="lg:w-2/5">
             <p className="mb-8 text-heading-h3">Filtry</p>
             <Form />
           </aside>
@@ -57,10 +55,27 @@ function MatchesContainer() {
     })}`
   );
 
+  const tags = (match: Match) => {
+    const tags = [];
+    if (match.open_for_referee) {
+      tags.push('Otwarte dla sędziów');
+    }
+    if (match.for_team_only) {
+      tags.push('Tylko dla drużyn');
+    }
+    return tags;
+  };
+
   return (
     <>
-      {matches?.map((match) => (
-        <MatchTile key={match.match.id} {...match} />
+      {matches?.map(({ match, benefits }) => (
+        <Tile
+          key={match.id}
+          href={`${ROUTES.MATCHES}/${match.id}`}
+          title={getAddressFromFacility(match.reservation?.field?.facility)}
+          description={[getLocaleDateString(match.reservation?.start_time)]}
+          tags={[...tags(match), ...benefits]}
+        />
       ))}
 
       {isLoading && <p>Ładowanie...</p>}
@@ -157,52 +172,6 @@ function Form() {
         <Button value="Szukaj" isSubmit fullWidth />
       </div>
     </form>
-  );
-}
-
-function MatchTile(props: MatchesData) {
-  const match = props.match;
-  const startDate = getLocaleDateString(match.reservation?.start_time);
-
-  return (
-    <Link href={`${ROUTES.MATCHES}/${match.id}`}>
-      <div className="flex w-full cursor-pointer flex-col gap-5 rounded-2xl border border-gray-300 bg-grey-100 p-4 hover:bg-green-100 sm:flex-row">
-        <div className="relative h-full w-full sm:w-[220px]">
-          <Image
-            className="aspect-video rounded-2xl bg-green-900 object-cover"
-            src={footballImage1}
-            quality={20}
-            alt=""
-          />
-        </div>
-        <div className="flex flex-col justify-between gap-3">
-          <div>
-            <h3 className="mb-1 text-label-medium">
-              {getAddressFromFacility(match.reservation?.field?.facility)}
-            </h3>
-            <p>{startDate}</p>
-          </div>
-          <div className="flex gap-1">
-            <Tag
-              text={`${props.signed_users?.toString()}/${match.num_of_players?.toString()} Graczy`}
-            />
-            {match.open_for_referee && <Tag text="Otwarte dla sędziów" />}
-            {match.for_team_only && <Tag text="Tylko dla drużyn" />}
-            {props.benefits?.map((benefit) => (
-              <Tag key={benefit} text={benefit} />
-            ))}
-          </div>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
-function Tag({ text }: { text: string }) {
-  return (
-    <div className="w-fit rounded-full border border-grey-600 px-2 py-1">
-      <p className="text-label-small text-green-900">{text}</p>
-    </div>
   );
 }
 
