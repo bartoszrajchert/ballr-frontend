@@ -32,12 +32,15 @@ interface User {
 }
 
 interface Facility {
-  id: number;
   name: string;
   street: string;
   postcode: string;
-  city_id: number;
-  city?: City;
+  street_number: number;
+  is_verified: boolean;
+  open_time: string;
+  close_time: string;
+  city: City;
+  id: number;
 }
 
 interface BenefitFacility {
