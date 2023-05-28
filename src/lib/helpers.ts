@@ -1,3 +1,7 @@
+import { ErrorData } from '@/lib/types';
+import { AxiosError } from 'axios';
+import { FieldErrors, FieldValues, UseFormSetError } from 'react-hook-form';
+
 export function getAddressFromFacility(facility?: Facility) {
   return `${facility?.street} ${facility?.street_number}, ${facility?.postcode} ${facility?.city?.name}`;
 }
@@ -12,4 +16,40 @@ export function getLocaleDateString(date?: string) {
   const minute = ('0' + inputDate.getMinutes()).slice(-2);
 
   return `${day}/${month}/${year} • ${hour}:${minute}`;
+}
+
+export function concatenateDateAndTime(date: Date, time: string): string {
+  return `${date.toISOString().split('T')[0]}T${time}:00.000Z`;
+}
+
+export function getFieldErrorText(name: string, errors: FieldErrors) {
+  const error = errors[name];
+  if (error?.type === 'required') {
+    return 'Pole jest wymagane';
+  }
+
+  if (error?.type === 'validate') {
+    if (error?.message === 'repeatPassword') {
+      return 'Hasła muszą być takie same';
+    }
+  }
+
+  if (error?.message) {
+    return String(error?.message);
+  }
+
+  return undefined;
+}
+
+export function setFormErrors(
+  err: AxiosError,
+  setError: UseFormSetError<FieldValues>
+) {
+  const data = err.response?.data as ErrorData;
+  if (Array.isArray(data.detail))
+    data.detail.map((error) => {
+      setError(error.loc[1], { message: error.msg });
+    });
+
+  setError('root', { message: err.message });
 }

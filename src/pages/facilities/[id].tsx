@@ -51,10 +51,9 @@ function Content() {
       </section>
       <section className="mt-14 flex w-full flex-col gap-4">
         {facility?.fields?.map((field) => (
-          /* TODO: href */
           <Tile
             key={field.id}
-            href={``}
+            href={`${ROUTES.FIELDS}/${field.id}`}
             title={field.name}
             description={[
               `Długość: ${field.length}m`,
