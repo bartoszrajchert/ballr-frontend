@@ -5,7 +5,7 @@ interface Gender {
 
 interface City {
   id: number;
-  Name: string; // TODO: fix typo in backend
+  name: string;
 }
 
 interface Benefit {
