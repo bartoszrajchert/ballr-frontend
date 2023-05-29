@@ -6,16 +6,19 @@ import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
 import { getAddressFromFacility, getLocaleDateString } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
+import useGetAuth from '@/lib/useGetAuth';
 import { addUserToMatch } from '@/repository/match.repository';
 import { IconCalendarEvent, IconInfoCircle } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { toast } from 'react-toastify';
 import useSWR, { SWRConfig } from 'swr';
-import footballImage1 from '../../../public/prapoth-panchuea-_lTF9zrF1PY-unsplash.jpg';
+import footballImage1 from '../../../../public/prapoth-panchuea-_lTF9zrF1PY-unsplash.jpg';
 
 enum MatchStatus {
   UPCOMING = 'upcoming',
@@ -38,6 +41,9 @@ export default function MatchId({ fallback }: { fallback: any }) {
 }
 
 const Content = () => {
+  const auth = useGetAuth();
+  const [firebaseUser, authLoading] = useAuthState(auth);
+
   const router = useRouter();
   const { id } = router.query;
   const { data: match } = useSWR<Match>(`${BACKEND_ROUTES.MATCHES}/${id}`);
@@ -81,6 +87,11 @@ const Content = () => {
     user_last_name: mvpLastName,
     user_score: mvpScore,
   } = match?.users?.find((user) => user.is_mvp) ?? {};
+
+  // TODO: adjust when user will have uid
+  const me =
+    match?.users?.find((user) => String(user.user_id) === firebaseUser?.uid) ??
+    undefined;
 
   return (
     <MainLayout>
@@ -140,9 +151,16 @@ const Content = () => {
                 <p className="text-heading-h3">Mecz w trakcie</p>
               )}
               {matchStatus === MatchStatus.COMPLETED && (
-                <p className="text-heading-h3 text-green-700">
-                  Mecz zakończony
-                </p>
+                <div className="flex w-full flex-col gap-4">
+                  <p className="text-heading-h3 text-green-700">
+                    Mecz zakończony
+                  </p>
+                  {me && me.voted && (
+                    <NextLink href={`${ROUTES.MATCHES}/${id}/rate`}>
+                      <Button value="Oceń graczy" fullWidth />
+                    </NextLink>
+                  )}
+                </div>
               )}
             </div>
           </div>

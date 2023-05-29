@@ -126,8 +126,8 @@ interface UserMatch {
   is_match_creator: boolean;
   is_referee: boolean;
   is_mvp: boolean;
-  is_rated: boolean;
-  rating: number;
+  voted: boolean;
+  combined_rating: number;
   user_id: number;
   user_name: string;
   user_last_name: string;
