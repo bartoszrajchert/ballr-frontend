@@ -19,8 +19,8 @@ enum ROUTES {
 
   PROFILE = '/profile',
 
-  SETTINGS = '/settings',
-  SETTINGS_SECURITY = '/settings/security',
+  SETTINGS = '/profile/settings',
+  SETTINGS_SECURITY = '/profile/settings/security',
 
   PROTECTED_PAGE = '/protected-page',
   REQUESTS_TEST_PAGE = '/requests-test-page',
