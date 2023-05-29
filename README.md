@@ -12,6 +12,18 @@ This is the frontend for the ballr project - a part of bachelor of engineering t
 4. Expand `firebaseLocalStorageDb`
 5. Search for `accessToken` key (should be under `value.stsTokenManager.accessToken`)
 
+## Commits
+This project uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for commit messages.
+Common types:
+* feat: A new feature
+* fix: A bug fix
+* docs: Documentation only changes
+* style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+* refactor: A code change that neither fixes a bug or adds a feature
+* perf: A code change that improves performance
+* test: Adding missing tests
+* chore: Changes to the build process or auxiliary tools and libraries such as documentation generation
+
 ## License
 
 This project is licensed under the terms of the BSD license.
