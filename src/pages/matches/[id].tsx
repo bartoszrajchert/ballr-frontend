@@ -4,7 +4,7 @@ import TextInformation from '@/components/TextInformation';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
 import { getAddressFromFacility, getLocaleDateString } from '@/lib/helpers';
-import { ROUTES } from '@/lib/routes';
+import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { addUserToMatch } from '@/repository/match.repository';
 import { IconCalendarEvent, IconInfoCircle } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
@@ -39,7 +39,7 @@ export default function MatchId({ fallback }: { fallback: any }) {
 const Content = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { data: match } = useSWR<Match>(`${ROUTES.MATCHES}/${id}`);
+  const { data: match } = useSWR<Match>(`${BACKEND_ROUTES.MATCHES}/${id}`);
   const [matchStatus, setMatchStatus] = React.useState<MatchStatus | null>(
     null
   );
@@ -249,12 +249,15 @@ const Content = () => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.query;
-  const match = await fetcherBackend(`${ROUTES.MATCHES}/${id}`, context);
+  const match = await fetcherBackend(
+    `${BACKEND_ROUTES.MATCHES}/${id}`,
+    context
+  );
 
   return {
     props: {
       fallback: {
-        [`${ROUTES.MATCHES}/${id}`]: match ?? null,
+        [`${BACKEND_ROUTES.MATCHES}/${id}`]: match ?? null,
       },
     },
   };
