@@ -27,7 +27,7 @@ const Avatar = (props: Props) => {
         width: size,
       }}
     >
-      <p className="text-p-medium text-green-900">{initials}</p>
+      <p className="text-label-medium text-green-900">{initials}</p>
     </div>
   );
 };
