@@ -1,6 +1,7 @@
 import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
 import Header from '@/components/Header';
+import Section from '@/components/Section';
 import TextInformation from '@/components/TextInformation';
 import MainLayout from '@/layouts/MainLayout';
 import { ROUTES } from '@/lib/routes';
@@ -13,7 +14,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 export default function ProfileId() {
   const router = useRouter();
   const auth = useGetAuth();
-  const [user, authLoading] = useAuthState(auth);
+  const [firebaseUser, authLoading] = useAuthState(auth);
   const { id } = router.query;
 
   return (
@@ -21,16 +22,18 @@ export default function ProfileId() {
       <Header>
         <div className="flex flex-wrap items-center justify-center gap-4">
           <Avatar firstName="Jan" lastName="Kowalski" size={60} />
-          <h1 className="text-heading-h2">Jan Kowalski</h1>
-          {id === user?.uid && !authLoading && (
+          <div>
+            <p>Użytkownik</p>
+            <h1 className="text-heading-h2">Jan Kowalski</h1>
+          </div>
+          {id === firebaseUser?.uid && !authLoading && (
             <Link href={ROUTES.SETTINGS}>
               <Button icon={<IconPencil />} type="tertiary" />
             </Link>
           )}
         </div>
       </Header>
-      <section>
-        <h2 className="mb-7 text-heading-h3">Informacje</h2>
+      <Section title="Informacje">
         <div className="flex w-full flex-col flex-wrap gap-5 sm:flex-row">
           <TextInformation
             header="Data urodzenia"
@@ -53,7 +56,7 @@ export default function ProfileId() {
             className="flex-grow"
           />
         </div>
-      </section>
+      </Section>
     </MainLayout>
   );
 }

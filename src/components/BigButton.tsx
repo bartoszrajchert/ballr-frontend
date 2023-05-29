@@ -5,6 +5,7 @@ type Props = {
   title: string;
   description: string;
   onClick?: () => void;
+  className?: string;
 };
 
 const BigButton = (props: Props) => {
@@ -12,6 +13,7 @@ const BigButton = (props: Props) => {
     <button
       className={clsx(
         'space-y-1.5 rounded-2xl border border-green-900 p-6 text-left',
+        props.className,
         {
           'hover:bg-green-100': props.onClick,
         }
