@@ -28,7 +28,7 @@ function Footer() {
           <ul>
             <li>
               <a className="link --underline" href="mailto:kontakt@ballr.com">
-                E-mail: kontakt@ballr.com
+                E-mail: kontakt@ballr.pl
               </a>
             </li>
           </ul>

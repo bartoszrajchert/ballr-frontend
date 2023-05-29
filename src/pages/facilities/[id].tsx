@@ -4,7 +4,7 @@ import Tile from '@/components/Tile';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
 import { getAddressFromFacility } from '@/lib/helpers';
-import { ROUTES } from '@/lib/routes';
+import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import useSWR, { SWRConfig } from 'swr';
@@ -20,7 +20,9 @@ function FacilitiesId({ fallback }: { fallback: any }) {
 function Content() {
   const router = useRouter();
   const { id } = router.query;
-  const { data: facility } = useSWR<Facility>(`${ROUTES.FACILITIES}/${id}`);
+  const { data: facility } = useSWR<Facility>(
+    `${BACKEND_ROUTES.FACILITIES}/${id}`
+  );
 
   return (
     <MainLayout>
@@ -68,12 +70,15 @@ function Content() {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.query;
-  const facility = await fetcherBackend(`${ROUTES.FACILITIES}/${id}`, context);
+  const facility = await fetcherBackend(
+    `${BACKEND_ROUTES.FACILITIES}/${id}`,
+    context
+  );
 
   return {
     props: {
       fallback: {
-        [`${ROUTES.FACILITIES}/${id}`]: facility ?? null,
+        [`${BACKEND_ROUTES.FACILITIES}/${id}`]: facility ?? null,
       },
     },
   };

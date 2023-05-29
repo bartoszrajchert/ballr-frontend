@@ -35,7 +35,7 @@ function FacilitiesContainer() {
     isLoading,
     error,
   } = useSWR<Facility[]>(
-    `${ROUTES.FACILITIES}?${queryString.stringify(router.query, {
+    `${BACKEND_ROUTES.FACILITIES}?${queryString.stringify(router.query, {
       skipEmptyString: true,
       skipNull: true,
     })}`
