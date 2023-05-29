@@ -1,5 +1,6 @@
 import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
+import Section from '@/components/Section';
 import TextInformation from '@/components/TextInformation';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
@@ -147,8 +148,7 @@ const Content = () => {
           </div>
         </section>
         {matchStatus === MatchStatus.COMPLETED && (
-          <section>
-            <h3 className="mb-7 text-heading-h3">Wynik</h3>
+          <Section title="Wynik">
             <div className="flex w-full flex-col flex-wrap gap-2 sm:flex-row">
               {match?.for_team_only && (
                 <>
@@ -169,10 +169,9 @@ const Content = () => {
                 }
               />
             </div>
-          </section>
+          </Section>
         )}
-        <section>
-          <h3 className="mb-7 text-heading-h3">Informacje</h3>
+        <Section title="Informacje">
           <div className="flex w-full flex-col flex-wrap gap-2 sm:flex-row">
             <TextInformation
               header="Nazwa boiska"
@@ -212,15 +211,13 @@ const Content = () => {
               className="flex-grow"
             />
           </div>
-        </section>
-        <section>
-          <h3 className="mb-7 text-heading-h3">Opis</h3>
+        </Section>
+        <Section title="Opis">
           <p>{match?.description}</p>
-        </section>
-        <section>
-          <h3 className="mb-7 text-heading-h3">
-            Uczestnicy {match?.users?.length} / {match?.num_of_players}
-          </h3>
+        </Section>
+        <Section
+          title={`Uczestnicy ${match?.users?.length} / ${match?.num_of_players}`}
+        >
           <div className="flex flex-wrap gap-4">
             {match?.users?.map((user) => (
               <Link
@@ -241,7 +238,7 @@ const Content = () => {
               </Link>
             ))}
           </div>
-        </section>
+        </Section>
       </div>
     </MainLayout>
   );
