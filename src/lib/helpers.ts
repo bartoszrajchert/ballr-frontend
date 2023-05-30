@@ -1,6 +1,11 @@
 import { ErrorData } from '@/lib/types';
 import { AxiosError } from 'axios';
-import { FieldErrors, FieldValues, UseFormSetError } from 'react-hook-form';
+import {
+  FieldErrors,
+  FieldValues,
+  UseFormReset,
+  UseFormSetError,
+} from 'react-hook-form';
 
 export function getAddressFromFacility(facility?: Facility) {
   return `${facility?.street} ${facility?.street_number}, ${facility?.postcode} ${facility?.city?.name}`;
@@ -41,16 +46,23 @@ export function getFieldErrorText(name: string, errors: FieldErrors) {
   return undefined;
 }
 
+/**
+ * When using this function remember to use resetKeepValues on button click.
+ * Otherwise, form will always be submitted.
+ * @see resetKeepValues
+ */
 export function setUseReactFormErrors(
   err: AxiosError,
   setError: UseFormSetError<FieldValues>
 ) {
+  console.error(err);
+
   const data = err.response?.data as ErrorData;
-  if (Array.isArray(data.detail))
+  if (Array.isArray(data?.detail))
     data.detail.map((error) => {
       setError(error.loc[1], { message: error.msg });
     });
-  else if (data.detail) {
+  else if (data?.detail) {
     setError('root', { message: data.detail });
     return;
   }
@@ -58,16 +70,20 @@ export function setUseReactFormErrors(
   setError('root', { message: err.message });
 }
 
+export function resetKeepValues(reset: UseFormReset<FieldValues>) {
+  reset({}, { keepValues: true });
+}
+
 export function getErrorMessage(err: AxiosError): string {
   const data = err.response?.data as ErrorData;
 
-  if (Array.isArray(data.detail)) {
+  if (Array.isArray(data?.detail)) {
     return data.detail
       .map((error) => `${error.loc[1]} ${error.msg}`)
       .join('\n');
   }
 
-  if (data.detail) {
+  if (data?.detail) {
     return data.detail;
   }
 
