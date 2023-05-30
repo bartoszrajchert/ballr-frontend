@@ -81,9 +81,7 @@ const Content = () => {
   } = match?.users?.find((user) => user.is_mvp) ?? {};
 
   // TODO: adjust when user will have uid
-  const me =
-    match?.users?.find((user) => String(user.user_id) === firebaseUser?.uid) ??
-    undefined;
+  const me: Partial<UserMatch> = { voted: false };
 
   const getNumberOfTeams = () => {
     if (match?.opponent_team && match?.team) {
@@ -98,6 +96,8 @@ const Content = () => {
   const amISignedAsReferee = false;
   // TODO: sprawdź czy jestem zapisany na mecz jako gracz
   const amISignedAsPlayer = false;
+  // TODO: sprawdź czy jestem kapitanem drużyny i czy mecz jest drużynowy
+  const amICaptainAndIsTeamMatch = true && match?.for_team_only;
 
   return (
     <MainLayout>
@@ -173,9 +173,15 @@ const Content = () => {
                 <p className="text-heading-h3 text-green-700">
                   Mecz zakończony
                 </p>
-                {me && me.voted && (
+                {me && !me.voted && !match?.for_team_only && (
                   <NextLink href={`${ROUTES.MATCHES}/${id}/rate`}>
                     <Button value="Oceń graczy" fullWidth />
+                  </NextLink>
+                )}
+
+                {amICaptainAndIsTeamMatch && (
+                  <NextLink href={`${ROUTES.MATCHES}/${id}/rate`}>
+                    <Button value="Wpisz wynik" fullWidth />
                   </NextLink>
                 )}
               </div>
@@ -363,8 +369,6 @@ function TeamForm(props: { match: Match }) {
       })
       .catch((err) => {
         toast.error(`Nie udało się zapisać na mecz: ${getErrorMessage(err)}`);
-        setUseReactFormErrors(err, setError);
-        console.error(err);
       });
   };
 
@@ -378,8 +382,6 @@ function TeamForm(props: { match: Match }) {
       })
       .catch((err) => {
         toast.error(`Nie udało się wypisać z meczu: ${getErrorMessage(err)}`);
-        setUseReactFormErrors(err, setError);
-        console.error(err);
       });
   };
 
