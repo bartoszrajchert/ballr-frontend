@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import React from 'react';
 
-type Props = {
+export type ButtonProps = {
   value?: string;
   onClick?: () => void;
   type?: 'primary' | 'primary-dark' | 'secondary' | 'tertiary' | 'cancel';
@@ -19,7 +19,7 @@ function Button({
   isSubmit,
   fullWidth,
   disabled,
-}: Props) {
+}: ButtonProps) {
   return (
     <button
       onClick={onClick}
