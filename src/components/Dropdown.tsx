@@ -1,8 +1,14 @@
 import Label from '@/components/Label';
 import * as Select from '@radix-ui/react-select';
-import { IconCheck, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
+import {
+  IconCheck,
+  IconChevronDown,
+  IconChevronUp,
+  IconExclamationCircle,
+} from '@tabler/icons-react';
+import clsx from 'clsx';
 import React from 'react';
-import { Control, Controller } from 'react-hook-form';
+import { Control, Controller, RegisterOptions } from 'react-hook-form';
 
 type Props = {
   name: string;
@@ -12,6 +18,8 @@ type Props = {
   resetField?: () => void;
   placeholder?: string;
   onValueChange?: (value: string) => void;
+  rules?: RegisterOptions;
+  errorText?: string;
 };
 
 const Dropdown = (props: Props) => {
@@ -21,8 +29,9 @@ const Dropdown = (props: Props) => {
       <Controller
         control={props.control}
         name={props.name}
+        rules={props.rules}
         render={({ field }) => (
-          <div className="flex gap-1">
+          <div className="flex flex-col gap-1">
             <Select.Root
               value={field.value}
               onValueChange={(event) => {
@@ -33,7 +42,13 @@ const Dropdown = (props: Props) => {
             >
               <Select.Trigger
                 id={props.name}
-                className="flex h-[48px] w-full appearance-none items-center justify-between rounded-2 px-4 shadow-border-1px outline-none transition-shadow hover:shadow-border-2px focus:shadow-border-3px focus-visible:shadow-border-3px"
+                className={clsx(
+                  'flex h-[48px] w-full appearance-none items-center justify-between rounded-2 px-4 shadow-border-1px outline-none transition-shadow hover:shadow-border-2px focus:shadow-border-3px focus-visible:shadow-border-3px',
+                  {
+                    '!shadow-red': props.errorText,
+                    '!shadow-green-900': !props.errorText,
+                  }
+                )}
               >
                 <Select.Value asChild>
                   <span>
@@ -67,6 +82,12 @@ const Dropdown = (props: Props) => {
                 </Select.Content>
               </Select.Portal>
             </Select.Root>
+            {props.errorText && (
+              <div className="flex gap-1 text-red">
+                <IconExclamationCircle size={20} />
+                <small className="text-p-small">{props.errorText}</small>
+              </div>
+            )}
           </div>
         )}
       />
