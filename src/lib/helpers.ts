@@ -41,7 +41,7 @@ export function getFieldErrorText(name: string, errors: FieldErrors) {
   return undefined;
 }
 
-export function setFormErrors(
+export function setUseReactFormErrors(
   err: AxiosError,
   setError: UseFormSetError<FieldValues>
 ) {
@@ -50,6 +50,26 @@ export function setFormErrors(
     data.detail.map((error) => {
       setError(error.loc[1], { message: error.msg });
     });
+  else if (data.detail) {
+    setError('root', { message: data.detail });
+    return;
+  }
 
   setError('root', { message: err.message });
+}
+
+export function getErrorMessage(err: AxiosError): string {
+  const data = err.response?.data as ErrorData;
+
+  if (Array.isArray(data.detail)) {
+    return data.detail
+      .map((error) => `${error.loc[1]} ${error.msg}`)
+      .join('\n');
+  }
+
+  if (data.detail) {
+    return data.detail;
+  }
+
+  return err.message;
 }
