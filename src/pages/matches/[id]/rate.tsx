@@ -3,18 +3,33 @@ import Button from '@/components/Button';
 import Header from '@/components/Header';
 import TextField from '@/components/TextField';
 import MainLayout from '@/layouts/MainLayout';
-import { getFieldErrorText } from '@/lib/helpers';
+import {
+  getErrorMessage,
+  getFieldErrorText,
+  resetKeepValues,
+  setUseReactFormErrors,
+} from '@/lib/helpers';
 import { BACKEND_ROUTES } from '@/lib/routes';
+import {
+  putRatePlayers,
+  PutRatePlayerType,
+} from '@/repository/match.repository';
+import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { FieldErrors, useForm, UseFormRegister } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import useSWR from 'swr';
 
 // TODO Give access to this page only to players who are in the match
 // TODO Add spinner when loading
-export default function MatchesIdRate() {
-  const router = useRouter();
-  const { id } = router.query;
+
+/**
+ * This page is used to rate players after the match.
+ * It can be accessed by all players, however the server will check if the user is in the match.
+ * @constructor
+ */
+export default function MatchesIdRate({ id }: any) {
   const { data: match, isLoading } = useSWR<Match>(
     `${BACKEND_ROUTES.MATCHES}/${id}`
   );
@@ -34,7 +49,7 @@ export default function MatchesIdRate() {
               {match?.for_team_only ? (
                 <ScoreForm />
               ) : (
-                <UserForm users={match?.users} />
+                <UserForm id={String(id)} users={match?.users} />
               )}
             </section>
           </>
@@ -68,6 +83,7 @@ function ScoreForm() {
           type="number"
           min={0}
           max={99}
+          errorText={getFieldErrorText('score', errors)}
           {...register('score')}
         />
       </div>
@@ -85,36 +101,67 @@ function ScoreForm() {
   );
 }
 
-function UserForm(props: { users?: UserMatch[] }) {
+function UserForm(props: { id: string; users?: UserMatch[] }) {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitted },
     setError,
   } = useForm();
 
+  // TODO delete me from users
+  const me = { id: '1' };
+
   const onSubmit = (data: any) => {
-    // TODO: send data to backend
-    console.log(data);
+    console.log('data', data);
+
+    const userGrades: PutRatePlayerType[] = [];
+    Object.keys(data).forEach((key) => {
+      userGrades.push({
+        user_id: Number(key),
+        rating: Number(data[key]),
+        is_mvp: false,
+      });
+    });
+
+    putRatePlayers(props.id, userGrades)
+      .then(async () => {
+        toast.success('Oceny zostały zapisane');
+        await router.push(`/matches/${props.id}`);
+      })
+      .catch((err) => {
+        toast.error(
+          `Wystąpił błąd podczas zapisywania ocen: ${getErrorMessage(err)}`
+        );
+        setUseReactFormErrors(err, setError);
+      });
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {props.users?.map((user) => (
-          <UserGrade
-            key={user.user_id}
-            userId={user.user_id.toString()}
-            firstName={user.user_name}
-            lastName={user.user_last_name}
-            register={register}
-            errors={errors}
-          />
-        ))}
+        {props.users
+          ?.filter((user) => user.user_id !== Number(me.id))
+          .map((user) => (
+            <UserGrade
+              key={user.user_id}
+              userId={user.user_id.toString()}
+              firstName={user.user_name}
+              lastName={user.user_last_name}
+              register={register}
+              errors={errors}
+            />
+          ))}
       </div>
       <div className="mt-4 flex w-full gap-1">
-        <Button value="Prześlij formularz" isSubmit fullWidth />
+        <Button
+          value="Prześlij formularz"
+          isSubmit
+          fullWidth
+          onClick={() => resetKeepValues(reset)}
+        />
       </div>
       <div>
         {getFieldErrorText('root', errors) && (
@@ -127,6 +174,7 @@ function UserForm(props: { users?: UserMatch[] }) {
   );
 }
 
+// TODO add mvp checkbox
 function UserGrade(props: {
   userId: string;
   firstName: string;
@@ -153,3 +201,13 @@ function UserGrade(props: {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { id } = context.query;
+
+  return {
+    props: {
+      id,
+    },
+  };
+};
