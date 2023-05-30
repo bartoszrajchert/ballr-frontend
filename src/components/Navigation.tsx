@@ -64,29 +64,9 @@ const navigationContent: CategoryContent = {
     title: 'Obiekty',
     links: [
       {
-        label: 'Stwórz nowy obiekt',
-        desc: 'Zaproś znajomych i rozegrajcie mecz',
-        href: ROUTES.FACILITIES_CREATE,
-      },
-      {
         label: 'Przeglądaj obiekty',
         desc: 'Przeglądaj mecze i dołącz do nich',
         href: ROUTES.FACILITIES,
-      },
-    ],
-  },
-  tournaments: {
-    title: 'Turnieje',
-    links: [
-      {
-        label: 'Stwórz nowy turniej',
-        desc: 'Zaproś znajomych i rozegrajcie mecz',
-        href: ROUTES.TOURNAMENTS_CREATE,
-      },
-      {
-        label: 'Przeglądaj turnieje',
-        desc: 'Przeglądaj mecze i dołącz do nich',
-        href: ROUTES.TOURNAMENTS,
       },
     ],
   },
@@ -244,7 +224,7 @@ const HamburgerMenu = () => {
               {Object.keys(navigationContent).map((key) => (
                 <li
                   key={key}
-                  className="flex cursor-pointer justify-between border-b border-b-gray-500 p-4"
+                  className="flex cursor-pointer justify-between border-b border-b-grey-600 p-4 text-label-medium"
                   onClick={() => setExpandedContent(key)}
                 >
                   {navigationContent[key].title}
@@ -256,7 +236,7 @@ const HamburgerMenu = () => {
             <div>
               <button
                 onClick={() => setExpandedContent(null)}
-                className="mb-3 flex items-center justify-center gap-2"
+                className="my-2 flex items-center justify-center gap-2 py-3 text-label-medium"
               >
                 <IconChevronLeft size={16} />
                 {navigationContent[expandedContent].title}
