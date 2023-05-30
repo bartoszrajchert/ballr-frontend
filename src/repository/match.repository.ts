@@ -9,3 +9,17 @@ export async function addUserToMatch(
     is_referee: isReferee,
   });
 }
+
+export async function addTeamToMatch(
+  matchId: string | number,
+  teamId: string | number
+) {
+  return axios.post(`${ROUTES.MATCHES}/${matchId}/teams/${teamId}`);
+}
+
+export async function deleteTeamFromMatch(
+  matchId: string | number,
+  teamId: string | number
+) {
+  return axios.delete(`${ROUTES.MATCHES}/${matchId}/teams/${teamId}`);
+}
