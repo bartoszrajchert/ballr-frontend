@@ -7,6 +7,7 @@ import {
   concatenateDateAndTime,
   getAddressFromFacility,
   getFieldErrorText,
+  resetKeepValues,
   setUseReactFormErrors,
 } from '@/lib/helpers';
 import { ROUTES } from '@/lib/routes';
@@ -86,14 +87,16 @@ function Form() {
     const end = concatenateDateAndTime(new Date(date), end_time);
 
     createReservation(String(id), start, end)
-      .then(() => {
+      .then(async (data) => {
         reset();
         toast.success('Rezerwacja została utworzona');
+
+        // TODO: Redirect to reservation page
+        await router.push(data.data.id);
       })
       .catch((err) => {
         toast.error('Nie udało się utworzyć rezerwacji');
         setUseReactFormErrors(err, setError);
-        console.error(err);
       });
   };
 
@@ -120,7 +123,12 @@ function Form() {
         />
       </div>
       <div className="mt-4 flex w-full gap-1">
-        <Button value="Rezerwuj" isSubmit fullWidth />
+        <Button
+          value="Rezerwuj"
+          isSubmit
+          fullWidth
+          onClick={() => resetKeepValues(reset)}
+        />
       </div>
       <div>
         {getFieldErrorText('root', errors) && (
