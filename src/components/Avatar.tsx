@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-type Props = {
+export type AvatarProps = {
   firstName: string;
   lastName: string;
   size?: number;
@@ -8,7 +8,7 @@ type Props = {
   clickable?: boolean;
 };
 
-const Avatar = (props: Props) => {
+const Avatar = (props: AvatarProps) => {
   const initials = `${props.firstName[0]}${props.lastName[0]}`;
   const size = props.size ? props.size : 48;
 
