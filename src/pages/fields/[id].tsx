@@ -7,7 +7,7 @@ import {
   concatenateDateAndTime,
   getAddressFromFacility,
   getFieldErrorText,
-  setFormErrors,
+  setUseReactFormErrors,
 } from '@/lib/helpers';
 import { ROUTES } from '@/lib/routes';
 import { createReservation } from '@/repository/reservation.repository';
@@ -92,7 +92,7 @@ function Form() {
       })
       .catch((err) => {
         toast.error('Nie udało się utworzyć rezerwacji');
-        setFormErrors(err, setError);
+        setUseReactFormErrors(err, setError);
         console.error(err);
       });
   };
