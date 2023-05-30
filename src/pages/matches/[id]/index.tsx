@@ -1,24 +1,35 @@
-import Avatar from '@/components/Avatar';
-import Button from '@/components/Button';
+import Button, { ButtonProps } from '@/components/Button';
+import Dropdown from '@/components/Dropdown';
+import EntityCard from '@/components/EntityCard';
+import ImageHeader from '@/components/ImageHeader';
 import Section from '@/components/Section';
 import TextInformation from '@/components/TextInformation';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
-import { getAddressFromFacility, getLocaleDateString } from '@/lib/helpers';
+import {
+  getAddressFromFacility,
+  getErrorMessage,
+  getFieldErrorText,
+  getLocaleDateString,
+  setUseReactFormErrors,
+} from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
-import { addUserToMatch } from '@/repository/match.repository';
+import {
+  addTeamToMatch,
+  addUserToMatch,
+  deleteTeamFromMatch,
+} from '@/repository/match.repository';
 import { IconCalendarEvent, IconInfoCircle } from '@tabler/icons-react';
+import clsx from 'clsx';
 import { GetServerSideProps } from 'next';
-import Image from 'next/image';
-import Link from 'next/link';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import useSWR, { SWRConfig } from 'swr';
-import footballImage1 from '../../../../public/prapoth-panchuea-_lTF9zrF1PY-unsplash.jpg';
+import useSWR, { SWRConfig, useSWRConfig } from 'swr';
 
 enum MatchStatus {
   UPCOMING = 'upcoming',
@@ -26,12 +37,6 @@ enum MatchStatus {
   COMPLETED = 'completed',
 }
 
-/**
- * TODO: mock data
- * TODO: team add
- * @param fallback
- * @constructor
- */
 export default function MatchId({ fallback }: { fallback: any }) {
   return (
     <SWRConfig value={{ fallback }}>
@@ -66,19 +71,6 @@ const Content = () => {
     }
   }, [match]);
 
-  const submitAddUser = async (isReferee: boolean) => {
-    if (!id) return;
-
-    addUserToMatch(String(id), isReferee)
-      .then(() => {
-        toast.success('Zapisano na mecz');
-      })
-      .catch((err) => {
-        toast.error('Nie udało się zapisać na mecz');
-        console.error(err);
-      });
-  };
-
   const { user_name: refereeName, user_last_name: refereeLastName } =
     match?.users?.find((user) => user.is_referee) ?? {};
 
@@ -93,78 +85,104 @@ const Content = () => {
     match?.users?.find((user) => String(user.user_id) === firebaseUser?.uid) ??
     undefined;
 
+  const getNumberOfTeams = () => {
+    if (match?.opponent_team && match?.team) {
+      return 2;
+    } else if (match?.opponent_team || match?.team) {
+      return 1;
+    }
+    return 0;
+  };
+
+  // TODO: sprawdź czy jestem zapisany na mecz jako sędzia
+  const amISignedAsReferee = false;
+  // TODO: sprawdź czy jestem zapisany na mecz jako gracz
+  const amISignedAsPlayer = false;
+
   return (
     <MainLayout>
       <div className="mt-10 space-y-16">
-        <section className="flex flex-col gap-10 lg:grid lg:grid-cols-2 lg:gap-2">
-          <Image
-            className="aspect-video rounded-2xl bg-green-900 object-cover"
-            src={footballImage1}
-            quality={20}
-            alt=""
-          />
-          <div className="my-auto space-y-6 lg:px-10">
-            <div className="flex flex-col gap-2">
-              <div>
-                <Link
-                  className="link --underline"
-                  href={`${ROUTES.FACILITIES}/${match?.reservation?.field?.facility_id}`}
-                >
-                  {match?.reservation?.field?.facility?.name ?? 'Error'}
-                </Link>
-              </div>
-              <h1 className="text-heading-h3">
-                {getAddressFromFacility(match?.reservation?.field?.facility)}
-              </h1>
-            </div>
-            <div className="flex flex-col gap-1">
-              <div className="flex gap-3">
-                <IconInfoCircle />
-                <p>
-                  Zapisani: {match?.users?.length} / {match?.num_of_players}
+        <ImageHeader
+          href={`${ROUTES.FACILITIES}/${match?.reservation?.field?.facility_id}`}
+          hrefText={match?.reservation?.field?.facility?.name ?? 'Error'}
+          title={getAddressFromFacility(match?.reservation?.field?.facility)}
+          iconDetails={[
+            {
+              icon: <IconInfoCircle />,
+              text: `Zapisani: ${match?.users?.length} / ${match?.num_of_players}`,
+            },
+            {
+              icon: <IconCalendarEvent />,
+              text: getLocaleDateString(match?.reservation?.start_time),
+            },
+          ]}
+        >
+          <div
+            className={clsx('flex gap-2 lg:flex-row', {
+              'lg:flex-row': !match?.for_team_only,
+              'flex-col lg:flex-col': match?.for_team_only,
+            })}
+          >
+            {/* User form */}
+            {matchStatus === MatchStatus.UPCOMING &&
+              match &&
+              !match?.for_team_only && (
+                <ButtonForm
+                  id={String(id)}
+                  signUpButtonType="primary"
+                  amISigned={amISignedAsPlayer}
+                  signUpText="Zapisz się jako zawodnik"
+                  signOutText="Wypisz się z meczu"
+                  isReferee={false}
+                  disabled={
+                    !amISignedAsPlayer &&
+                    match?.users?.length === match?.num_of_players
+                  }
+                />
+              )}
+
+            {/* Team form */}
+            {matchStatus === MatchStatus.UPCOMING && match?.for_team_only && (
+              <TeamForm match={match} />
+            )}
+
+            {/* Referee form */}
+            {match &&
+              match.open_for_referee &&
+              matchStatus === MatchStatus.UPCOMING && (
+                <ButtonForm
+                  id={String(id)}
+                  signUpButtonType="secondary"
+                  amISigned={amISignedAsReferee}
+                  signUpText="Zapisz się jako sędzia"
+                  signOutText="Wypisz się z meczu"
+                  isReferee={true}
+                  disabled={
+                    !amISignedAsReferee &&
+                    !!match?.users?.some((user) => user.is_referee)
+                  }
+                />
+              )}
+
+            {matchStatus === MatchStatus.IN_PROGRESS && (
+              <p className="text-heading-h3 text-green-800">Mecz w trakcie</p>
+            )}
+
+            {matchStatus === MatchStatus.COMPLETED && (
+              <div className="flex w-full flex-col gap-4">
+                <p className="text-heading-h3 text-green-700">
+                  Mecz zakończony
                 </p>
+                {me && me.voted && (
+                  <NextLink href={`${ROUTES.MATCHES}/${id}/rate`}>
+                    <Button value="Oceń graczy" fullWidth />
+                  </NextLink>
+                )}
               </div>
-              <div className="flex gap-3">
-                <IconCalendarEvent />
-                <p>{getLocaleDateString(match?.reservation?.start_time)}</p>
-              </div>
-            </div>
-            <div className="flex flex-col gap-2 lg:flex-row">
-              {matchStatus === MatchStatus.UPCOMING && (
-                <>
-                  <Button
-                    value="Zapisz się jako zawodnik"
-                    fullWidth
-                    onClick={() => submitAddUser(false)}
-                    disabled={match?.users?.length === match?.num_of_players}
-                  />
-                  <Button
-                    value="Zapisz się jako sędzia"
-                    type="secondary"
-                    onClick={() => submitAddUser(false)}
-                    disabled={match?.users?.some((user) => user.is_referee)}
-                    fullWidth
-                  />
-                </>
-              )}
-              {matchStatus === MatchStatus.IN_PROGRESS && (
-                <p className="text-heading-h3">Mecz w trakcie</p>
-              )}
-              {matchStatus === MatchStatus.COMPLETED && (
-                <div className="flex w-full flex-col gap-4">
-                  <p className="text-heading-h3 text-green-700">
-                    Mecz zakończony
-                  </p>
-                  {me && me.voted && (
-                    <NextLink href={`${ROUTES.MATCHES}/${id}/rate`}>
-                      <Button value="Oceń graczy" fullWidth />
-                    </NextLink>
-                  )}
-                </div>
-              )}
-            </div>
+            )}
           </div>
-        </section>
+        </ImageHeader>
+
         {matchStatus === MatchStatus.COMPLETED && (
           <Section title="Wynik">
             <div className="flex w-full flex-col flex-wrap gap-2 sm:flex-row">
@@ -189,6 +207,7 @@ const Content = () => {
             </div>
           </Section>
         )}
+
         <Section title="Informacje">
           <div className="flex w-full flex-col flex-wrap gap-2 sm:flex-row">
             <TextInformation
@@ -230,37 +249,175 @@ const Content = () => {
             />
           </div>
         </Section>
+
         <Section title="Opis">
           <p>{match?.description}</p>
         </Section>
-        <Section
-          title={`Uczestnicy ${match?.users?.length} / ${match?.num_of_players}`}
-        >
-          <div className="flex flex-wrap gap-4">
-            {match?.users?.map((user) => (
-              <Link
-                href={`${ROUTES.PROFILE}/${user.user_id}`}
-                key={user.user_id}
-              >
-                <div className="flex flex-col items-center justify-center rounded-2xl bg-grey-100 p-7 shadow-border-1px shadow-grey-300 hover:bg-green-100">
-                  <Avatar
-                    firstName={user.user_name}
-                    lastName={user.user_last_name}
-                    className="mb-4"
-                  />
-                  <p className="text-label-medium">
-                    {user.user_name} {user.user_last_name}
-                  </p>
-                  <p>Ocena: {user.user_score}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </Section>
+
+        {!match?.for_team_only && (
+          <Section
+            title={`Uczestnicy ${match?.users?.length} / ${match?.num_of_players}`}
+          >
+            <div className="flex flex-wrap gap-4">
+              {match?.users?.map((user) => (
+                <EntityCard
+                  key={user.user_id}
+                  href={`${ROUTES.PROFILE}/${user.user_id}`}
+                  avatar={{
+                    firstName: user.user_name,
+                    lastName: user.user_last_name,
+                  }}
+                  title={`${user.user_name} ${user.user_last_name}`}
+                  paragraph={`Ocena: ${user.user_score}`}
+                />
+              ))}
+            </div>
+          </Section>
+        )}
+        {match?.for_team_only && (
+          <Section title={`Drużyny ${getNumberOfTeams()} / 2`}>
+            <div className="flex flex-wrap gap-4">
+              {match?.team && (
+                <EntityCard
+                  key={match?.team?.id}
+                  href={`${ROUTES.TEAMS}/${match?.team?.id}`}
+                  title={match?.team?.name}
+                />
+              )}
+              {match?.opponent_team && (
+                <EntityCard
+                  key={match?.opponent_team?.id}
+                  href={`${ROUTES.TEAMS}/${match?.opponent_team?.id}`}
+                  title={match?.opponent_team?.name}
+                />
+              )}
+            </div>
+          </Section>
+        )}
       </div>
     </MainLayout>
   );
 };
+
+function ButtonForm(props: {
+  amISigned: boolean;
+  id: string;
+  isReferee: boolean;
+  signUpText: string;
+  signOutText: string;
+  signUpButtonType: ButtonProps['type'];
+  disabled: boolean;
+}) {
+  const { mutate } = useSWRConfig();
+
+  const submitAddUser = async () => {
+    addUserToMatch(props.id, props.isReferee)
+      .then(() => {
+        toast.success('Zapisano na mecz');
+        mutate(`${BACKEND_ROUTES.MATCHES}/${props.id}`);
+      })
+      .catch((err) => {
+        toast.error(`Nie udało się zapisać na mecz: ${getErrorMessage(err)}`);
+        console.error(err);
+      });
+  };
+
+  // TODO: submitDeleteUser
+  const submitDeleteUser = async () => {
+    console.log('submitDeleteUser');
+  };
+
+  return (
+    <Button
+      value={props.amISigned ? props.signOutText : props.signUpText}
+      type={props.amISigned ? 'cancel' : props.signUpButtonType}
+      disabled={props.disabled}
+      fullWidth
+      onClick={props.amISigned ? submitDeleteUser : submitAddUser}
+    />
+  );
+}
+
+function TeamForm(props: { match: Match }) {
+  const { mutate } = useSWRConfig();
+  const {
+    handleSubmit,
+    formState: { errors },
+    setError,
+    control,
+  } = useForm();
+
+  // TODO: get teams from API
+  const myTeam = { team_id: 1 };
+  const isMyTeamSigned =
+    props.match?.opponent_team?.id === myTeam.team_id ||
+    props.match?.team?.id === myTeam.team_id;
+
+  const submitAddTeam = async (data: any) => {
+    if (!props.match.id) return;
+
+    addTeamToMatch(String(props.match.id), data.team_id)
+      .then(() => {
+        toast.success('Zapisano na mecz');
+        mutate(`${BACKEND_ROUTES.MATCHES}/${props.match.id}`); // Refresh match data
+      })
+      .catch((err) => {
+        toast.error(`Nie udało się zapisać na mecz: ${getErrorMessage(err)}`);
+        setUseReactFormErrors(err, setError);
+        console.error(err);
+      });
+  };
+
+  const submitDeleteTeam = async () => {
+    if (!props.match.id) return;
+
+    deleteTeamFromMatch(String(props.match.id), myTeam.team_id)
+      .then(() => {
+        toast.success('Wypisano z meczu');
+        mutate(`${BACKEND_ROUTES.MATCHES}/${props.match.id}`); // Refresh match data
+      })
+      .catch((err) => {
+        toast.error(`Nie udało się wypisać z meczu: ${getErrorMessage(err)}`);
+        setUseReactFormErrors(err, setError);
+        console.error(err);
+      });
+  };
+
+  return (
+    <form
+      className="space-y-1"
+      onSubmit={handleSubmit(isMyTeamSigned ? submitDeleteTeam : submitAddTeam)}
+    >
+      <div className="flex flex-col gap-2 lg:flex-row">
+        {!isMyTeamSigned && (
+          <Dropdown
+            name="team_id"
+            placeholder="Wybierz drużynę"
+            control={control}
+            rules={{ required: true }}
+            errorText={getFieldErrorText('team_id', errors)}
+            data={[
+              // TODO: get teams (where user is captain) from API
+              { label: '1', value: '1' },
+              { label: '2', value: '2' },
+            ]}
+          />
+        )}
+        <Button
+          value={isMyTeamSigned ? 'Wypisz drużynę' : 'Zapisz drużynę'}
+          type={isMyTeamSigned ? 'cancel' : 'primary'}
+          fullWidth
+          disabled={
+            !isMyTeamSigned &&
+            !!props.match?.team &&
+            !!props.match?.opponent_team
+          }
+          isSubmit
+        />
+      </div>
+    </form>
+  );
+}
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.query;
