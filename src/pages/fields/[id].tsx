@@ -1,4 +1,5 @@
 import Button from '@/components/Button';
+import ImageHeader from '@/components/ImageHeader';
 import TextField from '@/components/TextField';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
@@ -12,14 +13,11 @@ import { ROUTES } from '@/lib/routes';
 import { createReservation } from '@/repository/reservation.repository';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
-import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import useSWR, { SWRConfig } from 'swr';
-import footballImage1 from '../../../public/prapoth-panchuea-_lTF9zrF1PY-unsplash.jpg';
 
 function FieldsId({ fallback }: { fallback: any }) {
   return (
@@ -37,45 +35,25 @@ function Content() {
   return (
     <MainLayout>
       <div className="mt-10 space-y-16">
-        <section className="flex flex-col gap-10 lg:grid lg:grid-cols-2 lg:gap-2">
-          <Image
-            className="aspect-video rounded-2xl bg-green-900 object-cover"
-            src={footballImage1}
-            quality={20}
-            alt=""
-          />
-          <div className="my-auto space-y-6 lg:px-10">
-            <div className="flex flex-col gap-2">
-              <div>
-                <Link
-                  className="link --underline"
-                  href={`${ROUTES.FACILITIES}/${field?.facility?.id}`}
-                >
-                  {field?.facility?.name ?? 'Error'}
-                </Link>
-              </div>
-              <h1 className="text-heading-h3">
-                {getAddressFromFacility(field?.facility)}
-              </h1>
-            </div>
-            <div className="flex flex-col gap-1">
-              <div className="flex gap-3">
-                <IconInfoCircle />
-                <p>Nazwa boiska: {field?.name}</p>
-              </div>
-              <div className="flex gap-3">
-                <IconInfoCircle />
-                <p>
-                  Wymiary boiska: {field?.length}m x {field?.width}m
-                </p>
-              </div>
-              <div className="flex gap-3">
-                <IconInfoCircle />
-                <p>Zadaszone: {field?.roof ? 'Tak' : 'Nie'}</p>
-              </div>
-            </div>
-          </div>
-        </section>
+        <ImageHeader
+          href={`${ROUTES.FACILITIES}/${field?.facility?.id}`}
+          hrefText={field?.facility?.name ?? 'Error'}
+          title={getAddressFromFacility(field?.facility)}
+          iconDetails={[
+            {
+              icon: <IconInfoCircle />,
+              text: `Nazwa boiska: ${field?.name}`,
+            },
+            {
+              icon: <IconInfoCircle />,
+              text: `Wymiary boiska: ${field?.length}m x ${field?.width}m`,
+            },
+            {
+              icon: <IconInfoCircle />,
+              text: `Zadaszone: ${field?.roof ? 'Tak' : 'Nie'}`,
+            },
+          ]}
+        />
         <section className="m-auto w-2/5">
           <div className="mb-7 space-y-4">
             <h3 className="text-heading-h3">Rezerwacja</h3>
