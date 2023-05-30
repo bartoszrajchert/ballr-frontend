@@ -4,7 +4,7 @@ import React from 'react';
 type Props = {
   value?: string;
   onClick?: () => void;
-  type?: 'primary' | 'primary-dark' | 'secondary' | 'tertiary';
+  type?: 'primary' | 'primary-dark' | 'secondary' | 'tertiary' | 'cancel';
   icon?: JSX.Element;
   isSubmit?: boolean;
   fullWidth?: boolean;
@@ -34,6 +34,7 @@ function Button({
           '!px-3': icon && !value,
           'w-full': fullWidth,
           '!bg-grey-300 !text-black': disabled,
+          'bg-red text-white hover:bg-redHover': type === 'cancel',
         }
       )}
       type={isSubmit ? 'submit' : 'button'}
