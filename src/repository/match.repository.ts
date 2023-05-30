@@ -23,3 +23,18 @@ export async function deleteTeamFromMatch(
 ) {
   return axios.delete(`${ROUTES.MATCHES}/${matchId}/teams/${teamId}`);
 }
+
+export type PutRatePlayerType = {
+  user_id: number;
+  rating: number;
+  is_mvp: boolean;
+};
+
+export async function putRatePlayers(
+  matchId: string | number,
+  players: PutRatePlayerType[]
+) {
+  return axios.put(`${ROUTES.MATCHES}/${matchId}/users`, {
+    user_matches: players,
+  });
+}
