@@ -36,8 +36,10 @@ export default function Login() {
         if (res?.user) {
           const redirect =
             (router.query[QUERY_PARAMS.REDIRECT] as string) ?? ROUTES.HOME;
-          await router.push(redirect);
-          toast.info('Konto zostało utworzone');
+          await router.push({
+            pathname: ROUTES.CREATE_PROFILE,
+            query: { [QUERY_PARAMS.REDIRECT]: redirect },
+          });
           await sendEmailVerificationWithToast();
         }
       }

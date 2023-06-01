@@ -2,6 +2,7 @@ import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
 import { ROUTES, QUERY_PARAMS } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
+import { UserContext } from '@/providers/UserProvider';
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
 import {
   IconChevronLeft,
@@ -14,12 +15,8 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import {
-  useAuthState,
-  useIdToken,
-  useSignOut,
-} from 'react-firebase-hooks/auth';
+import React, { useContext, useEffect, useState } from 'react';
+import { useSignOut } from 'react-firebase-hooks/auth';
 import { toast } from 'react-toastify';
 import { UrlObject } from 'url';
 import logo from '../../public/logo.svg';
@@ -174,10 +171,9 @@ function Navigation({ focusMode }: Props) {
  */
 const HamburgerMenu = () => {
   const router = useRouter();
+  const { firebaseUser: user } = useContext(UserContext);
   const [isHamburgerMenuOpen, setIsHamburgerMenuOpen] = useState(false);
   const [expandedContent, setExpandedContent] = useState<string | null>(null);
-  const auth = useGetAuth();
-  const [user] = useIdToken(auth);
 
   useEffect(() => {
     const closeHamburgerMenu = () => setIsHamburgerMenuOpen(false);
@@ -266,17 +262,14 @@ const HamburgerMenu = () => {
 const UserMenu = () => {
   const router = useRouter();
   const auth = useGetAuth();
-  const [user, authLoading, authError] = useAuthState(auth);
+  const { user } = useContext(UserContext);
   const [signOut, _, errorSignOut] = useSignOut(auth);
 
   useEffect(() => {
-    if (authError) {
-      toast.error(`Wystąpił błąd: ${authError.message}`);
-    }
     if (errorSignOut) {
       toast.error(`Wystąpił błąd: ${errorSignOut.message}`);
     }
-  }, [authError, errorSignOut]);
+  }, [errorSignOut]);
 
   const signOutHandler = async () => {
     await signOut();
@@ -286,7 +279,7 @@ const UserMenu = () => {
 
   return (
     <div className="flex justify-end lg:w-[250px]">
-      {!authLoading && !user && (
+      {!user && (
         <ul className="flex items-center gap-6 text-green-900 ">
           <Link
             href={{
@@ -312,10 +305,14 @@ const UserMenu = () => {
           </li>
         </ul>
       )}
-      {!authLoading && user && (
+      {user && (
         <div className="flex items-center gap-2">
-          <NextLink href={`${ROUTES.PROFILE}/${user.uid}`}>
-            <Avatar firstName="Jan" lastName="Kowalski" clickable />
+          <NextLink href={`${ROUTES.PROFILE}/`}>
+            <Avatar
+              firstName={user.first_name}
+              lastName={user.last_name}
+              clickable
+            />
           </NextLink>
           <Button
             icon={<IconLogout />}
