@@ -10,10 +10,12 @@ import clsx from 'clsx';
 import React from 'react';
 import { Control, Controller, RegisterOptions } from 'react-hook-form';
 
+export type DropdownData = { label: string; value: string };
+
 type Props = {
   name: string;
-  control: Control;
-  data: { label: string; value: string }[];
+  control: Control<any>;
+  data: DropdownData[];
   label?: string;
   resetField?: () => void;
   placeholder?: string;
