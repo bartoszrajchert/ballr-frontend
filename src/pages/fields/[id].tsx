@@ -55,7 +55,7 @@ function Content() {
             },
           ]}
         />
-        <section className="m-auto w-2/5">
+        <section className="m-auto w-full lg:w-2/5">
           <div className="mb-7 space-y-4">
             <h3 className="text-heading-h3">Rezerwacja</h3>
             <p>

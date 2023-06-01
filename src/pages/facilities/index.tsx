@@ -1,6 +1,7 @@
 import Button from '@/components/Button';
 import Dropdown from '@/components/Dropdown';
 import Header from '@/components/Header';
+import ListWithPagination from '@/components/ListWithPagination';
 import Tile from '@/components/Tile';
 import MainLayout from '@/layouts/MainLayout';
 import { getAddressFromFacility } from '@/lib/helpers';
@@ -30,36 +31,28 @@ function Facilities() {
 
 function FacilitiesContainer() {
   const router = useRouter();
-  const {
-    data: facilities,
-    isLoading,
-    error,
-  } = useSWR<Facility[]>(
-    `${BACKEND_ROUTES.FACILITIES}?${queryString.stringify(router.query, {
-      skipEmptyString: true,
-      skipNull: true,
-    })}`
-  );
 
   return (
     <>
-      {facilities?.map((facility) => (
-        <Tile
-          key={facility.id}
-          href={`${ROUTES.FACILITIES}/${facility.id}`}
-          title={facility.name}
-          description={[
-            getAddressFromFacility(facility),
-            `Godziny otwarcia: ${facility.open_time} - ${facility.close_time}`,
-            // TODO: Liczba boisk
-          ]}
-        />
-      ))}
-      {isLoading && <div>Loading...</div>}
-      {!isLoading && (!facilities || facilities.length <= 0) && !error && (
-        <p>Brak meczy</p>
-      )}
-      {error && <div>Error</div>}
+      <ListWithPagination
+        child={(data: Facility) => (
+          <Tile
+            key={data.id}
+            href={`${ROUTES.FACILITIES}/${data.id}`}
+            title={data.name}
+            description={[
+              getAddressFromFacility(data),
+              `Godziny otwarcia: ${data.open_time} - ${data.close_time}`,
+              // TODO: Liczba boisk
+            ]}
+          />
+        )}
+        apiURL={BACKEND_ROUTES.FACILITIES}
+        queryParams={queryString.stringify(router.query, {
+          skipEmptyString: true,
+          skipNull: true,
+        })}
+      />
     </>
   );
 }
@@ -68,7 +61,7 @@ function Form() {
   const router = useRouter();
   const { register, handleSubmit, control, reset, getValues } = useForm();
 
-  const { data: cities } = useSWR<City[]>(BACKEND_ROUTES.CITIES);
+  const { data: cities } = useSWR<Pagination<City>>(BACKEND_ROUTES.CITIES);
 
   useEffect(() => {
     reset(router.query);
@@ -87,10 +80,12 @@ function Form() {
         name="city_id"
         control={control}
         data={
-          cities?.map((city) => ({
-            label: city.name,
-            value: city.id.toString(),
-          })) || []
+          (cities &&
+            cities.items.map((city) => ({
+              label: city.name,
+              value: city.id.toString(),
+            }))) ||
+          []
         }
       />
       <div className="mt-4 flex w-full gap-1">
