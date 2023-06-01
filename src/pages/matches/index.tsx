@@ -2,6 +2,7 @@ import Button from '@/components/Button';
 import Checkbox from '@/components/Checkbox';
 import Dropdown from '@/components/Dropdown';
 import Header from '@/components/Header';
+import ListWithPagination from '@/components/ListWithPagination';
 import TextField from '@/components/TextField';
 import Tile from '@/components/Tile';
 import MainLayout from '@/layouts/MainLayout';
@@ -48,12 +49,6 @@ function Matches({ fallback }: Props) {
 
 function MatchesContainer() {
   const router = useRouter();
-  const { data: matches, isLoading } = useSWR<MatchesData[]>(
-    `${ROUTES.MATCHES}?${queryString.stringify(router.query, {
-      skipEmptyString: true,
-      skipNull: true,
-    })}`
-  );
 
   const tags = (match: Match) => {
     const tags = [];
@@ -68,18 +63,26 @@ function MatchesContainer() {
 
   return (
     <>
-      {matches?.map(({ match, benefits }) => (
-        <Tile
-          key={match.id}
-          href={`${ROUTES.MATCHES}/${match.id}`}
-          title={getAddressFromFacility(match.reservation?.field?.facility)}
-          description={[getLocaleDateString(match.reservation?.start_time)]}
-          tags={[...tags(match), ...benefits]}
-        />
-      ))}
-
-      {isLoading && <p>Ładowanie...</p>}
-      {!isLoading && (!matches || matches.length <= 0) && <p>Brak meczy</p>}
+      <ListWithPagination
+        child={({ match, benefits, signed_users }: MatchesData) => (
+          <Tile
+            key={match.id}
+            href={`${ROUTES.MATCHES}/${match.id}`}
+            title={getAddressFromFacility(match.reservation?.field?.facility)}
+            description={[getLocaleDateString(match.reservation?.start_time)]}
+            tags={[
+              `${signed_users}/${match.num_of_players}`,
+              ...tags(match),
+              ...benefits,
+            ]}
+          />
+        )}
+        apiURL={BACKEND_ROUTES.MATCHES}
+        queryParams={queryString.stringify(router.query, {
+          skipEmptyString: true,
+          skipNull: true,
+        })}
+      />
     </>
   );
 }
@@ -89,11 +92,13 @@ function Form() {
   const { register, handleSubmit, control, reset } = useForm();
   const [cityId, setCityId] = React.useState<string>('');
 
-  const { data: cities } = useSWR<City[]>(BACKEND_ROUTES.CITIES);
-  const { data: facilities } = useSWR<Facility[]>(
+  const { data: cities } = useSWR<Pagination<City>>(BACKEND_ROUTES.CITIES);
+  const { data: facilities } = useSWR<Pagination<Facility>>(
     `${BACKEND_ROUTES.FACILITIES}?${cityId && `city_id=${cityId}`}`
   );
-  const { data: benefits } = useSWR<Benefit[]>(BACKEND_ROUTES.BENEFITS);
+  const { data: benefits } = useSWR<Pagination<Benefit>>(
+    BACKEND_ROUTES.BENEFITS
+  );
 
   useEffect(() => {
     reset(router.query);
@@ -115,10 +120,12 @@ function Form() {
           setCityId(value);
         }}
         data={
-          cities?.map((city) => ({
-            label: city.name,
-            value: city.id.toString(),
-          })) || []
+          (cities &&
+            cities.items.map((city) => ({
+              label: city.name,
+              value: city.id.toString(),
+            }))) ||
+          []
         }
       />
       <Dropdown
@@ -126,10 +133,12 @@ function Form() {
         name="facility_id"
         control={control}
         data={
-          facilities?.map((facility) => ({
-            label: facility.name,
-            value: facility.id.toString(),
-          })) || []
+          (facilities &&
+            facilities.items.map((facility) => ({
+              label: facility.name,
+              value: facility.id.toString(),
+            }))) ||
+          []
         }
       />
       <TextField
@@ -150,10 +159,12 @@ function Form() {
         name="benefit_id"
         control={control}
         data={
-          benefits?.map((benefit) => ({
-            label: benefit.name,
-            value: benefit.id.toString(),
-          })) || []
+          (benefits &&
+            benefits.items.map((benefit) => ({
+              label: benefit.name,
+              value: benefit.id.toString(),
+            }))) ||
+          []
         }
       />
       <Checkbox
