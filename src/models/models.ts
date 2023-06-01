@@ -1,3 +1,11 @@
+interface Pagination<T> {
+  items: T[];
+  page: number;
+  pages: number;
+  size: number;
+  total: number;
+}
+
 interface Gender {
   id: number;
   type: string;

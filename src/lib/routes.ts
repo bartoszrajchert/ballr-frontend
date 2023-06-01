@@ -3,6 +3,7 @@ enum ROUTES {
   LOGIN = '/login',
   REGISTER = '/register',
   FORGOT_PASSWORD = '/forgot-password',
+  CREATE_PROFILE = '/create-profile',
 
   MATCHES = '/matches',
   MATCHES_CREATE = '/matches/create',

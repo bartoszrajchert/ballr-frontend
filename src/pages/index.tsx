@@ -102,7 +102,9 @@ export default function Home() {
 const MatchForm = () => {
   const router = useRouter();
   const { control, handleSubmit } = useForm();
-  const { data: cities, error } = useSWR<City[]>(BACKEND_ROUTES.CITIES);
+  const { data: cities, error } = useSWR<Pagination<City>>(
+    BACKEND_ROUTES.CITIES
+  );
 
   const onSubmit = async (data: any) => {
     await router.push(
@@ -126,10 +128,12 @@ const MatchForm = () => {
               name="city_id"
               control={control}
               data={
-                cities?.map((city) => ({
-                  label: city.name,
-                  value: city.id.toString(),
-                })) || []
+                (cities &&
+                  cities.items.map((city) => ({
+                    label: city.name,
+                    value: city.id.toString(),
+                  }))) ||
+                []
               }
             />
           </div>
