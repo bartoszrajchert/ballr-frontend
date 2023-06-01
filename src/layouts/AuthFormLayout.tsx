@@ -4,13 +4,14 @@ import React from 'react';
 
 type Props = {
   header: string;
-  subheader: string | JSX.Element | JSX.Element[];
+  subheader?: string | JSX.Element | JSX.Element[];
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   inputChildren: JSX.Element | JSX.Element[];
   buttonValue: string;
-  footerChildren: JSX.Element | JSX.Element[];
+  footerChildren?: JSX.Element | JSX.Element[];
   errorMessage?: string;
   buttonDisabled?: boolean;
+  buttonOnClick?: () => void;
 };
 
 const AuthFormLayout = (props: Props) => {
@@ -29,6 +30,7 @@ const AuthFormLayout = (props: Props) => {
               isSubmit
               fullWidth
               disabled={props.buttonDisabled}
+              onClick={props.buttonOnClick}
             />
             {props.errorMessage && (
               <p className="text-red">{props.errorMessage}</p>

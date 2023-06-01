@@ -53,7 +53,7 @@ export function getFieldErrorText(name: string, errors: FieldErrors) {
  */
 export function setUseReactFormErrors(
   err: AxiosError,
-  setError: UseFormSetError<FieldValues>
+  setError: UseFormSetError<any>
 ) {
   console.error(err);
 
@@ -70,7 +70,7 @@ export function setUseReactFormErrors(
   setError('root', { message: err.message });
 }
 
-export function resetKeepValues(reset: UseFormReset<FieldValues>) {
+export function resetKeepValues(reset: UseFormReset<any>) {
   reset({}, { keepValues: true });
 }
 
