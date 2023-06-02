@@ -62,23 +62,25 @@ export default function App({ Component, pageProps }: AppProps) {
             }}
           >
             <main>
-              <VerifyEmailBanner />
-              <Navigation focusMode={focusMode} />
-              <Component {...pageProps} />
+              <div>
+                <VerifyEmailBanner />
+                <Navigation focusMode={focusMode} />
+                <Component {...pageProps} />
+              </div>
               {!focusMode && <Footer />}
-              <ToastContainer
-                position="bottom-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-              />
             </main>
+            <ToastContainer
+              position="bottom-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
           </SWRConfig>
         </AxiosAuthInterceptor>
       </UserProvider>
