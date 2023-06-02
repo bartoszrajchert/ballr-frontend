@@ -39,7 +39,6 @@ function ProfileCreate() {
       })
       .catch((err) => {
         setUseReactFormErrors(err, setError);
-        console.log(err);
       });
   };
 
