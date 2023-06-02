@@ -23,7 +23,7 @@ const Settings = () => {
             title="Mecze"
             className="w-full md:w-fit"
             description="Przeglądaj dotychczasowe oraz przyszłe mecze"
-            onClick={() => console.log('test')}
+            onClick={() => router.push(ROUTES.SETTINGS_MATCHES)}
           />
           <BigButton
             title="Moje rezerwacje"
