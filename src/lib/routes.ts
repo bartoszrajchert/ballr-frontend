@@ -23,6 +23,9 @@ enum ROUTES {
   SETTINGS = '/profile/settings',
   SETTINGS_SECURITY = '/profile/settings/security',
   SETTINGS_EDIT = '/profile/settings/edit',
+  SETTINGS_RESERVATIONS = '/profile/settings/reservations',
+
+  RESERVATIONS = '/reservations',
 
   PROTECTED_PAGE = '/protected-page',
   REQUESTS_TEST_PAGE = '/requests-test-page',
