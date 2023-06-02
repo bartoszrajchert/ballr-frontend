@@ -7,6 +7,7 @@ import {
   setUseReactFormErrors,
 } from '@/lib/helpers';
 import { BACKEND_ROUTES, QUERY_PARAMS, ROUTES } from '@/lib/routes';
+import { Pagination } from '@/models/base.model';
 import { createUser, CreateUserData } from '@/repository/user.repository';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';

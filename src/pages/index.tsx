@@ -4,6 +4,7 @@ import FullWidthBackgroundColor from '@/components/FullWidthBackgroundColor';
 import MainLayout from '@/layouts/MainLayout';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
+import { Pagination } from '@/models/base.model';
 import { AxiosError } from 'axios';
 import Head from 'next/head';
 import Image from 'next/image';
