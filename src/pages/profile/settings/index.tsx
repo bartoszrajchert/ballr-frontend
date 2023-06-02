@@ -13,18 +13,22 @@ const Settings = () => {
   return (
     <MainLayout>
       <Header value="Ustawienia" />
-      <Section title="Zajęcia" subtitle="Twoje zajęcia" className="mb-14">
+      <Section
+        title="Zajęcia"
+        subtitle="Ustawienia związane z meczami oraz rezerwacjami."
+        className="mb-14"
+      >
         <div className="flex flex-wrap gap-5">
           <BigButton
-            title="Zapisy"
+            title="Mecze"
             className="w-full md:w-fit"
-            description="Przeglądaj dotychczasowe oraz przyszłe zajęcia"
+            description="Przeglądaj dotychczasowe oraz przyszłe mecze"
             onClick={() => console.log('test')}
           />
           <BigButton
-            title="Moje zajęcia"
+            title="Moje rezerwacje"
             className="w-full md:w-fit"
-            description="Przeglądaj swoje zajęcia"
+            description="Przeglądaj swoje rezerwacje"
             onClick={() => console.log('test')}
           />
         </div>
@@ -34,13 +38,13 @@ const Settings = () => {
           <BigButton
             title="Dane osobowe"
             className="w-full md:w-fit"
-            description="Dodawaj i zmieniaj dane osobowe, pakiety benefitowe"
+            description="Dodawaj i zmieniaj dane osobowe"
             onClick={() => console.log('test')}
           />
           <BigButton
             title="Bezpieczeństwo"
             className="w-full md:w-fit"
-            description="Ustawienia hasła i prywatności"
+            description="Ustawienia hasła"
             onClick={() => router.push(ROUTES.SETTINGS_SECURITY)}
           />
         </div>
