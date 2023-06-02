@@ -3,7 +3,6 @@ import AuthFormLayout from '@/layouts/AuthFormLayout';
 import { getFieldErrorText } from '@/lib/helpers';
 import { ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
-import { withAuth } from '@/lib/withAuth';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useUpdatePassword } from 'react-firebase-hooks/auth';
@@ -66,4 +65,4 @@ const Security = () => {
   );
 };
 
-export default withAuth(Security);
+export default Security;

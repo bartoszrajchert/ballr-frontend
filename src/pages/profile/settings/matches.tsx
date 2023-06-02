@@ -1,9 +1,8 @@
 import Header from '@/components/Header';
 import Tile from '@/components/Tile';
 import MainLayout from '@/layouts/MainLayout';
-import { getAddressFromFacility, getLocaleDateString } from '@/lib/helpers';
+import { getLocaleDateString } from '@/lib/helpers';
 import { ROUTES } from '@/lib/routes';
-import { withAuth } from '@/lib/withAuth';
 import { UserContext } from '@/providers/UserProvider';
 import React, { useContext } from 'react';
 
@@ -34,4 +33,4 @@ function ProfileSettingsMatches() {
   );
 }
 
-export default withAuth(ProfileSettingsMatches);
+export default ProfileSettingsMatches;

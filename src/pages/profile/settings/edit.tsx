@@ -8,7 +8,6 @@ import {
   setUseReactFormErrors,
 } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
-import { withAuth } from '@/lib/withAuth';
 import { Pagination } from '@/models/base.model';
 import { UserContext } from '@/providers/UserProvider';
 import { CreateUpdateUserData, updateUser } from '@/repository/user.repository';
@@ -130,4 +129,4 @@ const ProfileSettingsEdit = () => {
   );
 };
 
-export default withAuth(ProfileSettingsEdit);
+export default ProfileSettingsEdit;
