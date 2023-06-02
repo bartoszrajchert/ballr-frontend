@@ -38,3 +38,10 @@ export async function putRatePlayers(
     user_matches: players,
   });
 }
+
+export async function updateMatchScore(
+  matchId: string | number,
+  data: { score: number }
+) {
+  return axios.put(`${ROUTES.MATCHES}/${matchId}/score`, data);
+}
