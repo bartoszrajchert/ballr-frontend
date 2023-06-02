@@ -7,3 +7,5 @@ export type ErrorData = {
       }[]
     | string;
 };
+
+export type ProtoExtends<T, U> = U & Omit<T, keyof U>;
