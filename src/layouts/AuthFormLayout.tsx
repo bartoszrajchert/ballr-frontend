@@ -1,5 +1,6 @@
 import Button from '@/components/Button';
 import MainLayout from '@/layouts/MainLayout';
+import clsx from 'clsx';
 import React from 'react';
 
 type Props = {
@@ -12,12 +13,18 @@ type Props = {
   errorMessage?: string;
   buttonDisabled?: boolean;
   buttonOnClick?: () => void;
+  centered?: boolean; // default true
 };
 
 const AuthFormLayout = (props: Props) => {
   return (
     <MainLayout>
-      <div className="sm:centered mt-6 sm:min-w-[400px]">
+      <div
+        className={clsx('mt-6 sm:min-w-[400px]', {
+          'sm:centered': props.centered || props.centered === undefined,
+          'm-auto sm:max-w-[400px]': !props.centered,
+        })}
+      >
         <div className="mb-10 space-y-2 text-center">
           <h1 className="text-heading-h2 text-green-900">{props.header}</h1>
           <p>{props.subheader}</p>
