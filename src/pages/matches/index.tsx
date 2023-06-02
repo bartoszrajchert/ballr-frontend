@@ -9,6 +9,7 @@ import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
 import { getAddressFromFacility, getLocaleDateString } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
+import { Pagination } from '@/models/base.model';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';

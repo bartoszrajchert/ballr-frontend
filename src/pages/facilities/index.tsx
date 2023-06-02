@@ -6,6 +6,7 @@ import Tile from '@/components/Tile';
 import MainLayout from '@/layouts/MainLayout';
 import { getAddressFromFacility } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
+import { Pagination } from '@/models/base.model';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
 import React, { useEffect } from 'react';
