@@ -2,6 +2,7 @@ import { COOKIES } from '@/lib/cookies';
 import { globalFetcher } from '@/lib/fetchers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
+import { GetUserResponse } from '@/models/user.model';
 import { onIdTokenChanged, User as FirebaseUser } from '@firebase/auth';
 import { useRouter } from 'next/router';
 import nookies from 'nookies';
@@ -10,7 +11,7 @@ import { useIdToken } from 'react-firebase-hooks/auth';
 import { toast } from 'react-toastify';
 
 export const UserContext = React.createContext<{
-  user: User | null;
+  user: GetUserResponse | null;
   firebaseUser: FirebaseUser | null | undefined;
   firebaseLoading: boolean;
   firebaseError: Error | undefined;
@@ -29,7 +30,7 @@ function UserProvider(props: Props) {
   const auth = useGetAuth();
   const router = useRouter();
   const [firebaseUser, firebaseLoading, firebaseError] = useIdToken(auth);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<GetUserResponse | null>(null);
 
   useEffect(() => {
     const unsubscribe = onIdTokenChanged(auth, async (user) => {
@@ -50,7 +51,7 @@ function UserProvider(props: Props) {
   useEffect(() => {
     if (firebaseUser) {
       globalFetcher(`${BACKEND_ROUTES.USERS}/${firebaseUser?.uid}`)
-        .then((res: User) => {
+        .then((res: GetUserResponse) => {
           setUser(res);
         })
         .catch(async (err) => {
