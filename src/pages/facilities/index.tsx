@@ -34,27 +34,25 @@ function FacilitiesContainer() {
   const router = useRouter();
 
   return (
-    <>
-      <ListWithPagination
-        child={(data: Facility) => (
-          <Tile
-            key={data.id}
-            href={`${ROUTES.FACILITIES}/${data.id}`}
-            title={data.name}
-            description={[
-              getAddressFromFacility(data),
-              `Godziny otwarcia: ${data.open_time} - ${data.close_time}`,
-              // TODO: Liczba boisk
-            ]}
-          />
-        )}
-        apiURL={BACKEND_ROUTES.FACILITIES}
-        queryParams={queryString.stringify(router.query, {
-          skipEmptyString: true,
-          skipNull: true,
-        })}
-      />
-    </>
+    <ListWithPagination
+      child={(data: Facility) => (
+        <Tile
+          key={data.id}
+          href={`${ROUTES.FACILITIES}/${data.id}`}
+          title={data.name}
+          description={[
+            getAddressFromFacility(data),
+            `Godziny otwarcia: ${data.open_time} - ${data.close_time}`,
+            // TODO: Liczba boisk
+          ]}
+        />
+      )}
+      apiURL={BACKEND_ROUTES.FACILITIES}
+      queryParams={queryString.stringify(router.query, {
+        skipEmptyString: true,
+        skipNull: true,
+      })}
+    />
   );
 }
 
