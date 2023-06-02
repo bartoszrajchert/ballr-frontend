@@ -307,7 +307,7 @@ const UserMenu = () => {
       )}
       {user && (
         <div className="flex items-center gap-2">
-          <NextLink href={`${ROUTES.PROFILE}/`}>
+          <NextLink href={`${ROUTES.PROFILE}/${user.id}`}>
             <Avatar
               firstName={user.first_name}
               lastName={user.last_name}
