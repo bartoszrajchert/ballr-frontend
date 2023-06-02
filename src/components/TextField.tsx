@@ -19,8 +19,8 @@ const TextField = React.forwardRef<HTMLInputElement, Props>(
           'text-red': errorText,
         })}
       >
-        {props.label && props.name && (
-          <Label value={props.label} htmlFor={props.name} />
+        {props.label && (
+          <Label value={props.label} htmlFor={props.name ?? ''} />
         )}
         <div className={'overflow-auto'}>
           <span className="icon leading-icon">{props.leadingIcon}</span>
