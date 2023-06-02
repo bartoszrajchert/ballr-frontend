@@ -95,7 +95,6 @@ function Form() {
         await router.push(data.data.id);
       })
       .catch((err) => {
-        toast.error('Nie udało się utworzyć rezerwacji');
         setUseReactFormErrors(err, setError);
       });
   };
