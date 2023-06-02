@@ -39,7 +39,7 @@ const Settings = () => {
             title="Dane osobowe"
             className="w-full md:w-fit"
             description="Dodawaj i zmieniaj dane osobowe"
-            onClick={() => console.log('test')}
+            onClick={() => router.push(ROUTES.SETTINGS_EDIT)}
           />
           <BigButton
             title="Bezpieczeństwo"
