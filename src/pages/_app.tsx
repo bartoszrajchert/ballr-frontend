@@ -59,7 +59,6 @@ export default function App({ Component, pageProps }: AppProps) {
           <SWRConfig
             value={{
               fetcher: globalFetcher,
-              revalidateOnFocus: false,
             }}
           >
             <main>
