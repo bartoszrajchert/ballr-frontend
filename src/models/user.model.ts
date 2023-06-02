@@ -31,5 +31,32 @@ export type GetUserResponse = {
     match_start_date: string;
     match_description: string;
   }[];
-  reservations: [];
+  reservations: {
+    start_time: string;
+    end_time: string;
+    is_paid: boolean;
+    is_approved: boolean;
+    field: {
+      name: string;
+      length: number;
+      width: number;
+      roof: boolean;
+      facility: {
+        name: string;
+        street: string;
+        postcode: string;
+        street_number: number;
+        is_verified: boolean;
+        open_time: string;
+        close_time: string;
+        city: {
+          name: string;
+          id: number;
+        };
+        id: number;
+      };
+      id: number;
+    };
+    id: number;
+  }[];
 };

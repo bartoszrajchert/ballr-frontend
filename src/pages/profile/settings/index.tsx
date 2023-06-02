@@ -29,7 +29,7 @@ const Settings = () => {
             title="Moje rezerwacje"
             className="w-full md:w-fit"
             description="Przeglądaj swoje rezerwacje"
-            onClick={() => console.log('test')}
+            onClick={() => router.push(ROUTES.SETTINGS_RESERVATIONS)}
           />
         </div>
       </Section>
