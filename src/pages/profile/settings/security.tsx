@@ -21,7 +21,7 @@ const Security = () => {
 
   const router = useRouter();
   const auth = useGetAuth();
-  const [updatePassword, updating, error] = useUpdatePassword(auth);
+  const [updatePassword, _, error] = useUpdatePassword(auth);
 
   const onSubmit = (data: FormData) => {
     updatePassword(data.password).then(async (success) => {

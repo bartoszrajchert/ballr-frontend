@@ -1,11 +1,6 @@
 import { ErrorData } from '@/lib/types';
 import { AxiosError } from 'axios';
-import {
-  FieldErrors,
-  FieldValues,
-  UseFormReset,
-  UseFormSetError,
-} from 'react-hook-form';
+import { FieldErrors, UseFormReset, UseFormSetError } from 'react-hook-form';
 
 export function getAddressFromFacility(facility?: Facility) {
   return `${facility?.street} ${facility?.street_number}, ${facility?.postcode} ${facility?.city?.name}`;
