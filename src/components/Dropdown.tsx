@@ -22,6 +22,8 @@ type Props = {
   errorText?: string;
 };
 
+// TODO: disabled state
+
 const Dropdown = (props: Props) => {
   return (
     <div className="w-full space-y-1">

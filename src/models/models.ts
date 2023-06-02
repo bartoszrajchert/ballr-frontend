@@ -1,10 +1,6 @@
-interface Pagination<T> {
-  items: T[];
-  page: number;
-  pages: number;
-  size: number;
-  total: number;
-}
+/**
+ * DEPRECATED
+ */
 
 interface Gender {
   id: number;
@@ -21,23 +17,25 @@ interface Benefit {
   name: string;
 }
 
-interface User {
-  id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-  birth_date: string;
-  score: number;
-  is_admin: boolean;
-  referee: boolean;
-  notification_preference: boolean;
-  is_confirmed: boolean;
-  gender_id: number;
-  city_id: number;
-  gender?: Gender;
-  city?: City;
-}
+// TODO: Delete
+// interface User {
+//   id: string;
+//   first_name: string;
+//   last_name: string;
+//   email: string;
+//   birth_date: string;
+//   // score: number;
+//   // is_admin: boolean;
+//   // referee: boolean;
+//   notification_preference: boolean;
+//   // gender_id: number;
+//   // city_id: number;
+//   gender?: Gender;
+//   city?: City;
+//   teams?: Team[];
+//   matches?: Match[];
+//   reservations?: Reservation[];
+// }
 
 interface Facility {
   name: string;
@@ -71,6 +69,7 @@ interface Field {
   facility?: Facility;
 }
 
+// TODO: Delete
 interface Reservation {
   id: number;
   start_time: string;
@@ -80,7 +79,7 @@ interface Reservation {
   benefit_card: string;
   user_id: number;
   field_id: number;
-  user?: User;
+  // user?: User;
   field?: Field;
 }
 
@@ -108,7 +107,6 @@ interface Team {
   short_name: string;
   creation_date: string;
   is_active: boolean;
-  city_id: number;
   city?: City;
 }
 
@@ -120,29 +118,32 @@ interface TeamTournament {
   team?: Team;
 }
 
-interface UserTeam {
-  user_id: number;
-  team_id: number;
-  is_captain: boolean;
-  start_date: string;
-  end_date?: string;
-  user?: User;
-  team?: Team;
-}
+// TODO: Delete
+// interface UserTeam {
+//   user_id: number;
+//   team_id: number;
+//   is_captain: boolean;
+//   start_date: string;
+//   end_date?: string;
+//   user?: User;
+//   team?: Team;
+// }
 
-interface UserMatch {
-  is_match_creator: boolean;
-  is_referee: boolean;
-  is_mvp: boolean;
-  voted: boolean;
-  combined_rating: number;
-  user_id: number;
-  user_name: string;
-  user_last_name: string;
-  user_score: number;
-  user_email: string;
-}
+// TODO: Delete
+// interface UserMatch {
+//   is_match_creator: boolean;
+//   is_referee: boolean;
+//   is_mvp: boolean;
+//   voted: boolean;
+//   combined_rating: number;
+//   user_id: string;
+//   user_name: string;
+//   user_last_name: string;
+//   user_score: number;
+//   user_email: string;
+// }
 
+// TODO: Delete
 interface Match {
   id: number;
   start_date: string;
@@ -164,7 +165,7 @@ interface Match {
   team?: Team;
   opponent_team?: Team;
   winner_team?: Team;
-  users?: UserMatch[];
+  // users?: UserMatch[];
   weather?: Weather;
 }
 
@@ -173,6 +174,7 @@ interface Weather {
   description: string;
 }
 
+// TODO: Delete
 interface MatchesData {
   match: Match;
   benefits: string[];
