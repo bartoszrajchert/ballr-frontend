@@ -2,40 +2,63 @@ import Dropdown from '@/components/Dropdown';
 import TextField from '@/components/TextField';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
 import {
+  formatDateTimeToInputFormat,
   getFieldErrorText,
   resetKeepValues,
   setUseReactFormErrors,
 } from '@/lib/helpers';
-import { BACKEND_ROUTES, QUERY_PARAMS, ROUTES } from '@/lib/routes';
+import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
+import { withAuth } from '@/lib/withAuth';
 import { Pagination } from '@/models/base.model';
-import { createUser, CreateUpdateUserData } from '@/repository/user.repository';
+import { UserContext } from '@/providers/UserProvider';
+import { CreateUpdateUserData, updateUser } from '@/repository/user.repository';
 import { useRouter } from 'next/router';
+import React, { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import useSWR from 'swr';
 
-function ProfileCreate() {
+const ProfileSettingsEdit = () => {
   const router = useRouter();
-
+  const { user } = useContext(UserContext);
   const { data: cities } = useSWR<Pagination<City>>(BACKEND_ROUTES.CITIES);
   const { data: genders } = useSWR<Pagination<Gender>>(BACKEND_ROUTES.GENDERS);
+
   const {
     register,
     handleSubmit,
-    control,
     setError,
+    control,
     reset,
     formState: { errors },
   } = useForm<CreateUpdateUserData>();
 
-  const onSubmit = async (data: CreateUpdateUserData) => {
+  useEffect(() => {
+    reset({
+      first_name: user?.first_name,
+      last_name: user?.last_name,
+      birth_date: formatDateTimeToInputFormat(user?.birth_date ?? ''),
+      city_id: user?.city.id,
+      gender_id: user?.gender.id,
+    });
+  }, [
+    reset,
+    user?.birth_date,
+    user?.city.id,
+    user?.first_name,
+    user?.gender.id,
+    user?.last_name,
+  ]);
+
+  const onSubmit = (data: CreateUpdateUserData) => {
+    if (!user) return;
+
     data.birth_date = new Date(data.birth_date).toISOString();
-    createUser(data)
-      .then(async (res) => {
-        const redirect =
-          (router.query[QUERY_PARAMS.REDIRECT] as string) ?? ROUTES.HOME;
-        await router.push(redirect);
-        toast.success('Pomyślnie utworzono konto!');
+
+    updateUser(data, user?.id)
+      .then(async () => {
+        await router.push(ROUTES.SETTINGS);
+        toast.success('Pomyślnie zaktualizowano dane!');
       })
       .catch((err) => {
         setUseReactFormErrors(err, setError);
@@ -44,12 +67,12 @@ function ProfileCreate() {
 
   return (
     <AuthFormLayout
-      header="Uzupełnij dane"
+      header="Dane osobowe"
       onSubmit={handleSubmit(onSubmit)}
       inputChildren={
         <>
           <TextField
-            label="Imię"
+            label="Imie"
             errorText={getFieldErrorText('first_name', errors)}
             {...register('first_name', { required: true })}
           />
@@ -102,8 +125,9 @@ function ProfileCreate() {
         getFieldErrorText('root', errors) &&
         `Formularz zawiera błędy: ${getFieldErrorText('root', errors)}`
       }
+      centered={false}
     />
   );
-}
+};
 
-export default ProfileCreate;
+export default withAuth(ProfileSettingsEdit);
