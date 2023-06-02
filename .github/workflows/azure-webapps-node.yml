@@ -31,7 +31,7 @@ jobs:
         npm run test --if-present
         
     - name: Zip artifact for deployment
-      run: zip -9 -q -r --symlinks ballr-frontend-release.zip .next package.json node_modules
+      run: zip -9 -q -r --symlinks ballr-frontend-release.zip .next package.json node_modules public
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v3
