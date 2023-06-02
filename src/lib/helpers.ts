@@ -20,7 +20,7 @@ export function formatDateTimeToInputFormat(unformulatedDate: string) {
   return `${year}-${month}-${day}`;
 }
 
-export function getLocaleDateString(date?: string) {
+export function getLocaleDateString(date?: string, withoutTime?: boolean) {
   const inputDate = date ? new Date(date) : new Date();
 
   const year = inputDate.getFullYear();
@@ -29,7 +29,9 @@ export function getLocaleDateString(date?: string) {
   const hour = ('0' + inputDate.getHours()).slice(-2);
   const minute = ('0' + inputDate.getMinutes()).slice(-2);
 
-  return `${day}/${month}/${year} • ${hour}:${minute}`;
+  const time = withoutTime ? '' : ` • ${hour}:${minute}`;
+
+  return `${day}/${month}/${year} ${time}`;
 }
 
 export function concatenateDateAndTime(date: Date, time: string): string {
