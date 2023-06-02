@@ -6,6 +6,7 @@ import Section from '@/components/Section';
 import TextInformation from '@/components/TextInformation';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
+import { getLocaleDateString } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { GetUserResponse } from '@/models/user.model';
 import { UserContext } from '@/providers/UserProvider';
@@ -83,7 +84,7 @@ function Content() {
           <div className="flex w-full flex-col flex-wrap gap-5 sm:flex-row">
             <TextInformation
               header="Data urodzenia"
-              body={profile.birth_date}
+              body={getLocaleDateString(profile.birth_date, true)}
               className="flex-grow"
             />
             <TextInformation
