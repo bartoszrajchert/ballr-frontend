@@ -1,3 +1,4 @@
+import { Pagination } from '@/models/base.model';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
@@ -11,7 +12,7 @@ type Props = {
 
 function ListWithPagination(props: Props) {
   const [pageIndex, setPageIndex] = useState(1);
-  const [pageSize, setPageSize] = useState(1);
+  const [pageSize, setPageSize] = useState(2);
   const [pageCount, setPageCount] = useState(1);
   const { data, isLoading, error } = useSWR<Pagination<unknown>>(
     `${props.apiURL}?page=${pageIndex}&size=${pageSize}&${props.queryParams}`
