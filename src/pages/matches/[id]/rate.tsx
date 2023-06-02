@@ -9,14 +9,17 @@ import {
   resetKeepValues,
   setUseReactFormErrors,
 } from '@/lib/helpers';
-import { BACKEND_ROUTES } from '@/lib/routes';
+import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
+import { GetMatchResponse } from '@/models/match.model';
+import { UserContext } from '@/providers/UserProvider';
 import {
   putRatePlayers,
   PutRatePlayerType,
+  updateMatchScore,
 } from '@/repository/match.repository';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useContext } from 'react';
 import { FieldErrors, useForm, UseFormRegister } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import useSWR from 'swr';
@@ -30,7 +33,7 @@ import useSWR from 'swr';
  * @constructor
  */
 export default function MatchesIdRate({ id }: any) {
-  const { data: match, isLoading } = useSWR<Match>(
+  const { data: match, isLoading } = useSWR<GetMatchResponse>(
     `${BACKEND_ROUTES.MATCHES}/${id}`
   );
 
@@ -47,7 +50,7 @@ export default function MatchesIdRate({ id }: any) {
             />
             <section className="m-auto max-w-[820px]">
               {match?.for_team_only ? (
-                <ScoreForm />
+                <ScoreForm id={String(id)} />
               ) : (
                 <UserForm id={String(id)} users={match?.users} />
               )}
@@ -59,7 +62,8 @@ export default function MatchesIdRate({ id }: any) {
   );
 }
 
-function ScoreForm() {
+function ScoreForm(props: { id: string }) {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -69,8 +73,16 @@ function ScoreForm() {
   } = useForm();
 
   const onSubmit = (data: any) => {
-    // TODO: send data to backend
-    console.log(data);
+    updateMatchScore(props.id, data)
+      .then(async () => {
+        toast.success('Wynik został zaktualizowany');
+        await router.push(`${ROUTES.MATCHES}/${props.id}`);
+      })
+      .catch((err) => {
+        toast.error(
+          'Wystąpił błąd podczas aktualizacji wyniku: ' + getErrorMessage(err)
+        );
+      });
   };
 
   return (
@@ -101,7 +113,9 @@ function ScoreForm() {
   );
 }
 
-function UserForm(props: { id: string; users?: UserMatch[] }) {
+function UserForm(props: { id: string; users?: GetMatchResponse['users'] }) {
+  const { user } = useContext(UserContext);
+
   const router = useRouter();
   const {
     register,
@@ -110,9 +124,6 @@ function UserForm(props: { id: string; users?: UserMatch[] }) {
     formState: { errors, isSubmitted },
     setError,
   } = useForm();
-
-  // TODO delete me from users
-  const me = { id: '1' };
 
   const onSubmit = (data: any) => {
     console.log('data', data);
@@ -132,9 +143,6 @@ function UserForm(props: { id: string; users?: UserMatch[] }) {
         await router.push(`/matches/${props.id}`);
       })
       .catch((err) => {
-        toast.error(
-          `Wystąpił błąd podczas zapisywania ocen: ${getErrorMessage(err)}`
-        );
         setUseReactFormErrors(err, setError);
       });
   };
@@ -143,7 +151,7 @@ function UserForm(props: { id: string; users?: UserMatch[] }) {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {props.users
-          ?.filter((user) => user.user_id !== Number(me.id))
+          ?.filter((userMatch) => userMatch.user_id !== user?.id)
           .map((user) => (
             <UserGrade
               key={user.user_id}

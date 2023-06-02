@@ -5,16 +5,17 @@ import ImageHeader from '@/components/ImageHeader';
 import Section from '@/components/Section';
 import TextInformation from '@/components/TextInformation';
 import MainLayout from '@/layouts/MainLayout';
+import { MAX_NUMBER_OF_TEAMS } from '@/lib/constants';
 import { fetcherBackend } from '@/lib/fetchers';
 import {
   getAddressFromFacility,
   getErrorMessage,
   getFieldErrorText,
   getLocaleDateString,
-  setUseReactFormErrors,
 } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
-import useGetAuth from '@/lib/useGetAuth';
+import { GetMatchResponse } from '@/models/match.model';
+import { UserContext } from '@/providers/UserProvider';
 import {
   addTeamToMatch,
   addUserToMatch,
@@ -25,7 +26,7 @@ import clsx from 'clsx';
 import { GetServerSideProps } from 'next';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -37,6 +38,15 @@ enum MatchStatus {
   COMPLETED = 'completed',
 }
 
+/**
+ * This page is used to display match details.
+ * It can be accessed by all players, however the server will check if the user is in the match.
+ *
+ * This page has a refresh interval of 5 seconds. It is used to update the match status.
+ *
+ * @param fallback - Fallback data for SWR.
+ * @constructor
+ */
 export default function MatchId({ fallback }: { fallback: any }) {
   return (
     <SWRConfig value={{ fallback }}>
@@ -46,12 +56,14 @@ export default function MatchId({ fallback }: { fallback: any }) {
 }
 
 const Content = () => {
-  const auth = useGetAuth();
-  const [firebaseUser, authLoading] = useAuthState(auth);
-
   const router = useRouter();
   const { id } = router.query;
-  const { data: match } = useSWR<Match>(`${BACKEND_ROUTES.MATCHES}/${id}`);
+  const { data: match } = useSWR<GetMatchResponse>(
+    `${BACKEND_ROUTES.MATCHES}/${id}`,
+    { refreshInterval: 5000, revalidateOnMount: true }
+  );
+
+  const { user } = useContext(UserContext);
   const [matchStatus, setMatchStatus] = React.useState<MatchStatus | null>(
     null
   );
@@ -71,45 +83,69 @@ const Content = () => {
     }
   }, [match]);
 
-  const { user_name: refereeName, user_last_name: refereeLastName } =
-    match?.users?.find((user) => user.is_referee) ?? {};
+  const referee = useMemo(
+    () => match?.users?.find((user) => user.is_referee),
+    [match]
+  );
 
-  const {
-    user_name: mvpName,
-    user_last_name: mvpLastName,
-    user_score: mvpScore,
-  } = match?.users?.find((user) => user.is_mvp) ?? {};
+  const mvpUser = useMemo(
+    () => match?.users?.find((user) => user.is_mvp),
+    [match]
+  );
 
-  // TODO: adjust when user will have uid
-  const me: Partial<UserMatch> = { voted: false };
-
-  const getNumberOfTeams = () => {
+  const getNumberOfTeams = useCallback(() => {
     if (match?.opponent_team && match?.team) {
       return 2;
     } else if (match?.opponent_team || match?.team) {
       return 1;
     }
     return 0;
-  };
+  }, [match]);
 
-  // TODO: sprawdź czy jestem zapisany na mecz jako sędzia
-  const amISignedAsReferee = false;
-  // TODO: sprawdź czy jestem zapisany na mecz jako gracz
-  const amISignedAsPlayer = false;
-  // TODO: sprawdź czy jestem kapitanem drużyny i czy mecz jest drużynowy
-  const amICaptainAndIsTeamMatch = true && match?.for_team_only;
+  const me = useMemo(
+    () => match?.users.find((matchUser) => matchUser.user_id === user?.id),
+    [match?.users, user?.id]
+  );
+
+  const teamWhereIAmCaptain = useMemo(
+    () =>
+      user?.teams?.find(
+        (team) =>
+          (team.team_id === match?.opponent_team?.id ||
+            team.team_id === match?.team?.id) &&
+          team.is_captain
+      ),
+    [match?.opponent_team?.id, match?.team?.id, user?.teams]
+  );
+
+  const myTeamScore = useMemo(() => {
+    if (match?.opponent_team?.id === teamWhereIAmCaptain?.team_id) {
+      return match?.opponent_score;
+    } else if (match?.team?.id === teamWhereIAmCaptain?.team_id) {
+      return match?.score;
+    }
+    return null;
+  }, [
+    match?.opponent_score,
+    match?.opponent_team?.id,
+    match?.score,
+    match?.team?.id,
+    teamWhereIAmCaptain?.team_id,
+  ]);
 
   return (
     <MainLayout>
       <div className="mt-10 space-y-16">
         <ImageHeader
-          href={`${ROUTES.FACILITIES}/${match?.reservation?.field?.facility_id}`}
+          href={`${ROUTES.FACILITIES}/${match?.reservation?.field?.facility.id}`}
           hrefText={match?.reservation?.field?.facility?.name ?? 'Error'}
           title={getAddressFromFacility(match?.reservation?.field?.facility)}
           iconDetails={[
             {
               icon: <IconInfoCircle />,
-              text: `Zapisani: ${match?.users?.length} / ${match?.num_of_players}`,
+              text: match?.for_team_only
+                ? `Drużyny: ${getNumberOfTeams()} / ${MAX_NUMBER_OF_TEAMS}`
+                : `Zapisani: ${match?.users?.length} / ${match?.num_of_players}`,
             },
             {
               icon: <IconCalendarEvent />,
@@ -130,20 +166,19 @@ const Content = () => {
                 <ButtonForm
                   id={String(id)}
                   signUpButtonType="primary"
-                  amISigned={amISignedAsPlayer}
+                  amISigned={!!me}
                   signUpText="Zapisz się jako zawodnik"
                   signOutText="Wypisz się z meczu"
                   isReferee={false}
                   disabled={
-                    !amISignedAsPlayer &&
-                    match?.users?.length === match?.num_of_players
+                    !me && match?.users?.length === match?.num_of_players
                   }
                 />
               )}
 
             {/* Team form */}
             {matchStatus === MatchStatus.UPCOMING && match?.for_team_only && (
-              <TeamForm match={match} />
+              <TeamForm match={match} numberOfTeams={getNumberOfTeams()} />
             )}
 
             {/* Referee form */}
@@ -153,12 +188,12 @@ const Content = () => {
                 <ButtonForm
                   id={String(id)}
                   signUpButtonType="secondary"
-                  amISigned={amISignedAsReferee}
+                  amISigned={!!me?.is_referee}
                   signUpText="Zapisz się jako sędzia"
                   signOutText="Wypisz się z meczu"
                   isReferee={true}
                   disabled={
-                    !amISignedAsReferee &&
+                    !me?.is_referee &&
                     !!match?.users?.some((user) => user.is_referee)
                   }
                 />
@@ -173,17 +208,20 @@ const Content = () => {
                 <p className="text-heading-h3 text-green-700">
                   Mecz zakończony
                 </p>
+
                 {me && !me.voted && !match?.for_team_only && (
                   <NextLink href={`${ROUTES.MATCHES}/${id}/rate`}>
                     <Button value="Oceń graczy" fullWidth />
                   </NextLink>
                 )}
 
-                {amICaptainAndIsTeamMatch && (
-                  <NextLink href={`${ROUTES.MATCHES}/${id}/rate`}>
-                    <Button value="Wpisz wynik" fullWidth />
-                  </NextLink>
-                )}
+                {teamWhereIAmCaptain &&
+                  (myTeamScore === null || myTeamScore === undefined) &&
+                  match?.for_team_only && (
+                    <NextLink href={`${ROUTES.MATCHES}/${id}/rate`}>
+                      <Button value="Wpisz wynik" fullWidth />
+                    </NextLink>
+                  )}
               </div>
             )}
           </div>
@@ -204,12 +242,16 @@ const Content = () => {
                   />
                 </>
               )}
-              <TextInformation
-                header="MVP"
-                body={
-                  mvpName ? `${mvpName} ${mvpLastName} - ${mvpScore}` : 'Brak'
-                }
-              />
+              {!match?.for_team_only && (
+                <TextInformation
+                  header="MVP"
+                  body={
+                    mvpUser
+                      ? `${mvpUser.user_name} ${mvpUser.user_last_name} - ${mvpUser.user_score}`
+                      : 'Brak'
+                  }
+                />
+              )}
             </div>
           </Section>
         )}
@@ -241,7 +283,11 @@ const Content = () => {
             />
             <TextInformation
               header="Sędzia"
-              body={refereeName ? `${refereeName} ${refereeLastName}` : 'Brak'}
+              body={
+                referee
+                  ? `${referee.user_name} ${referee.user_last_name}`
+                  : 'Brak'
+              }
               className="flex-grow"
             />
             <TextInformation
@@ -320,11 +366,13 @@ function ButtonForm(props: {
     addUserToMatch(props.id, props.isReferee)
       .then(() => {
         toast.success('Zapisano na mecz');
-        mutate(`${BACKEND_ROUTES.MATCHES}/${props.id}`);
       })
       .catch((err) => {
         toast.error(`Nie udało się zapisać na mecz: ${getErrorMessage(err)}`);
         console.error(err);
+      })
+      .finally(() => {
+        mutate(`${BACKEND_ROUTES.MATCHES}/${props.id}`);
       });
   };
 
@@ -344,7 +392,8 @@ function ButtonForm(props: {
   );
 }
 
-function TeamForm(props: { match: Match }) {
+function TeamForm(props: { match: GetMatchResponse; numberOfTeams: number }) {
+  const { user } = useContext(UserContext);
   const { mutate } = useSWRConfig();
   const {
     handleSubmit,
@@ -353,11 +402,15 @@ function TeamForm(props: { match: Match }) {
     control,
   } = useForm();
 
-  // TODO: get teams from API
-  const myTeam = { team_id: 1 };
-  const isMyTeamSigned =
-    props.match?.opponent_team?.id === myTeam.team_id ||
-    props.match?.team?.id === myTeam.team_id;
+  const mySignedTeam = useMemo(
+    () =>
+      user?.teams?.find(
+        (team) =>
+          team.team_id === props.match?.opponent_team?.id ||
+          team.team_id === props.match?.team?.id
+      ) ?? null,
+    [props.match?.opponent_team?.id, props.match?.team?.id, user?.teams]
+  );
 
   const submitAddTeam = async (data: any) => {
     if (!props.match.id) return;
@@ -365,55 +418,61 @@ function TeamForm(props: { match: Match }) {
     addTeamToMatch(String(props.match.id), data.team_id)
       .then(() => {
         toast.success('Zapisano na mecz');
-        mutate(`${BACKEND_ROUTES.MATCHES}/${props.match.id}`); // Refresh match data
       })
       .catch((err) => {
         toast.error(`Nie udało się zapisać na mecz: ${getErrorMessage(err)}`);
+      })
+      .finally(() => {
+        mutate(`${BACKEND_ROUTES.MATCHES}/${props.match.id}`);
       });
   };
 
   const submitDeleteTeam = async () => {
     if (!props.match.id) return;
 
-    deleteTeamFromMatch(String(props.match.id), myTeam.team_id)
+    if (!mySignedTeam) {
+      toast.error('Nie jesteś kapitanem tej drużyny.');
+      return;
+    }
+
+    deleteTeamFromMatch(String(props.match.id), mySignedTeam.team_id)
       .then(() => {
         toast.success('Wypisano z meczu');
-        mutate(`${BACKEND_ROUTES.MATCHES}/${props.match.id}`); // Refresh match data
       })
       .catch((err) => {
         toast.error(`Nie udało się wypisać z meczu: ${getErrorMessage(err)}`);
+      })
+      .finally(() => {
+        mutate(`${BACKEND_ROUTES.MATCHES}/${props.match.id}`); // Refresh match data
       });
   };
 
   return (
     <form
       className="space-y-1"
-      onSubmit={handleSubmit(isMyTeamSigned ? submitDeleteTeam : submitAddTeam)}
+      onSubmit={handleSubmit(mySignedTeam ? submitDeleteTeam : submitAddTeam)}
     >
       <div className="flex flex-col gap-2 lg:flex-row">
-        {!isMyTeamSigned && (
+        {!mySignedTeam && (
           <Dropdown
             name="team_id"
             placeholder="Wybierz drużynę"
             control={control}
             rules={{ required: true }}
             errorText={getFieldErrorText('team_id', errors)}
-            data={[
-              // TODO: get teams (where user is captain) from API
-              { label: '1', value: '1' },
-              { label: '2', value: '2' },
-            ]}
+            data={
+              user?.teams?.map((team) => ({
+                label: team.team_name,
+                value: team.team_id.toString(),
+              })) ?? []
+            }
           />
         )}
         <Button
-          value={isMyTeamSigned ? 'Wypisz drużynę' : 'Zapisz drużynę'}
-          type={isMyTeamSigned ? 'cancel' : 'primary'}
+          value={mySignedTeam ? 'Wypisz drużynę' : 'Zapisz drużynę'}
+          type={mySignedTeam ? 'cancel' : 'primary'}
           fullWidth
-          disabled={
-            !isMyTeamSigned &&
-            !!props.match?.team &&
-            !!props.match?.opponent_team
-          }
+          disabled={!mySignedTeam && props.numberOfTeams >= MAX_NUMBER_OF_TEAMS}
           isSubmit
         />
       </div>
