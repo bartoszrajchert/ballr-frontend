@@ -6,8 +6,8 @@ import footballImage1 from '../../public/prapoth-panchuea-_lTF9zrF1PY-unsplash.j
 type Props = {
   href: string;
   title: string;
-  description: string[];
-  tags?: string[];
+  description: (string | null)[];
+  tags?: (string | null)[];
 };
 
 function Tile(props: Props) {
@@ -25,14 +25,13 @@ function Tile(props: Props) {
         <div className="flex flex-col justify-between gap-3">
           <div>
             <h3 className="mb-1 text-label-medium">{props.title}</h3>
-            {props.description.map((description) => (
-              <p key={description}>{description}</p>
-            ))}
+            {props.description.map(
+              (description) =>
+                description && <p key={description}>{description}</p>
+            )}
           </div>
           <div className="flex gap-1">
-            {props.tags?.map((tag) => (
-              <Tag key={tag} text={tag} />
-            ))}
+            {props.tags?.map((tag) => tag && <Tag key={tag} text={tag} />)}
           </div>
         </div>
       </div>
