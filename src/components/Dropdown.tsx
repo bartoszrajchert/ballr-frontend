@@ -107,7 +107,7 @@ const SelectItem = React.forwardRef<
 >((props, ref) => {
   return (
     <Select.Item
-      className="relative flex h-[25px] select-none items-center rounded-[3px] pl-[25px] pr-[35px] data-[disabled]:pointer-events-none data-[highlighted]:bg-green-900 data-[highlighted]:text-white data-[highlighted]:outline-none"
+      className="relative flex h-[48px] cursor-pointer select-none items-center rounded-[3px] pl-[25px] pr-[35px] transition-colors data-[disabled]:pointer-events-none data-[highlighted]:bg-green-900 data-[highlighted]:text-white data-[highlighted]:outline-none sm:h-[40px]"
       ref={ref}
       {...props}
     >
