@@ -339,8 +339,7 @@ const Content = () => {
                     key={user.user_id}
                     href={`${ROUTES.PROFILE}/${user.user_id}`}
                     avatar={{
-                      firstName: user.user_name,
-                      lastName: user.user_last_name,
+                      text: `${user.user_name} ${user.user_last_name}`,
                     }}
                     title={`${user.user_name} ${user.user_last_name}`}
                     paragraph={`Ocena: ${user.user_score}`}

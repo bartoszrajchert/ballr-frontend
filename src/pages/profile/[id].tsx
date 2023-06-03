@@ -62,8 +62,7 @@ function Content() {
       <Header>
         <div className="flex flex-wrap items-center justify-center gap-4">
           <Avatar
-            firstName={profile.first_name}
-            lastName={profile.last_name}
+            text={`${profile.first_name} ${profile.last_name}`}
             size={60}
           />
           <div>
