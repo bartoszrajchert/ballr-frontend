@@ -1,15 +1,15 @@
+import { getInitialsOrChars } from '@/lib/helpers';
 import clsx from 'clsx';
 
 export type AvatarProps = {
-  firstName: string;
-  lastName: string;
+  text: string;
   size?: number;
   className?: string;
   clickable?: boolean;
 };
 
 const Avatar = (props: AvatarProps) => {
-  const initials = `${props.firstName[0]}${props.lastName[0]}`;
+  const initials = getInitialsOrChars(props.text);
   const size = props.size ? props.size : 48;
 
   return (

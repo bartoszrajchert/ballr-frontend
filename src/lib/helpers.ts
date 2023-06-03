@@ -100,3 +100,14 @@ export function getErrorMessage(err: AxiosError): string {
 
   return err.message;
 }
+
+export function getInitialsOrChars(input: string): string {
+  if (input.includes(' ')) {
+    return input
+      .split(' ')
+      .map((word) => word[0].toUpperCase())
+      .join('');
+  }
+
+  return input.substring(0, 5);
+}

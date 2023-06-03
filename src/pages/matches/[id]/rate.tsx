@@ -193,7 +193,7 @@ function UserGrade(props: {
   return (
     <div className="flex flex-col gap-4 rounded-2xl bg-grey-100 p-6">
       <div className="flex items-center gap-4">
-        <Avatar firstName={props.firstName} lastName={props.lastName} />
+        <Avatar text={`${props.firstName} ${props.lastName}`} />
         <p className="text-label-medium">
           {props.firstName} {props.lastName}
         </p>

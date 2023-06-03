@@ -320,7 +320,7 @@ const UserMenu = () => {
             }
           >
             <p className="max-w-[300px]">
-              Błąd przy pobieraniu informacji o uzytkowniku: {error.message}
+              Błąd przy pobieraniu informacji o użytkowniku: {error.message}
             </p>
           </Tooltip>
         </div>
@@ -329,11 +329,7 @@ const UserMenu = () => {
         <div className="flex items-center gap-2">
           {user && (
             <NextLink href={`${ROUTES.PROFILE}/${user.id}`}>
-              <Avatar
-                firstName={user.first_name}
-                lastName={user.last_name}
-                clickable
-              />
+              <Avatar text={`${user.first_name} ${user.last_name}`} clickable />
             </NextLink>
           )}
           <Button
