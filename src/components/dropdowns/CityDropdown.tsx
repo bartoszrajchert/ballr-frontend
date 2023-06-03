@@ -8,6 +8,7 @@ import useSWR from 'swr';
 
 type Props = {
   control: any;
+  hideLabel?: boolean;
   errors?: any;
   rules?: RegisterOptions;
   onValueChange?: (value: string) => void;
@@ -28,7 +29,7 @@ function CityDropdown(props: Props) {
 
   return (
     <Dropdown
-      label="Miasto"
+      label={props.hideLabel ? undefined : 'Miasto'}
       name="city_id"
       control={props.control}
       errorText={
