@@ -6,14 +6,10 @@ enum ROUTES {
   CREATE_PROFILE = '/create-profile',
 
   MATCHES = '/matches',
-  MATCHES_CREATE = '/matches/create',
+  MATCHES_NEW = '/matches/new',
 
   FACILITIES = '/facilities',
-  FACILITIES_CREATE = '/facilities/create',
   FIELDS = '/fields',
-
-  TOURNAMENTS = '/tournaments',
-  TOURNAMENTS_CREATE = '/tournaments/create',
 
   TEAMS = '/teams',
   TEAMS_CREATE = '/teams/create',

@@ -24,7 +24,7 @@ export function getLocaleDateString(date?: string, withoutTime?: boolean) {
   const hour = ('0' + inputDate.getHours()).slice(-2);
   const minute = ('0' + inputDate.getMinutes()).slice(-2);
 
-  const time = withoutTime ? '' : ` • ${hour}:${minute}`;
+  const time = withoutTime ? '' : ` ${hour}:${minute}`;
 
   return `${day}/${month}/${year} ${time}`;
 }
