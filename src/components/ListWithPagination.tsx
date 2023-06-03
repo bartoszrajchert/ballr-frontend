@@ -1,5 +1,6 @@
 import { Pagination } from '@/models/base.model';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import useSWR from 'swr';
@@ -31,7 +32,7 @@ function ListWithPagination(props: Props) {
 
   return (
     <>
-      <div className={props.listClassName}>
+      <div className={clsx('mb-8', props.listClassName)}>
         {data && !error && data.items.map((item: unknown) => props.child(item))}
       </div>
       {error && <p>Błąd: {JSON.stringify(error)}</p>}

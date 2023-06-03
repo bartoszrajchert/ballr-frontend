@@ -10,7 +10,7 @@ function Teams() {
     <MainLayout>
       <Header value="Drużyny" />
       <DynamicListWithPagination
-        listClassName="flex flex-wrap gap-4 mb-8"
+        listClassName="flex flex-wrap gap-4"
         child={(team: GetTeamsResponse) => (
           <EntityCard
             className="w-full sm:w-fit"
