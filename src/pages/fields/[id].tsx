@@ -11,11 +11,12 @@ import {
   setUseReactFormErrors,
 } from '@/lib/helpers';
 import { ROUTES } from '@/lib/routes';
+import { UserContext } from '@/providers/UserProvider';
 import { createReservation } from '@/repository/reservation.repository';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import useSWR, { SWRConfig } from 'swr';
@@ -71,13 +72,14 @@ function Content() {
 }
 
 function Form() {
+  const { user } = useContext(UserContext); // TODO: remove this
   const router = useRouter();
   const { id } = router.query;
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting, isSubmitted },
     setError,
   } = useForm();
 
@@ -86,13 +88,10 @@ function Form() {
     const start = concatenateDateAndTime(new Date(date), start_time);
     const end = concatenateDateAndTime(new Date(date), end_time);
 
-    createReservation(String(id), start, end)
+    createReservation(String(id), start, end, user?.id ?? '') // TODO: remove user.id
       .then(async (data) => {
-        reset();
         toast.success('Rezerwacja została utworzona');
-
-        // TODO: Redirect to reservation page
-        await router.push(data.data.id);
+        await router.push(`${ROUTES.RESERVATIONS}/${data.data.id}`);
       })
       .catch((err) => {
         setUseReactFormErrors(err, setError);
@@ -124,6 +123,7 @@ function Form() {
       <div className="mt-4 flex w-full gap-1">
         <Button
           value="Rezerwuj"
+          disabled={isSubmitting || isSubmitted}
           isSubmit
           fullWidth
           onClick={() => resetKeepValues(reset)}
