@@ -8,6 +8,7 @@ type Props = {
   child: (data: any) => JSX.Element;
   apiURL: string;
   queryParams?: string;
+  listClassName?: string;
 };
 
 function ListWithPagination(props: Props) {
@@ -30,7 +31,9 @@ function ListWithPagination(props: Props) {
 
   return (
     <>
-      {data && !error && data.items.map((item: unknown) => props.child(item))}
+      <div className={props.listClassName}>
+        {data && !error && data.items.map((item: unknown) => props.child(item))}
+      </div>
       {error && <p>Błąd: {JSON.stringify(error)}</p>}
       {isLoading && <p>Ładowanie...</p>}
       {!error && !isLoading && (!data || data.total <= 0) && <p>Brak meczy</p>}
