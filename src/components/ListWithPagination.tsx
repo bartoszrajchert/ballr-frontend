@@ -12,7 +12,7 @@ type Props = {
 
 function ListWithPagination(props: Props) {
   const [pageIndex, setPageIndex] = useState(1);
-  const [pageSize, setPageSize] = useState(2);
+  const [pageSize] = useState(10);
   const [pageCount, setPageCount] = useState(1);
   const { data, isLoading, error } = useSWR<Pagination<unknown>>(
     `${props.apiURL}?page=${pageIndex}&size=${pageSize}&${props.queryParams}`
