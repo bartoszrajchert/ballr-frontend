@@ -14,6 +14,6 @@ export async function createUser(user: CreateUpdateUserData) {
   return axios.post(`${BACKEND_ROUTES.USERS}`, user);
 }
 
-export async function updateUser(user: CreateUpdateUserData, id: string) {
-  return axios.put(`${BACKEND_ROUTES.USERS}/${id}`, user);
+export async function updateUser(user: CreateUpdateUserData) {
+  return axios.put(`${BACKEND_ROUTES.USERS}/me`, user);
 }
