@@ -127,7 +127,7 @@ function Form() {
           value="Rezerwuj"
           isSubmit
           fullWidth
-          disabled={isSubmitting || isSubmitted}
+          // disabled={isSubmitting || isSubmitted} TODO: uncomment this
           onClick={() => resetKeepValues(reset)}
         />
       </div>

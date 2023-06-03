@@ -123,7 +123,7 @@ function Form() {
       <div className="mt-4 flex w-full gap-1">
         <Button
           value="Rezerwuj"
-          disabled={isSubmitting || isSubmitted}
+          // disabled={isSubmitting || isSubmitted} TODO: uncomment this
           isSubmit
           fullWidth
           onClick={() => resetKeepValues(reset)}
