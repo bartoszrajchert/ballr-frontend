@@ -29,7 +29,7 @@ const TextField = React.forwardRef<HTMLInputElement, Props>(
             ref={ref}
             id={props.name}
             className={clsx(
-              'h-[48px] w-full appearance-none rounded-2 px-4 shadow-border-1px outline-none transition-shadow hover:shadow-border-2px focus:shadow-border-3px focus-visible:shadow-border-3px',
+              'h-[48px] w-full appearance-none rounded-2 bg-white px-4 shadow-border-1px outline-none transition-shadow hover:shadow-border-2px focus:shadow-border-3px focus-visible:shadow-border-3px',
               {
                 '!shadow-red': errorText,
                 '!shadow-green-900': !errorText,
