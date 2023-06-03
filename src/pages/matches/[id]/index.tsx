@@ -21,7 +21,11 @@ import {
   addUserToMatch,
   deleteTeamFromMatch,
 } from '@/repository/match.repository';
-import { IconCalendarEvent, IconInfoCircle } from '@tabler/icons-react';
+import {
+  IconCalendarEvent,
+  IconEdit,
+  IconInfoCircle,
+} from '@tabler/icons-react';
 import clsx from 'clsx';
 import { GetServerSideProps } from 'next';
 import NextLink from 'next/link';
@@ -42,6 +46,8 @@ enum MatchStatus {
  * It can be accessed by all players, however the server will check if the user is in the match.
  *
  * This page has a refresh interval of 5 seconds. It is used to update the match status.
+ *
+ * TODO: Koordynator can delete users and referees from the match.
  *
  * @param fallback - Fallback data for SWR.
  * @constructor
@@ -155,12 +161,7 @@ const Content = () => {
             },
           ]}
         >
-          <div
-            className={clsx('flex gap-2 lg:flex-row', {
-              'lg:flex-row': !match?.for_team_only,
-              'flex-col lg:flex-col': match?.for_team_only,
-            })}
-          >
+          <div className={'flex flex-col gap-2'}>
             {/* User form */}
             {matchStatus === MatchStatus.UPCOMING &&
               match &&
@@ -198,6 +199,18 @@ const Content = () => {
                     !me?.is_referee &&
                     !!match?.users?.some((user) => user.is_referee)
                   }
+                />
+              )}
+
+            {match &&
+              matchStatus === MatchStatus.UPCOMING &&
+              match.reservation.user.id === user?.id && (
+                <Button
+                  value="Edytuj mecz"
+                  fullWidth
+                  type="secondary"
+                  icon={<IconEdit />}
+                  onClick={() => router.push(`${ROUTES.MATCHES}/${id}/edit`)}
                 />
               )}
 
