@@ -27,7 +27,6 @@ import { GetServerSideProps } from 'next';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import useSWR, { SWRConfig, useSWRConfig } from 'swr';
@@ -401,7 +400,6 @@ function TeamForm(props: { match: GetMatchResponse; numberOfTeams: number }) {
   const {
     handleSubmit,
     formState: { errors },
-    setError,
     control,
   } = useForm();
 

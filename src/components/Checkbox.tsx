@@ -7,7 +7,7 @@ import { Control, Controller } from 'react-hook-form';
 type Props = {
   label: string;
   name: string;
-  control: Control;
+  control: Control<any>;
 };
 
 const Checkbox = (props: Props) => {
