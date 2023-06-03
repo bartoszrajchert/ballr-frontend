@@ -33,7 +33,7 @@ function Button({
           'hover:bg-grey-200': type === 'tertiary',
           '!px-3': icon && !value,
           'w-full': fullWidth,
-          '!bg-grey-300 !text-black': disabled,
+          '!bg-grey-300 !text-black !shadow-none': disabled,
           'bg-red text-white hover:bg-redHover': type === 'cancel',
         }
       )}
