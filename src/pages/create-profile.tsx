@@ -28,7 +28,7 @@ function ProfileCreate() {
   const onSubmit = async (data: CreateUpdateUserData) => {
     data.birth_date = new Date(data.birth_date).toISOString();
     createUser(data)
-      .then(async (res) => {
+      .then(async () => {
         const redirect =
           (router.query[QUERY_PARAMS.REDIRECT] as string) ?? ROUTES.HOME;
         await router.push(redirect);
