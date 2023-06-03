@@ -51,13 +51,14 @@ function Matches({ fallback }: Props) {
 function MatchesContainer() {
   const router = useRouter();
 
-  const tags = (match: Match) => {
+  const tags = ({ match, benefits, signed_users }: MatchesData) => {
     const tags = [];
     if (match.open_for_referee) {
       tags.push('Otwarte dla sędziów');
     }
     if (match.for_team_only) {
       tags.push('Tylko dla drużyn');
+      tags.push(`${signed_users}/${match.num_of_players}`);
     }
     return tags;
   };
@@ -71,11 +72,7 @@ function MatchesContainer() {
             href={`${ROUTES.MATCHES}/${match.id}`}
             title={getAddressFromFacility(match.reservation?.field?.facility)}
             description={[getLocaleDateString(match.reservation?.start_time)]}
-            tags={[
-              `${signed_users}/${match.num_of_players}`,
-              ...tags(match),
-              ...benefits,
-            ]}
+            tags={[...tags({ match, signed_users, benefits }), ...benefits]}
           />
         )}
         apiURL={BACKEND_ROUTES.MATCHES}

@@ -20,8 +20,8 @@ function ProfileSettingsReservations() {
         )}
         {user?.reservations.map((reservation, index) => (
           <Tile
-            key={index} // TODO: change to reservation.id
-            href={`${ROUTES.RESERVATIONS}/${reservation.id}`}
+            key={index}
+            href={`${ROUTES.RESERVATIONS}/${reservation.reservation_id}`}
             title={getAddressFromFacility(reservation.field.facility)}
             description={[
               `Data rezerwacji: ${getLocaleDateString(
