@@ -106,10 +106,20 @@ function Form() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onSubmit = (data: any) =>
-    router.push({ query: data }, undefined, {
-      shallow: true,
-    });
+  const onSubmit = async (data: any) => {
+    await router.push(
+      {
+        query: queryString.stringify(data, {
+          skipEmptyString: true,
+          skipNull: true,
+        }),
+      },
+      undefined,
+      {
+        shallow: true,
+      }
+    );
+  };
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
