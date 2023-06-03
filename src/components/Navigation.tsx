@@ -75,7 +75,7 @@ const navigationContent: CategoryContent = {
       {
         label: 'Stwórz nową drużynę',
         desc: 'Rozgrywaj mecze ze swoimi ulubionymi ludźmi i stówrz drużynę marzeń',
-        href: ROUTES.TEAMS_CREATE,
+        href: ROUTES.TEAMS_NEW,
       },
       {
         label: 'Przeglądaj drużyny',
