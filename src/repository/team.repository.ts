@@ -14,3 +14,15 @@ export async function createTeam(data: CreateTeamPayload) {
 
   return axios.post(`${BACKEND_ROUTES.TEAMS}`, data);
 }
+
+export type GetTeamsResponse = {
+  name: string;
+  short_name: string;
+  is_active: boolean;
+  city: {
+    name: string;
+    id: number;
+  };
+  id: number;
+  creation_date: string;
+};
