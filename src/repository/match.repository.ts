@@ -49,7 +49,7 @@ export async function updateMatchScore(
 
 // TODO: clear comments
 export type CreateMatchPayload = {
-  start_date: string;
+  // start_date: string;
   for_team_only: boolean;
   description: string;
   num_of_players: number;
@@ -66,4 +66,15 @@ export type CreateMatchPayload = {
 
 export async function createMatch(data: CreateMatchPayload) {
   return axios.post<GetMatchResponse>(ROUTES.MATCHES, data);
+}
+
+export type UpdateMatchPayload = Partial<
+  Omit<CreateMatchPayload, 'reservation_id'>
+>;
+
+export async function updateMatch(
+  matchId: string | number,
+  data: UpdateMatchPayload
+) {
+  return axios.put<GetMatchResponse>(`${ROUTES.MATCHES}/${matchId}`, data);
 }
