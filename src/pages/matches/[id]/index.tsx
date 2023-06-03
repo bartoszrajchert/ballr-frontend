@@ -20,6 +20,7 @@ import {
   addTeamToMatch,
   addUserToMatch,
   deleteTeamFromMatch,
+  deleteUserFromMatch,
 } from '@/repository/match.repository';
 import {
   IconCalendarEvent,
@@ -153,7 +154,7 @@ const Content = () => {
               icon: <IconInfoCircle />,
               text: match?.for_team_only
                 ? `Drużyny: ${getNumberOfTeams()} / ${MAX_NUMBER_OF_TEAMS}`
-                : `Zapisani: ${match?.users?.length} / ${match?.num_of_players}`,
+                : `Zapisani: ${match?.signed_users} / ${match?.num_of_players}`,
             },
             {
               icon: <IconCalendarEvent />,
@@ -161,7 +162,11 @@ const Content = () => {
             },
           ]}
         >
-          <div className={'flex flex-col gap-2'}>
+          <div
+            className={clsx('flex flex-col gap-2', {
+              hidden: !user,
+            })}
+          >
             {/* User form */}
             {matchStatus === MatchStatus.UPCOMING &&
               match &&
@@ -169,12 +174,13 @@ const Content = () => {
                 <ButtonForm
                   id={String(id)}
                   signUpButtonType="primary"
-                  amISigned={!!me}
+                  amISigned={!!me && !me?.is_referee}
                   signUpText="Zapisz się jako zawodnik"
                   signOutText="Wypisz się z meczu"
                   isReferee={false}
                   disabled={
-                    !me && match?.users?.length === match?.num_of_players
+                    (!me && match?.signed_users === match?.num_of_players) ||
+                    (!!me && me?.is_referee)
                   }
                 />
               )}
@@ -196,7 +202,7 @@ const Content = () => {
                   signOutText="Wypisz się z meczu"
                   isReferee={true}
                   disabled={
-                    !me?.is_referee &&
+                    (me && !me?.is_referee) ||
                     !!match?.users?.some((user) => user.is_referee)
                   }
                 />
@@ -323,21 +329,23 @@ const Content = () => {
 
         {!match?.for_team_only && (
           <Section
-            title={`Uczestnicy ${match?.users?.length} / ${match?.num_of_players}`}
+            title={`Uczestnicy ${match?.signed_users} / ${match?.num_of_players}`}
           >
             <div className="flex flex-wrap gap-4">
-              {match?.users?.map((user) => (
-                <EntityCard
-                  key={user.user_id}
-                  href={`${ROUTES.PROFILE}/${user.user_id}`}
-                  avatar={{
-                    firstName: user.user_name,
-                    lastName: user.user_last_name,
-                  }}
-                  title={`${user.user_name} ${user.user_last_name}`}
-                  paragraph={`Ocena: ${user.user_score}`}
-                />
-              ))}
+              {match?.users
+                ?.filter((user) => !user.is_referee)
+                .map((user) => (
+                  <EntityCard
+                    key={user.user_id}
+                    href={`${ROUTES.PROFILE}/${user.user_id}`}
+                    avatar={{
+                      firstName: user.user_name,
+                      lastName: user.user_last_name,
+                    }}
+                    title={`${user.user_name} ${user.user_last_name}`}
+                    paragraph={`Ocena: ${user.user_score}`}
+                  />
+                ))}
             </div>
           </Section>
         )}
@@ -376,9 +384,12 @@ function ButtonForm(props: {
   disabled: boolean;
 }) {
   const { mutate } = useSWRConfig();
+  const { user } = useContext(UserContext); // TODO: remove this
 
   const submitAddUser = async () => {
-    addUserToMatch(props.id, props.isReferee)
+    if (!user) return toast.error('Musisz być zalogowany'); // TODO: remove this
+
+    addUserToMatch(props.id, user.id, props.isReferee)
       .then(() => {
         toast.success('Zapisano na mecz');
       })
@@ -391,9 +402,18 @@ function ButtonForm(props: {
       });
   };
 
-  // TODO: submitDeleteUser
   const submitDeleteUser = async () => {
-    console.log('submitDeleteUser');
+    deleteUserFromMatch(props.id)
+      .then(() => {
+        toast.success('Wypisano z meczu');
+      })
+      .catch((err) => {
+        toast.error(`Nie udało się wypisać z meczu: ${getErrorMessage(err)}`);
+        console.error(err);
+      })
+      .finally(() => {
+        mutate(`${BACKEND_ROUTES.MATCHES}/${props.id}`);
+      });
   };
 
   return (
