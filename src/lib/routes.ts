@@ -12,7 +12,7 @@ enum ROUTES {
   FIELDS = '/fields',
 
   TEAMS = '/teams',
-  TEAMS_CREATE = '/teams/create',
+  TEAMS_NEW = '/teams/new',
 
   PROFILE = '/profile',
 
@@ -36,6 +36,7 @@ enum BACKEND_ROUTES {
   FACILITIES = '/facilities',
   BENEFITS = '/benefits',
   RESERVATIONS = '/reservations',
+  TEAMS = '/teams',
 }
 
 enum QUERY_PARAMS {
