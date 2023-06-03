@@ -1,8 +1,8 @@
 import Button from '@/components/Button';
 import Dropdown from '@/components/Dropdown';
 import Header from '@/components/Header';
-import ListWithPagination from '@/components/ListWithPagination';
 import Tile from '@/components/Tile';
+import { DynamicListWithPagination } from '@/components/dynamic/DynamicListWithPagination';
 import MainLayout from '@/layouts/MainLayout';
 import { getAddressFromFacility } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
@@ -34,7 +34,7 @@ function FacilitiesContainer() {
   const router = useRouter();
 
   return (
-    <ListWithPagination
+    <DynamicListWithPagination
       child={(data: Facility) => (
         <Tile
           key={data.id}

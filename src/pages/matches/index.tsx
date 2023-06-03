@@ -2,9 +2,9 @@ import Button from '@/components/Button';
 import Checkbox from '@/components/Checkbox';
 import Dropdown from '@/components/Dropdown';
 import Header from '@/components/Header';
-import ListWithPagination from '@/components/ListWithPagination';
 import TextField from '@/components/TextField';
 import Tile from '@/components/Tile';
+import { DynamicListWithPagination } from '@/components/dynamic/DynamicListWithPagination';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
 import { getAddressFromFacility, getLocaleDateString } from '@/lib/helpers';
@@ -65,7 +65,7 @@ function MatchesContainer() {
 
   return (
     <>
-      <ListWithPagination
+      <DynamicListWithPagination
         child={({ match, benefits, signed_users }: MatchesData) => (
           <Tile
             key={match.id}

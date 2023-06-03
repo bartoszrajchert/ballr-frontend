@@ -7,7 +7,6 @@ import initAxios from '@/lib/axios';
 import { globalFetcher } from '@/lib/fetchers';
 import '@/lib/firebase';
 import { ROUTES } from '@/lib/routes';
-import useGetAuth from '@/lib/useGetAuth';
 import UserProvider from '@/providers/UserProvider';
 import '@/styles/globals.css';
 import '@/styles/page-loader.css';
