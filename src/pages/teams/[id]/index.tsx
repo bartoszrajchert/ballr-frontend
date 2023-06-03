@@ -34,6 +34,7 @@ export default function TeamsId({ fallback }: { fallback: any }) {
 }
 
 function Content() {
+  const { user } = useContext(UserContext);
   const router = useRouter();
   const { id } = router.query;
   const {
@@ -80,16 +81,18 @@ function Content() {
         </Section>
         <Section title={`Członkowie (${team.users.length})`}>
           <div className="flex flex-wrap gap-4">
-            {team.users.map((user) => (
+            {team.users.map((teamUser) => (
               <EntityCard
-                key={user.user_id}
-                href={`${ROUTES.PROFILE}/${user.user_id}`}
-                title={`${user.user_first_name} ${user.user_last_name}`}
+                key={teamUser.user_id}
+                href={`${ROUTES.PROFILE}/${teamUser.user_id}`}
+                title={`${teamUser.user_first_name} ${teamUser.user_last_name}${
+                  teamUser.user_id === user?.id ? ' (Ty)' : ''
+                }`}
                 avatar={{
-                  text: `${user.user_first_name} ${user.user_last_name}`,
+                  text: `${teamUser.user_first_name} ${teamUser.user_last_name}`,
                 }}
                 leadingIcon={
-                  user.is_captain ? <IconCrown size={16} /> : undefined
+                  teamUser.is_captain ? <IconCrown size={16} /> : undefined
                 }
               />
             ))}
