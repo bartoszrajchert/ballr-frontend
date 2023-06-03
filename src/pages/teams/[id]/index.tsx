@@ -22,7 +22,6 @@ import useSWR, { SWRConfig, useSWRConfig } from 'swr';
 
 // TODO: Ban user by captain
 // TODO: Remove user from team by captain
-// TODO: Edit team by captain
 // TODO: Modal
 // TODO: Show you are banned
 

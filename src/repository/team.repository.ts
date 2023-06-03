@@ -7,6 +7,14 @@ export type CreateTeamPayload = {
   city_id: number;
 };
 
+export type EditTeamPayload = {
+  name: string;
+  short_name: string;
+  is_active: boolean;
+  city_id: number;
+  new_captain: string;
+};
+
 export async function createTeam(data: CreateTeamPayload) {
   // TODO: Remove this
   // @ts-ignore
@@ -17,6 +25,14 @@ export async function createTeam(data: CreateTeamPayload) {
 
 export async function addUserToTeam(teamId: string) {
   return axios.post(`${BACKEND_ROUTES.TEAMS}/${teamId}/users`, {});
+}
+
+export async function editTeam(teamId: string, data: EditTeamPayload) {
+  return axios.put(`${BACKEND_ROUTES.TEAMS}/${teamId}`, data);
+}
+
+export async function deleteTeam(teamId: string) {
+  return axios.delete(`${BACKEND_ROUTES.TEAMS}/${teamId}`);
 }
 
 export async function removeUserFromTeam(teamId: string) {
