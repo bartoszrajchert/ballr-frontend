@@ -20,7 +20,7 @@ function Facilities() {
           <p className="mb-8 text-heading-h3">Filtry</p>
           <Form />
         </aside>
-        <div className="flex w-full flex-col gap-4">
+        <div className="w-full">
           <FacilitiesContainer />
         </div>
       </div>
@@ -33,6 +33,7 @@ function FacilitiesContainer() {
 
   return (
     <DynamicListWithPagination
+      listClassName="flex w-full flex-col gap-4"
       child={(data: Facility) => (
         <Tile
           key={data.id}
