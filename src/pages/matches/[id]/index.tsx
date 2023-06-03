@@ -70,15 +70,18 @@ const Content = () => {
 
   useEffect(() => {
     if (match?.reservation?.start_time) {
-      const startTime = new Date('2023-05-25T14:41:24');
+      const startTime = new Date(match.reservation.start_time);
+      const endTime = new Date(match.reservation.end_time);
       const currentTime = new Date();
 
-      if (startTime < currentTime) {
-        setMatchStatus(MatchStatus.COMPLETED);
-      } else if (startTime > currentTime) {
-        setMatchStatus(MatchStatus.IN_PROGRESS);
-      } else {
+      if (startTime > currentTime) {
         setMatchStatus(MatchStatus.UPCOMING);
+      } else if (startTime < currentTime) {
+        setMatchStatus(MatchStatus.IN_PROGRESS);
+      } else if (endTime < currentTime) {
+        setMatchStatus(MatchStatus.COMPLETED);
+      } else {
+        setMatchStatus(null);
       }
     }
   }, [match]);
