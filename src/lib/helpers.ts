@@ -76,6 +76,7 @@ export function setUseReactFormErrors(
   setError('root', { message: err.message });
 }
 
+// TODO: refactor this
 export function resetKeepValues(reset: UseFormReset<any>) {
   reset({}, { keepValues: true });
 }
