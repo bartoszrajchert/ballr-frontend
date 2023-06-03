@@ -12,11 +12,13 @@ import { toast } from 'react-toastify';
 
 export const UserContext = React.createContext<{
   user: GetUserResponse | null;
+  error: Error | null;
   firebaseUser: FirebaseUser | null | undefined;
   firebaseLoading: boolean;
   firebaseError: Error | undefined;
 }>({
   user: null,
+  error: null,
   firebaseUser: null,
   firebaseLoading: false,
   firebaseError: undefined,
@@ -31,6 +33,7 @@ function UserProvider(props: Props) {
   const router = useRouter();
   const [firebaseUser, firebaseLoading, firebaseError] = useIdToken(auth);
   const [user, setUser] = useState<GetUserResponse | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const unsubscribe = onIdTokenChanged(auth, async (user) => {
@@ -53,18 +56,23 @@ function UserProvider(props: Props) {
       globalFetcher(`${BACKEND_ROUTES.USERS}/${firebaseUser?.uid}`)
         .then((res: GetUserResponse) => {
           setUser(res);
+          setError(null);
         })
         .catch(async (err) => {
           if (
+            err.response &&
             err.response.status === 404 &&
             router.pathname !== ROUTES.CREATE_PROFILE
           ) {
             toast.info('Prosimy o uzupełnienie danych o profilu.');
             await router.push(ROUTES.CREATE_PROFILE);
           }
+
+          setError(err);
         });
     } else {
       setUser(null);
+      setError(null);
     }
   }, [firebaseUser, router]);
 
@@ -72,6 +80,7 @@ function UserProvider(props: Props) {
     <UserContext.Provider
       value={{
         user,
+        error,
         firebaseUser,
         firebaseLoading,
         firebaseError,
