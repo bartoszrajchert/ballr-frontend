@@ -30,7 +30,7 @@ function Tile(props: Props) {
                 description && <p key={description}>{description}</p>
             )}
           </div>
-          <div className="flex gap-1">
+          <div className="flex flex-wrap gap-1">
             {props.tags?.map((tag) => tag && <Tag key={tag} text={tag} />)}
           </div>
         </div>
