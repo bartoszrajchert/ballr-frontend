@@ -33,7 +33,11 @@ const Dropdown = (props: Props) => {
         name={props.name}
         rules={props.rules}
         render={({ field }) => (
-          <div className="flex flex-col gap-1">
+          <div
+            className={clsx('flex flex-col gap-1', {
+              '!text-red': props.errorText,
+            })}
+          >
             <Select.Root
               value={field.value}
               onValueChange={(event) => {
