@@ -1,9 +1,11 @@
 import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
+import Tooltip from '@/components/Tooltip';
 import { ROUTES, QUERY_PARAMS } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
 import { UserContext } from '@/providers/UserProvider';
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
+import { IconAlertTriangleFilled } from '@tabler/icons-react';
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -262,7 +264,7 @@ const HamburgerMenu = () => {
 const UserMenu = () => {
   const router = useRouter();
   const auth = useGetAuth();
-  const { user } = useContext(UserContext);
+  const { user, error, firebaseUser } = useContext(UserContext);
   const [signOut, _, errorSignOut] = useSignOut(auth);
 
   useEffect(() => {
@@ -279,7 +281,7 @@ const UserMenu = () => {
 
   return (
     <div className="flex justify-end lg:w-[250px]">
-      {!user && (
+      {!firebaseUser && (
         <ul className="flex items-center gap-6 text-green-900 ">
           <Link
             href={{
@@ -305,15 +307,35 @@ const UserMenu = () => {
           </li>
         </ul>
       )}
-      {user && (
+      {error && (
+        <div className="mr-2 flex items-center">
+          <Tooltip
+            delay={0}
+            trigger={
+              <Button
+                icon={<IconAlertTriangleFilled className="text-red" />}
+                type="tertiary"
+                className="cursor-default"
+              />
+            }
+          >
+            <p className="max-w-[300px]">
+              Błąd przy pobieraniu informacji o uzytkowniku: {error.message}
+            </p>
+          </Tooltip>
+        </div>
+      )}
+      {firebaseUser && (
         <div className="flex items-center gap-2">
-          <NextLink href={`${ROUTES.PROFILE}/${user.id}`}>
-            <Avatar
-              firstName={user.first_name}
-              lastName={user.last_name}
-              clickable
-            />
-          </NextLink>
+          {user && (
+            <NextLink href={`${ROUTES.PROFILE}/${user.id}`}>
+              <Avatar
+                firstName={user.first_name}
+                lastName={user.last_name}
+                clickable
+              />
+            </NextLink>
+          )}
           <Button
             icon={<IconLogout />}
             onClick={signOutHandler}
@@ -394,8 +416,24 @@ const FocusModeButton = () => {
     (router.query[QUERY_PARAMS.REDIRECT] as string) ?? ROUTES.HOME;
   const isCancelRedirect = router.query[QUERY_PARAMS.CANCEL_REDIRECT] as string;
 
+  const { firebaseUser } = useContext(UserContext);
+  const auth = useGetAuth();
+  const [signOut, _, errorSignOut] = useSignOut(auth);
+  const signOutHandler = async () => {
+    await signOut();
+    await router.push(ROUTES.HOME);
+    toast.success('Wylogowano pomyślnie');
+  };
+
   return (
-    <div className="hidden cursor-pointer lg:block">
+    <div className="hidden lg:flex lg:gap-2">
+      {firebaseUser && (
+        <Button
+          icon={<IconLogout />}
+          onClick={signOutHandler}
+          type="tertiary"
+        />
+      )}
       <Button
         icon={<IconX />}
         onClick={() => router.push(isCancelRedirect ? ROUTES.HOME : redirect)}
