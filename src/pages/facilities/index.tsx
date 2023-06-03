@@ -1,17 +1,15 @@
 import Button from '@/components/Button';
-import Dropdown from '@/components/Dropdown';
 import Header from '@/components/Header';
 import Tile from '@/components/Tile';
+import CityDropdown from '@/components/dropdowns/CityDropdown';
 import { DynamicListWithPagination } from '@/components/dynamic/DynamicListWithPagination';
 import MainLayout from '@/layouts/MainLayout';
 import { getAddressFromFacility } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
-import { Pagination } from '@/models/base.model';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import useSWR from 'swr';
 
 function Facilities() {
   return (
@@ -58,9 +56,7 @@ function FacilitiesContainer() {
 
 function Form() {
   const router = useRouter();
-  const { register, handleSubmit, control, reset, getValues } = useForm();
-
-  const { data: cities } = useSWR<Pagination<City>>(BACKEND_ROUTES.CITIES);
+  const { handleSubmit, control, reset } = useForm();
 
   useEffect(() => {
     reset(router.query);
@@ -74,19 +70,7 @@ function Form() {
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-      <Dropdown
-        label="Lokalizacja"
-        name="city_id"
-        control={control}
-        data={
-          (cities &&
-            cities.items.map((city) => ({
-              label: city.name,
-              value: city.id.toString(),
-            }))) ||
-          []
-        }
-      />
+      <CityDropdown control={control} />
       <div className="mt-4 flex w-full gap-1">
         <Button value="Szukaj" isSubmit fullWidth />
       </div>

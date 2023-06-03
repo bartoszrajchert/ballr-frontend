@@ -1,23 +1,20 @@
-import Dropdown from '@/components/Dropdown';
 import TextField from '@/components/TextField';
+import CityDropdown from '@/components/dropdowns/CityDropdown';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
 import {
   getFieldErrorText,
   resetKeepValues,
   setUseReactFormErrors,
 } from '@/lib/helpers';
-import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
-import { Pagination } from '@/models/base.model';
+import { ROUTES } from '@/lib/routes';
 import { createTeam, CreateTeamPayload } from '@/repository/team.repository';
 import { useRouter } from 'next/router';
-import React, { useContext } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import useSWR from 'swr';
 
 function TeamsNew() {
   const router = useRouter();
-  const { data: cities } = useSWR<Pagination<City>>(BACKEND_ROUTES.CITIES);
 
   const {
     register,
@@ -57,20 +54,10 @@ function TeamsNew() {
             helperText="Maksymalnie 5 znaków"
             {...register('short_name', { required: true, maxLength: 5 })}
           />
-          <Dropdown
-            label="Miasto"
-            name="city_id"
+          <CityDropdown
             control={control}
-            errorText={getFieldErrorText('city_id', errors)}
+            errors={errors}
             rules={{ required: true }}
-            data={
-              (cities &&
-                cities.items.map((city) => ({
-                  label: city.name,
-                  value: city.id.toString(),
-                }))) ||
-              []
-            }
           />
         </>
       }
