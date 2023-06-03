@@ -14,6 +14,8 @@ type Props = {
   buttonDisabled?: boolean;
   buttonOnClick?: () => void;
   centered?: boolean; // default true
+  cancelButtonValue?: string;
+  cancelButtonOnClick?: () => void;
 };
 
 const AuthFormLayout = (props: Props) => {
@@ -43,8 +45,22 @@ const AuthFormLayout = (props: Props) => {
               <p className="text-red">{props.errorMessage}</p>
             )}
           </div>
-          <p className="mt-10 text-center">{props.footerChildren}</p>
+          {props.footerChildren && (
+            <p className="mt-10 text-center">{props.footerChildren}</p>
+          )}
         </form>
+
+        {props.cancelButtonValue && (
+          <>
+            <hr className="my-5" />
+            <Button
+              value={props.cancelButtonValue}
+              type="cancel"
+              fullWidth
+              onClick={props.cancelButtonOnClick}
+            />
+          </>
+        )}
       </div>
     </MainLayout>
   );
