@@ -28,8 +28,28 @@ export type GetUserResponse = {
     voted: boolean;
     combined_rating: number;
     match_id: number;
-    match_start_date: string;
     match_description: string;
+    field: {
+      name: string;
+      length: number;
+      width: number;
+      roof: boolean;
+      facility: {
+        name: string;
+        street: string;
+        postcode: string;
+        street_number: number;
+        is_verified: boolean;
+        open_time: string;
+        close_time: string;
+        city: {
+          name: string;
+          id: number;
+        };
+        id: number;
+      };
+      id: number;
+    };
   }[];
   reservations: {
     start_time: string;
@@ -57,6 +77,6 @@ export type GetUserResponse = {
       };
       id: number;
     };
-    id: number;
+    reservation_id: number;
   }[];
 };
