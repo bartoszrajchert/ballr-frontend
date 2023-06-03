@@ -39,6 +39,10 @@ export function getFieldErrorText(name: string, errors: FieldErrors) {
     return 'Pole jest wymagane';
   }
 
+  if (error?.type === 'maxLength') {
+    return `Za długi tekst.`;
+  }
+
   if (error?.type === 'validate') {
     if (error?.message === 'repeatPassword') {
       return 'Hasła muszą być takie same';
