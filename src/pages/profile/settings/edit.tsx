@@ -47,11 +47,9 @@ const ProfileSettingsEdit = () => {
   ]);
 
   const onSubmit = (data: CreateUpdateUserData) => {
-    if (!user) return;
-
     data.birth_date = new Date(data.birth_date).toISOString();
 
-    updateUser(data, user?.id)
+    updateUser(data)
       .then(async () => {
         await router.push(ROUTES.SETTINGS);
         toast.success('Pomyślnie zaktualizowano dane!');
