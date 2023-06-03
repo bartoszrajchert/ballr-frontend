@@ -75,7 +75,7 @@ const Content = () => {
 
       if (startTime > currentTime) {
         setMatchStatus(MatchStatus.UPCOMING);
-      } else if (startTime < currentTime) {
+      } else if (startTime < currentTime && endTime > currentTime) {
         setMatchStatus(MatchStatus.IN_PROGRESS);
       } else if (endTime < currentTime) {
         setMatchStatus(MatchStatus.COMPLETED);
