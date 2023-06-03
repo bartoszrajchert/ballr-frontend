@@ -1,4 +1,5 @@
 import Avatar from '@/components/Avatar';
+import AvatarHeader from '@/components/AvatarHeader';
 import Button from '@/components/Button';
 import EntityCard from '@/components/EntityCard';
 import Header from '@/components/Header';
@@ -59,25 +60,19 @@ function Content() {
 
   return (
     <MainLayout>
-      <Header>
-        <div className="flex flex-wrap items-center justify-center gap-4">
-          <Avatar
-            text={`${profile.first_name} ${profile.last_name}`}
-            size={60}
-          />
-          <div>
-            <p>Użytkownik</p>
-            <h1 className="text-heading-h2">
-              {profile.first_name} {profile.last_name}
-            </h1>
-          </div>
+      <AvatarHeader
+        avatarText={`${profile.first_name} ${profile.last_name}`}
+        title={`${profile.first_name} ${profile.last_name}`}
+        subtitle="Użytkownik"
+      >
+        <>
           {id === user?.id && (
             <Link href={ROUTES.SETTINGS}>
               <Button icon={<IconPencil />} type="tertiary" />
             </Link>
           )}
-        </div>
-      </Header>
+        </>
+      </AvatarHeader>
       <div className="space-y-16">
         <Section title="Informacje">
           <div className="flex w-full flex-col flex-wrap gap-5 sm:flex-row">
