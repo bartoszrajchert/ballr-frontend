@@ -40,7 +40,7 @@ function Matches({ fallback }: Props) {
             <p className="mb-8 text-heading-h3">Filtry</p>
             <Form />
           </aside>
-          <div className="flex w-full flex-col gap-4">
+          <div className="w-full">
             <MatchesContainer />
           </div>
         </div>
@@ -65,24 +65,23 @@ function MatchesContainer() {
   };
 
   return (
-    <>
-      <DynamicListWithPagination
-        child={({ match, benefits, signed_users }: MatchesData) => (
-          <Tile
-            key={match.id}
-            href={`${ROUTES.MATCHES}/${match.id}`}
-            title={getAddressFromFacility(match.reservation?.field?.facility)}
-            description={[getLocaleDateString(match.reservation?.start_time)]}
-            tags={[...tags({ match, signed_users, benefits }), ...benefits]}
-          />
-        )}
-        apiURL={BACKEND_ROUTES.MATCHES}
-        queryParams={queryString.stringify(router.query, {
-          skipEmptyString: true,
-          skipNull: true,
-        })}
-      />
-    </>
+    <DynamicListWithPagination
+      listClassName="flex w-full flex-col gap-4"
+      child={({ match, benefits, signed_users }: MatchesData) => (
+        <Tile
+          key={match.id}
+          href={`${ROUTES.MATCHES}/${match.id}`}
+          title={getAddressFromFacility(match.reservation?.field?.facility)}
+          description={[getLocaleDateString(match.reservation?.start_time)]}
+          tags={[...tags({ match, signed_users, benefits }), ...benefits]}
+        />
+      )}
+      apiURL={BACKEND_ROUTES.MATCHES}
+      queryParams={queryString.stringify(router.query, {
+        skipEmptyString: true,
+        skipNull: true,
+      })}
+    />
   );
 }
 
