@@ -4,11 +4,17 @@ import axios from 'axios';
 
 export async function addUserToMatch(
   matchId: string | number,
+  user_id: string | number, // TODO: Remove this
   isReferee: boolean
 ) {
   return axios.post(`${ROUTES.MATCHES}/${matchId}/users`, {
     is_referee: isReferee,
+    user_id: user_id,
   });
+}
+
+export async function deleteUserFromMatch(matchId: string | number) {
+  return axios.delete(`${ROUTES.MATCHES}/${matchId}/users`);
 }
 
 export async function addTeamToMatch(
