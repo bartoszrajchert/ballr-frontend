@@ -1,5 +1,6 @@
-import Dropdown from '@/components/Dropdown';
 import TextField from '@/components/TextField';
+import CityDropdown from '@/components/dropdowns/CityDropdown';
+import GenderDropdown from '@/components/dropdowns/GenderDropdown';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
 import {
   formatDateTimeToInputFormat,
@@ -7,21 +8,17 @@ import {
   resetKeepValues,
   setUseReactFormErrors,
 } from '@/lib/helpers';
-import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
-import { Pagination } from '@/models/base.model';
+import { ROUTES } from '@/lib/routes';
 import { UserContext } from '@/providers/UserProvider';
 import { CreateUpdateUserData, updateUser } from '@/repository/user.repository';
 import { useRouter } from 'next/router';
 import React, { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import useSWR from 'swr';
 
 const ProfileSettingsEdit = () => {
   const router = useRouter();
   const { user } = useContext(UserContext);
-  const { data: cities } = useSWR<Pagination<City>>(BACKEND_ROUTES.CITIES);
-  const { data: genders } = useSWR<Pagination<Gender>>(BACKEND_ROUTES.GENDERS);
 
   const {
     register,
@@ -86,35 +83,15 @@ const ProfileSettingsEdit = () => {
             errorText={getFieldErrorText('birth_date', errors)}
             {...register('birth_date', { required: true })}
           />
-          <Dropdown
-            label="Miasto"
-            name="city_id"
+          <CityDropdown
             control={control}
-            errorText={getFieldErrorText('city_id', errors)}
             rules={{ required: true }}
-            data={
-              (cities &&
-                cities.items.map((city) => ({
-                  label: city.name,
-                  value: city.id.toString(),
-                }))) ||
-              []
-            }
+            errors={errors}
           />
-          <Dropdown
-            label="Płeć"
-            name="gender_id"
+          <GenderDropdown
             control={control}
-            errorText={getFieldErrorText('city_id', errors)}
+            errors={errors}
             rules={{ required: true }}
-            data={
-              (genders &&
-                genders.items.map((gender) => ({
-                  label: gender.type,
-                  value: gender.id.toString(),
-                }))) ||
-              []
-            }
           />
         </>
       }

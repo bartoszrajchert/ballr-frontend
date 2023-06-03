@@ -1,11 +1,9 @@
 import Button from '@/components/Button';
-import Dropdown from '@/components/Dropdown';
 import FullWidthBackgroundColor from '@/components/FullWidthBackgroundColor';
+import CityDropdown from '@/components/dropdowns/CityDropdown';
 import MainLayout from '@/layouts/MainLayout';
-import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
+import { ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
-import { Pagination } from '@/models/base.model';
-import { AxiosError } from 'axios';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -15,7 +13,6 @@ import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 import medivocerSport from '../../public/medicover-sport.png';
 import multisport from '../../public/multisport.png';
 import footballImage1 from '../../public/prapoth-panchuea-_lTF9zrF1PY-unsplash.jpg';
@@ -103,9 +100,6 @@ export default function Home() {
 const MatchForm = () => {
   const router = useRouter();
   const { control, handleSubmit } = useForm();
-  const { data: cities, error } = useSWR<Pagination<City>>(
-    BACKEND_ROUTES.CITIES
-  );
 
   const onSubmit = async (data: any) => {
     await router.push(
@@ -121,32 +115,10 @@ const MatchForm = () => {
       className="flex w-full flex-col items-center justify-center gap-2 rounded-2xl bg-white px-8 py-4 sm:w-fit sm:flex-row sm:rounded-full"
       onSubmit={handleSubmit(onSubmit)}
     >
-      {!error && (
-        <>
-          <div className="min-w-[200px]">
-            <Dropdown
-              placeholder="Wybierz miasto"
-              name="city_id"
-              control={control}
-              data={
-                (cities &&
-                  cities.items.map((city) => ({
-                    label: city.name,
-                    value: city.id.toString(),
-                  }))) ||
-                []
-              }
-            />
-          </div>
-          <Button value="Szukaj" isSubmit />
-        </>
-      )}
-      {error && (
-        <p>
-          Wystąpił błąd podczas pobierania miast:{' '}
-          {(error as AxiosError).response?.status}
-        </p>
-      )}
+      <div className="min-w-[200px]">
+        <CityDropdown control={control} />
+      </div>
+      <Button value="Szukaj" isSubmit />
     </form>
   );
 };
