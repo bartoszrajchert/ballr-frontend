@@ -50,7 +50,7 @@ const navigationContent: CategoryContent = {
       {
         label: 'Stwórz nowy mecz',
         desc: 'Zaproś znajomych i rozegrajcie mecz',
-        href: ROUTES.MATCHES_CREATE,
+        href: ROUTES.MATCHES_NEW,
       },
       {
         label: 'Przeglądaj mecze',
