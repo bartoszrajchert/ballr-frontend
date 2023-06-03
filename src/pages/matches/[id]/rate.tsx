@@ -67,9 +67,7 @@ function ScoreForm(props: { id: string }) {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
-    setError,
   } = useForm();
 
   const onSubmit = (data: any) => {
@@ -121,7 +119,7 @@ function UserForm(props: { id: string; users?: GetMatchResponse['users'] }) {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitted },
+    formState: { errors },
     setError,
   } = useForm();
 
