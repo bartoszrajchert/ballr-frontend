@@ -414,7 +414,8 @@ const FocusModeButton = () => {
 
   const { firebaseUser } = useContext(UserContext);
   const auth = useGetAuth();
-  const [signOut, _, errorSignOut] = useSignOut(auth);
+  // TODO: handle error
+  const [signOut] = useSignOut(auth);
   const signOutHandler = async () => {
     await signOut();
     await router.push(ROUTES.HOME);

@@ -22,7 +22,6 @@ function TeamsNew() {
     setError,
     control,
     reset,
-    watch,
     formState: { errors },
   } = useForm<CreateTeamPayload>();
 

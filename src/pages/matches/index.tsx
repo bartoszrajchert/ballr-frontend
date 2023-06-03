@@ -52,7 +52,7 @@ function Matches({ fallback }: Props) {
 function MatchesContainer() {
   const router = useRouter();
 
-  const tags = ({ match, benefits, signed_users }: MatchesData) => {
+  const tags = ({ match, signed_users }: MatchesData) => {
     const tags = [];
     if (match.open_for_referee) {
       tags.push('Otwarte dla sędziów');
