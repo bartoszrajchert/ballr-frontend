@@ -1,5 +1,6 @@
 import TextField from '@/components/TextField';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
+import { firebaseError } from '@/lib/errorMappers';
 import { getFieldErrorText } from '@/lib/helpers';
 import { ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
@@ -59,7 +60,7 @@ const Security = () => {
         </>
       }
       buttonValue="Zapisz"
-      errorMessage={error?.message}
+      errorMessage={error ? firebaseError(error) : undefined}
       centered={false}
     />
   );
