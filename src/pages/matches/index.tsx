@@ -59,6 +59,8 @@ function MatchesContainer() {
     }
     if (match.for_team_only) {
       tags.push('Tylko dla drużyn');
+    }
+    if (!match.for_team_only) {
       tags.push(`${signed_users}/${match.num_of_players}`);
     }
     return tags;
