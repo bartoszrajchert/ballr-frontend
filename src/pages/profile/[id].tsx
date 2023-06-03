@@ -104,6 +104,10 @@ function Content() {
               <EntityCard
                 key={team.team_id}
                 href={`${ROUTES.TEAMS}/${team.team_id}`}
+                avatar={{
+                  text: team.team_short_name,
+                  size: 68,
+                }}
                 title={team.team_name}
                 paragraph={team.is_captain ? 'Kapitan' : undefined}
               />
