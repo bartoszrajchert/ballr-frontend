@@ -17,6 +17,7 @@ const TextField = React.forwardRef<HTMLInputElement, Props>(
       <div
         className={clsx('w-full space-y-1', {
           'text-red': errorText,
+          'text-grey-400': props.disabled,
         })}
       >
         {props.label && (
@@ -32,6 +33,8 @@ const TextField = React.forwardRef<HTMLInputElement, Props>(
               {
                 '!shadow-red': errorText,
                 '!shadow-green-900': !errorText,
+                'text-grey-400 !shadow-grey-400 hover:shadow-border-1px':
+                  props.disabled,
               }
             )}
             {...props}
