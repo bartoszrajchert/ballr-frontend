@@ -12,15 +12,15 @@ function ProfileSettingsReservations() {
   return (
     <MainLayout>
       <Header value="Moje rezerwacje" />
-      <>
+      <div className="flex flex-col gap-4">
         {user && user?.reservations?.length <= 0 && (
           <div className="text-center text-gray-500">
             Nie masz żadnych rezerwacji
           </div>
         )}
-        {user?.reservations.map((reservation) => (
+        {user?.reservations.map((reservation, index) => (
           <Tile
-            key={reservation.id}
+            key={index} // TODO: change to reservation.id
             href={`${ROUTES.RESERVATIONS}/${reservation.id}`}
             title={getAddressFromFacility(reservation.field.facility)}
             description={[
@@ -31,7 +31,7 @@ function ProfileSettingsReservations() {
             ]}
           />
         ))}
-      </>
+      </div>
     </MainLayout>
   );
 }
