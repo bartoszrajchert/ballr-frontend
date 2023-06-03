@@ -4,6 +4,7 @@ import Dropdown from '@/components/Dropdown';
 import Header from '@/components/Header';
 import TextField from '@/components/TextField';
 import Tile from '@/components/Tile';
+import CityDropdown from '@/components/dropdowns/CityDropdown';
 import { DynamicListWithPagination } from '@/components/dynamic/DynamicListWithPagination';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
@@ -90,7 +91,6 @@ function Form() {
   const { register, handleSubmit, control, reset } = useForm();
   const [cityId, setCityId] = React.useState<string>('');
 
-  const { data: cities } = useSWR<Pagination<City>>(BACKEND_ROUTES.CITIES);
   const { data: facilities } = useSWR<Pagination<Facility>>(
     `${BACKEND_ROUTES.FACILITIES}?${cityId && `city_id=${cityId}`}`
   );
@@ -120,21 +120,11 @@ function Form() {
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-      <Dropdown
-        label="Lokalizacja"
-        name="city_id"
+      <CityDropdown
         control={control}
         onValueChange={(value) => {
           setCityId(value);
         }}
-        data={
-          (cities &&
-            cities.items.map((city) => ({
-              label: city.name,
-              value: city.id.toString(),
-            }))) ||
-          []
-        }
       />
       <Dropdown
         label="Obiekt"

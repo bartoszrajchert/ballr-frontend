@@ -1,24 +1,21 @@
-import Dropdown from '@/components/Dropdown';
 import TextField from '@/components/TextField';
+import CityDropdown from '@/components/dropdowns/CityDropdown';
+import GenderDropdown from '@/components/dropdowns/GenderDropdown';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
 import {
   getFieldErrorText,
   resetKeepValues,
   setUseReactFormErrors,
 } from '@/lib/helpers';
-import { BACKEND_ROUTES, QUERY_PARAMS, ROUTES } from '@/lib/routes';
-import { Pagination } from '@/models/base.model';
+import { QUERY_PARAMS, ROUTES } from '@/lib/routes';
 import { createUser, CreateUpdateUserData } from '@/repository/user.repository';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import useSWR from 'swr';
 
 function ProfileCreate() {
   const router = useRouter();
 
-  const { data: cities } = useSWR<Pagination<City>>(BACKEND_ROUTES.CITIES);
-  const { data: genders } = useSWR<Pagination<Gender>>(BACKEND_ROUTES.GENDERS);
   const {
     register,
     handleSubmit,
@@ -64,35 +61,15 @@ function ProfileCreate() {
             errorText={getFieldErrorText('birth_date', errors)}
             {...register('birth_date', { required: true })}
           />
-          <Dropdown
-            label="Miasto"
-            name="city_id"
+          <CityDropdown
             control={control}
-            errorText={getFieldErrorText('city_id', errors)}
+            errors={errors}
             rules={{ required: true }}
-            data={
-              (cities &&
-                cities.items.map((city) => ({
-                  label: city.name,
-                  value: city.id.toString(),
-                }))) ||
-              []
-            }
           />
-          <Dropdown
-            label="Płeć"
-            name="gender_id"
+          <GenderDropdown
             control={control}
-            errorText={getFieldErrorText('city_id', errors)}
+            errors={errors}
             rules={{ required: true }}
-            data={
-              (genders &&
-                genders.items.map((gender) => ({
-                  label: gender.type,
-                  value: gender.id.toString(),
-                }))) ||
-              []
-            }
           />
         </>
       }
