@@ -4,6 +4,9 @@ import CityDropdown from '@/components/dropdowns/CityDropdown';
 import MainLayout from '@/layouts/MainLayout';
 import { ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
+import { GetStaticProps } from 'next';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -12,13 +15,12 @@ import queryString from 'query-string';
 import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import medivocerSport from '../../public/medicover-sport.png';
 import multisport from '../../public/multisport.png';
 import footballImage1 from '../../public/prapoth-panchuea-_lTF9zrF1PY-unsplash.jpg';
 
 export default function Home() {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
   const auth = useGetAuth();
   const [user] = useAuthState(auth);
 
@@ -122,3 +124,9 @@ const MatchForm = () => {
     </form>
   );
 };
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale ?? 'pl', ['common', 'footer'])),
+  },
+});
