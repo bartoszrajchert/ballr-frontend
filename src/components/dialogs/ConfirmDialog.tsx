@@ -9,7 +9,7 @@ export type ConfirmDialogProps = {
   confirmValue: string;
   altConfirmValue?: string;
   onConfirm?: () => void;
-  altOnConfirm?: () => void;
+  onAltConfirm?: () => void;
 };
 
 function ConfirmDialog(props: ConfirmDialogProps) {
@@ -32,7 +32,7 @@ function ConfirmDialog(props: ConfirmDialogProps) {
             <Button
               type="cancel"
               value={props.altConfirmValue}
-              onClick={props.altOnConfirm}
+              onClick={props.onAltConfirm}
             />
           </DialogPrimitive.Close>
         )}
