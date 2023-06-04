@@ -1,4 +1,4 @@
-import Dropdown from '@/components/Dropdown';
+import { DynamicDropdown } from '@/components/dynamic/DynamicDropdown';
 import { getFieldErrorText } from '@/lib/helpers';
 import { BACKEND_ROUTES } from '@/lib/routes';
 import { Pagination } from '@/models/base.model';
@@ -27,7 +27,7 @@ function GenderDropdown(props: Props) {
   }
 
   return (
-    <Dropdown
+    <DynamicDropdown
       label="Płeć"
       name="gender_id"
       control={props.control}

@@ -1,9 +1,9 @@
 import Button, { ButtonProps } from '@/components/Button';
-import Dropdown from '@/components/Dropdown';
 import EntityCard from '@/components/EntityCard';
 import ImageHeader from '@/components/ImageHeader';
 import Section from '@/components/Section';
 import TextInformation from '@/components/TextInformation';
+import { DynamicDropdown } from '@/components/dynamic/DynamicDropdown';
 import MainLayout from '@/layouts/MainLayout';
 import { MAX_NUMBER_OF_TEAMS } from '@/lib/constants';
 import { fetcherBackend } from '@/lib/fetchers';
@@ -491,7 +491,7 @@ function TeamForm(props: { match: GetMatchResponse; numberOfTeams: number }) {
     >
       <div className="flex flex-col gap-2 lg:flex-row">
         {!mySignedTeam && (
-          <Dropdown
+          <DynamicDropdown
             name="team_id"
             placeholder="Wybierz drużynę"
             control={control}

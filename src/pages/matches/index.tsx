@@ -1,10 +1,10 @@
 import Button from '@/components/Button';
-import Checkbox from '@/components/Checkbox';
-import Dropdown from '@/components/Dropdown';
 import Header from '@/components/Header';
 import TextField from '@/components/TextField';
 import Tile from '@/components/Tile';
 import CityDropdown from '@/components/dropdowns/CityDropdown';
+import { DynamicCheckbox } from '@/components/dynamic/DynamicCheckbox';
+import { DynamicDropdown } from '@/components/dynamic/DynamicDropdown';
 import { DynamicListWithPagination } from '@/components/dynamic/DynamicListWithPagination';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
@@ -127,7 +127,7 @@ function Form() {
           setCityId(value);
         }}
       />
-      <Dropdown
+      <DynamicDropdown
         label="Obiekt"
         name="facility_id"
         control={control}
@@ -153,7 +153,7 @@ function Form() {
         <TextField label="Godzina od" type="time" {...register('time_from')} />
         <TextField label="Godzina do" type="time" {...register('time_to')} />
       </div>
-      <Dropdown
+      <DynamicDropdown
         label="Karta beneficyjna"
         name="benefit_id"
         control={control}
@@ -166,12 +166,12 @@ function Form() {
           []
         }
       />
-      <Checkbox
+      <DynamicCheckbox
         label="Otwarte dla sędziów"
         name="open_for_referee"
         control={control}
       />
-      <Checkbox
+      <DynamicCheckbox
         label="Tylko dla drużyn"
         name="for_team_only"
         control={control}
