@@ -9,7 +9,6 @@
     "start-local": "next start",
     "lint": "next lint",
     "format": "prettier --write src",
-    "analyze-local": "cross-env ANALYZE=true next build",
     "prepare": "husky install"
   },
   "dependencies": {
