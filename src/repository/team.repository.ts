@@ -85,7 +85,14 @@ export type GetTeamResponse = {
     user_id: string;
     user_email: string;
   }[];
-  banned_users: [];
+  banned_users: {
+    start_date: string;
+    end_date?: string;
+    user_first_name: string;
+    user_last_name: string;
+    user_id: string;
+    user_email: string;
+  }[];
   // tournaments: [
   //   {
   //     place: null;
