@@ -18,7 +18,7 @@ function BaseDialog(props: Props) {
         <DialogPrimitive.Content
           className={clsx(
             'fixed z-50',
-            'w-[95vw] max-w-[580px] rounded-lg px-10 py-8 md:w-full',
+            'w-[95vw] max-w-[580px] rounded-lg px-6 py-8 sm:px-12 sm:py-10 md:w-full',
             'left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%]',
             'bg-white',
             'radix-state-open:animate-content-show'

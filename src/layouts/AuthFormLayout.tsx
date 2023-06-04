@@ -21,7 +21,7 @@ type Props = {
   cancelButtonOnClick?: () => void;
   confirmDialog?: Omit<
     ConfirmDialogProps,
-    'trigger' | 'onConfirm' | 'altConfirmValue' | 'altOnConfirm'
+    'trigger' | 'onConfirm' | 'altConfirmValue' | 'onAltConfirm'
   >;
 };
 
