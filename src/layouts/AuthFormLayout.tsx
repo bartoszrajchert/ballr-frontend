@@ -1,4 +1,7 @@
 import Button from '@/components/Button';
+import ConfirmDialog, {
+  ConfirmDialogProps,
+} from '@/components/dialogs/ConfirmDialog';
 import MainLayout from '@/layouts/MainLayout';
 import clsx from 'clsx';
 import React from 'react';
@@ -16,6 +19,10 @@ type Props = {
   centered?: boolean; // default true
   cancelButtonValue?: string;
   cancelButtonOnClick?: () => void;
+  confirmDialog?: Omit<
+    ConfirmDialogProps,
+    'trigger' | 'onConfirm' | 'altConfirmValue' | 'altOnConfirm'
+  >;
 };
 
 const AuthFormLayout = (props: Props) => {
@@ -53,12 +60,29 @@ const AuthFormLayout = (props: Props) => {
         {props.cancelButtonValue && (
           <>
             <hr className="my-5" />
-            <Button
-              value={props.cancelButtonValue}
-              type="cancel"
-              fullWidth
-              onClick={props.cancelButtonOnClick}
-            />
+            {props.confirmDialog && (
+              <ConfirmDialog
+                trigger={
+                  <Button
+                    value={props.cancelButtonValue}
+                    type="cancel"
+                    fullWidth
+                  />
+                }
+                title={props.confirmDialog.title}
+                description={props.confirmDialog.description}
+                confirmValue={props.confirmDialog.confirmValue}
+                onConfirm={props.cancelButtonOnClick}
+              />
+            )}
+            {!props.confirmDialog && (
+              <Button
+                value={props.cancelButtonValue}
+                type="cancel"
+                fullWidth
+                onClick={props.cancelButtonOnClick}
+              />
+            )}
           </>
         )}
       </div>

@@ -119,6 +119,11 @@ const MatchesIdEdit = () => {
       buttonOnClick={() => resetKeepValues(reset)}
       cancelButtonValue="Usuń mecz"
       cancelButtonOnClick={deleteMatchSubmit}
+      confirmDialog={{
+        title: 'Czy na pewno chcesz usunąć mecz?',
+        description: 'Ta operacja jest nieodwracalna.',
+        confirmValue: 'Usuń mecz',
+      }}
       errorMessage={
         getFieldErrorText('root', errors) &&
         `Formularz zawiera błędy: ${getFieldErrorText('root', errors)}`
