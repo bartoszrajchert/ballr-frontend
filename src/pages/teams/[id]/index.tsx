@@ -23,8 +23,6 @@ import React, { useCallback, useContext, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import useSWR, { SWRConfig, useSWRConfig } from 'swr';
 
-// TODO: Show you are banned
-
 export default function TeamsId({ fallback }: { fallback: any }) {
   return (
     <SWRConfig value={{ fallback }}>
@@ -48,6 +46,13 @@ function Content() {
     return team.users.find((team) => team.user_id === user.id)?.is_captain;
   }, [team, user]);
 
+  const amIBanned = useMemo(() => {
+    if (!team || !user) return false;
+    return team.banned_users.some(
+      (bannedUser) => bannedUser.user_id === user.id
+    );
+  }, [team, user]);
+
   if (!team && isLoading) {
     return <div>Loading...</div>;
   }
@@ -62,12 +67,22 @@ function Content() {
 
   return (
     <MainLayout>
+      <>
+        {amIBanned && (
+          <div className="mt-4 flex w-full items-center justify-center rounded-xl bg-red bg-opacity-10 px-4 py-4 text-center">
+            <p className="text-label-medium text-red">
+              Nie możesz dołączyć do tej drużyny. Zostałeś zablokowany przez
+              kapitana.
+            </p>
+          </div>
+        )}
+      </>
       <AvatarHeader
         avatarText={`${team.short_name}`}
         title={`${team.name}`}
         subtitle="Drużyna"
       >
-        <ButtonContainer team={team} />
+        <>{!amIBanned && <ButtonContainer team={team} />}</>
       </AvatarHeader>
       <div className="space-y-16">
         <Section title="Informacje">
