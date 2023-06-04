@@ -35,8 +35,23 @@ export async function deleteTeam(teamId: string) {
   return axios.delete(`${BACKEND_ROUTES.TEAMS}/${teamId}`);
 }
 
-export async function removeUserFromTeam(teamId: string) {
+export async function removeMeFromTeam(teamId: string) {
   return axios.delete(`${BACKEND_ROUTES.TEAMS}/${teamId}/users`);
+}
+
+export async function removeUserFromTeam(teamId: string, userId: string) {
+  return axios.delete(`${BACKEND_ROUTES.TEAMS}/${teamId}/users/${userId}`);
+}
+
+export async function banUserFromTeam(
+  teamId: string,
+  userId: string,
+  isBanned: boolean
+) {
+  return axios.put(`${BACKEND_ROUTES.TEAMS}/${teamId}/users/${userId}`, {
+    is_banned: isBanned,
+    is_captain: false, // TODO: Remove this after backend fix
+  });
 }
 
 export type GetTeamsResponse = {
