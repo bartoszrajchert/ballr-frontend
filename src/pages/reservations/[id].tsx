@@ -1,8 +1,8 @@
 import Button from '@/components/Button';
-import Checkbox from '@/components/Checkbox';
 import ImageHeader from '@/components/ImageHeader';
 import TextField from '@/components/TextField';
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog';
+import { DynamicCheckbox } from '@/components/dynamic/DynamicCheckbox';
 import MainLayout from '@/layouts/MainLayout';
 import {
   getAddressFromFacility,
@@ -124,12 +124,12 @@ function Form() {
         errorText={getFieldErrorText('num_of_players', errors)}
         {...register('num_of_players', { required: true })}
       />
-      <Checkbox
+      <DynamicCheckbox
         label="Tylko dla drużyn"
         name="for_team_only"
         control={control}
       />
-      <Checkbox
+      <DynamicCheckbox
         label="Otwarty dla sędziego"
         name="open_for_referee"
         control={control}
