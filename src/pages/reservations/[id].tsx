@@ -94,7 +94,7 @@ function Form() {
     handleSubmit,
     reset,
     control,
-    formState: { errors, isSubmitting, isSubmitted },
+    formState: { errors },
     setError,
   } = useForm<CreateMatchPayload>();
 
