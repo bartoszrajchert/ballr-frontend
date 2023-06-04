@@ -18,7 +18,7 @@ function ImageHeader(props: Props) {
   return (
     <section className="flex flex-col gap-10 lg:grid lg:grid-cols-2 lg:gap-2">
       <Image
-        className="aspect-video rounded-2xl bg-green-900 object-cover"
+        className="m-auto aspect-video rounded-2xl bg-green-900 object-cover"
         src={footballImage1}
         quality={20}
         alt=""
