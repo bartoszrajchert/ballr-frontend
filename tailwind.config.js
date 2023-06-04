@@ -83,6 +83,15 @@ module.exports = {
         'border-3px': 'inset 0 0 0 3px',
       },
       keyframes: {
+        // Dialog
+        'overlay-show': {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 1 },
+        },
+        'content-show': {
+          '0%': { opacity: 0, transform: 'translate(-50%, -48%) scale(0.96)' },
+          '100%': { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' },
+        },
         // Tooltip
         'slide-up-fade': {
           '0%': { opacity: 0, transform: 'translateY(2px)' },
@@ -136,6 +145,10 @@ module.exports = {
       },
     },
     animation: {
+      // Dialog
+      'overlay-show': 'overlay-show 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+      'content-show': 'content-show 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+
       // Tooltip
       'slide-up-fade': 'slide-up-fade 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
       'slide-right-fade': 'slide-right-fade 0.4s cubic-bezier(0.16, 1, 0.3, 1)',

@@ -2,6 +2,7 @@ import Button from '@/components/Button';
 import Checkbox from '@/components/Checkbox';
 import ImageHeader from '@/components/ImageHeader';
 import TextField from '@/components/TextField';
+import ConfirmDialog from '@/components/dialogs/ConfirmDialog';
 import MainLayout from '@/layouts/MainLayout';
 import {
   getAddressFromFacility,
@@ -62,11 +63,12 @@ function ReservationsId() {
             },
           ]}
         >
-          <Button
-            type="cancel"
-            value="Usuń rezerwację"
-            onClick={onSubmit}
-            fullWidth
+          <ConfirmDialog
+            title="Czy na pewno chcesz usunąć rezerwację?"
+            description="Jeśli jest przypisany mecz do tej rezerwacji to też zostanie usunięty. Ta operacja jest nieodwracalna."
+            trigger={<Button type="cancel" value="Usuń rezerwację" fullWidth />}
+            confirmValue="Usuń rezerwacje"
+            onConfirm={onSubmit}
           />
         </ImageHeader>
         <section className="m-auto w-full lg:w-2/5">
