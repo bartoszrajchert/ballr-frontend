@@ -14,7 +14,7 @@ type Props = {
 function EntityCard(props: Props) {
   return (
     <Link href={props.href} className={props.className}>
-      <div className="flex flex-col items-center justify-center rounded-2xl bg-grey-100 p-7 shadow-border-1px shadow-grey-300 hover:bg-green-100">
+      <div className="flex h-full w-full flex-col items-center justify-center rounded-2xl bg-grey-100 p-7 shadow-border-1px shadow-grey-300 hover:bg-green-100">
         {props.avatar && <Avatar {...props.avatar} className="mb-4" />}
         <p className="flex items-center justify-center gap-1 text-label-medium">
           {props.leadingIcon}
