@@ -111,6 +111,9 @@ const Content = () => {
     return 0;
   }, [match]);
 
+  /**
+   * Check if the user is in the match.
+   */
   const me = useMemo(
     () => match?.users.find((matchUser) => matchUser.user_id === user?.id),
     [match?.users, user?.id]
@@ -202,8 +205,9 @@ const Content = () => {
                   signOutText="Wypisz się z meczu"
                   isReferee={true}
                   disabled={
-                    (me && !me?.is_referee) ||
-                    !!match?.users?.some((user) => user.is_referee)
+                    !!match?.users?.some(
+                      (user) => user.is_referee && user.user_id !== me?.user_id
+                    )
                   }
                 />
               )}
