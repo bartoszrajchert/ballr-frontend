@@ -17,21 +17,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    
-    - uses: pnpm/action-setup@v2
-      with:
-        version: 7
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: ${{ env.NODE_VERSION }}
-        cache: 'pnpm'
+        cache: 'npm'
 
-    - name: pnpm install, build, and test
+    - name: npm install, build, and test
       run: |
-        pnpm install
-        pnpm run build
+        npm install
+        npm run build --if-present
+        npm run test --if-present
 
     - name: Zip artifact for deployment
       run: zip -9 -q -r --symlinks ballr-frontend-release.zip .next package.json node_modules public

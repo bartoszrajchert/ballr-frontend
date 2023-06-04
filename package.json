@@ -10,7 +10,6 @@
     "lint": "next lint",
     "format": "prettier --write src",
     "analyze": "cross-env ANALYZE=true next build",
-    "preinstall": "npx only-allow pnpm",
     "prepare": "husky install"
   },
   "dependencies": {
