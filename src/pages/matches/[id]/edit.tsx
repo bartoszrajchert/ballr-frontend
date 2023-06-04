@@ -8,14 +8,13 @@ import {
 } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { GetMatchResponse } from '@/models/match.model';
-import { UserContext } from '@/providers/UserProvider';
 import {
   deleteMatch,
   updateMatch,
   UpdateMatchPayload,
 } from '@/repository/match.repository';
 import { useRouter } from 'next/router';
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import useSWR from 'swr';
@@ -23,7 +22,6 @@ import useSWR from 'swr';
 const MatchesIdEdit = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { user } = useContext(UserContext);
   const { data: match } = useSWR<GetMatchResponse>(
     `${BACKEND_ROUTES.MATCHES}/${id}`,
     {
