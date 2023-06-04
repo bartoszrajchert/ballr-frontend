@@ -3,26 +3,26 @@ import Button from '@/components/Button';
 import EntityCard from '@/components/EntityCard';
 import Section from '@/components/Section';
 import TextInformation from '@/components/TextInformation';
+import ConfirmDialog from '@/components/dialogs/ConfirmDialog';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { UserContext } from '@/providers/UserProvider';
 import {
   addUserToTeam,
+  banUserFromTeam,
   GetTeamResponse,
+  removeMeFromTeam,
   removeUserFromTeam,
 } from '@/repository/team.repository';
-import { IconCrown, IconPencil } from '@tabler/icons-react';
+import { IconCrown, IconPencil, IconTrash } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useCallback, useContext, useMemo } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import useSWR, { SWRConfig, useSWRConfig } from 'swr';
 
-// TODO: Ban user by captain
-// TODO: Remove user from team by captain
-// TODO: Modal
 // TODO: Show you are banned
 
 export default function TeamsId({ fallback }: { fallback: any }) {
@@ -42,6 +42,11 @@ function Content() {
     isLoading,
     error,
   } = useSWR<GetTeamResponse>(`${BACKEND_ROUTES.TEAMS}/${id}`);
+
+  const amICaptain = useMemo(() => {
+    if (!team || !user) return false;
+    return team.users.find((team) => team.user_id === user.id)?.is_captain;
+  }, [team, user]);
 
   if (!team && isLoading) {
     return <div>Loading...</div>;
@@ -94,6 +99,11 @@ function Content() {
                 leadingIcon={
                   teamUser.is_captain ? <IconCrown size={16} /> : undefined
                 }
+                actionChildren={
+                  amICaptain && !teamUser.is_captain ? (
+                    <DeleteUserDialog teamUser={teamUser} />
+                  ) : undefined
+                }
               />
             ))}
           </div>
@@ -132,7 +142,7 @@ function ButtonContainer({ team }: { team: GetTeamResponse }) {
   const leaveTeam = useCallback(() => {
     if (!id) return null;
 
-    removeUserFromTeam(id.toString())
+    removeMeFromTeam(id.toString())
       .then(() => {
         toast.success(`Opuściłeś drużynę!`);
       })
@@ -168,6 +178,56 @@ function ButtonContainer({ team }: { team: GetTeamResponse }) {
     );
 
   return null;
+}
+
+function DeleteUserDialog({
+  teamUser,
+}: {
+  teamUser: GetTeamResponse['users'][0];
+}) {
+  const router = useRouter();
+  const { id } = router.query;
+  const { mutate } = useSWRConfig();
+
+  const handleDelete = useCallback(() => {
+    if (!id) return null;
+
+    removeUserFromTeam(String(id), teamUser.user_id.toString())
+      .then(() => {
+        toast.success(`Usunięto gracza!`);
+      })
+      .catch((err) => {
+        toast.error(`Nie udało się usunąć gracza: ${err}`);
+      })
+      .finally(async () => {
+        await mutate(`${BACKEND_ROUTES.TEAMS}/${id}`);
+      });
+  }, [id, mutate, teamUser.user_id]);
+
+  const handleBan = useCallback(() => {
+    banUserFromTeam(String(id), teamUser.user_id.toString(), true)
+      .then(() => {
+        toast.success(`Zbanowano gracza!`);
+      })
+      .catch((err) => {
+        toast.error(`Nie udało się zbanować gracza: ${err}`);
+      })
+      .finally(async () => {
+        await mutate(`${BACKEND_ROUTES.TEAMS}/${id}`);
+      });
+  }, [id, mutate, teamUser.user_id]);
+
+  return (
+    <ConfirmDialog
+      trigger={<Button type="tertiary" icon={<IconTrash />} />}
+      title={`Czy na pewno chcesz usunąć ${teamUser.user_first_name} ${teamUser.user_last_name}?`}
+      description="Możesz również zablokować tę osobę aby nie mogła znów dołączyć."
+      confirmValue="Usuń gracza"
+      onConfirm={handleDelete}
+      altConfirmValue="Zablokuj gracza"
+      onAltConfirm={handleBan}
+    />
+  );
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
