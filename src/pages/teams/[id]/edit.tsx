@@ -1,6 +1,6 @@
-import Dropdown from '@/components/Dropdown';
 import TextField from '@/components/TextField';
 import CityDropdown from '@/components/dropdowns/CityDropdown';
+import { DynamicDropdown } from '@/components/dynamic/DynamicDropdown';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
 import {
   getFieldErrorText,
@@ -93,7 +93,7 @@ function TeamsIdEdit() {
             errorText={getFieldErrorText('short_name', errors)}
             {...register('short_name', { required: true, maxLength: 5 })}
           />
-          <Dropdown
+          <DynamicDropdown
             label="Kapitan"
             name="new_captain"
             control={control}
