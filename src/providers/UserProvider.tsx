@@ -3,7 +3,7 @@ import { globalFetcher } from '@/lib/fetchers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
 import { GetUserResponse } from '@/models/user.model';
-import { onIdTokenChanged, User as FirebaseUser } from '@firebase/auth';
+import { onIdTokenChanged, User as FirebaseUser } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import nookies from 'nookies';
 import React, { useEffect, useState } from 'react';

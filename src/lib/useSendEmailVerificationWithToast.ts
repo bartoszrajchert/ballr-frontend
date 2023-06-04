@@ -1,4 +1,4 @@
-import { Auth } from '@firebase/auth';
+import { Auth } from 'firebase/auth';
 import { useEffect } from 'react';
 import { useSendEmailVerification } from 'react-firebase-hooks/auth';
 import { toast } from 'react-toastify';
