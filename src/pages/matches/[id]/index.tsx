@@ -494,10 +494,12 @@ function TeamForm(props: { match: GetMatchResponse; numberOfTeams: number }) {
             rules={{ required: true }}
             errorText={getFieldErrorText('team_id', errors)}
             data={
-              user?.teams?.map((team) => ({
-                label: team.team_name,
-                value: team.team_id.toString(),
-              })) ?? []
+              user?.teams
+                ?.filter((team) => team.is_captain)
+                .map((team) => ({
+                  label: team.team_name,
+                  value: team.team_id.toString(),
+                })) ?? []
             }
           />
         )}
