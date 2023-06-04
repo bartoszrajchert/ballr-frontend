@@ -26,7 +26,10 @@ function TeamsIdEdit() {
   const { id } = router.query;
   const { user } = useContext(UserContext);
   const { data: team } = useSWR<GetTeamResponse>(
-    `${BACKEND_ROUTES.TEAMS}/${id}`
+    `${BACKEND_ROUTES.TEAMS}/${id}`,
+    {
+      revalidateOnFocus: false,
+    }
   );
 
   const {
@@ -35,7 +38,6 @@ function TeamsIdEdit() {
     setError,
     control,
     reset,
-    watch,
     formState: { errors },
   } = useForm<EditTeamPayload>();
 
