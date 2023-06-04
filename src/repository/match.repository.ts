@@ -74,6 +74,10 @@ export async function createMatch(data: CreateMatchPayload) {
   return axios.post<GetMatchResponse>(ROUTES.MATCHES, data);
 }
 
+export async function deleteMatch(matchId: string | number) {
+  return axios.delete(`${ROUTES.MATCHES}/${matchId}`);
+}
+
 export type UpdateMatchPayload = Partial<
   Omit<CreateMatchPayload, 'reservation_id'>
 >;
