@@ -1,3 +1,4 @@
+import SkeletonListWithPagination from '@/components/skeletons/SkeletonListWithPagination';
 import { Pagination } from '@/models/base.model';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import clsx from 'clsx';
@@ -36,7 +37,7 @@ function ListWithPagination(props: Props) {
         {data && !error && data.items.map((item: unknown) => props.child(item))}
       </div>
       {error && <p>Błąd: {JSON.stringify(error)}</p>}
-      {isLoading && <p>Ładowanie...</p>}
+      {isLoading && <SkeletonListWithPagination />}
       {!error && !isLoading && (!data || data.total <= 0) && <p>Brak meczy</p>}
       {!error && (
         <ReactPaginate

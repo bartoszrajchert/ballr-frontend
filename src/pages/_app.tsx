@@ -1,3 +1,4 @@
+import SkeletonNavigation from '@/components/skeletons/SkeletonNavigation';
 import initAxios from '@/lib/axios';
 import { globalFetcher } from '@/lib/fetchers';
 import '@/lib/firebase';
@@ -10,6 +11,8 @@ import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React from 'react';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { SWRConfig } from 'swr';
@@ -23,11 +26,12 @@ const focusModePaths = [
   ROUTES.CREATE_PROFILE,
 ];
 
-const Navigation = dynamic(() => import('@/components/Navigation'));
-const Footer = dynamic(() => import('@/components/Footer'));
-const VerifyEmailBanner = dynamic(
-  () => import('@/components/VerifyEmailBanner')
-);
+const Navigation = dynamic(() => import('@/components/Navigation'), {
+  loading: () => <SkeletonNavigation />,
+});
+const Footer = dynamic(() => import('@/components/Footer'), {
+  loading: () => <Skeleton height={140} />,
+});
 const UserProvider = dynamic(() => import('@/providers/UserProvider'));
 const AxiosAuthInterceptor = dynamic(
   () => import('@/components/AxiosAuthInterceptor')
@@ -55,7 +59,6 @@ function App({ Component, pageProps }: AppProps) {
             >
               <main>
                 <div>
-                  <VerifyEmailBanner />
                   <Navigation focusMode={focusMode} />
                   <Component {...pageProps} />
                 </div>
