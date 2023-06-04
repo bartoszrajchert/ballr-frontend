@@ -120,6 +120,11 @@ function TeamsIdEdit() {
       buttonOnClick={() => resetKeepValues(reset)}
       cancelButtonValue="Usuń drużynę"
       cancelButtonOnClick={deleteTeamSubmit}
+      confirmDialog={{
+        title: 'Czy na pewno chcesz usunąć drużynę?',
+        description: 'Ta operacja jest nieodwracalna.',
+        confirmValue: 'Usuń drużynę',
+      }}
       errorMessage={
         getFieldErrorText('root', errors) &&
         `Formularz zawiera błędy: ${getFieldErrorText('root', errors)}`
