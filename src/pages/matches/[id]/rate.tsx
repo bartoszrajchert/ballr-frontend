@@ -2,6 +2,7 @@ import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
 import Header from '@/components/Header';
 import TextField from '@/components/TextField';
+import { DynamicCheckbox } from '@/components/dynamic/DynamicCheckbox';
 import MainLayout from '@/layouts/MainLayout';
 import {
   getErrorMessage,
@@ -19,8 +20,15 @@ import {
 } from '@/repository/match.repository';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import React, { useContext } from 'react';
-import { FieldErrors, useForm, UseFormRegister } from 'react-hook-form';
+import React, { useContext, useEffect, useState } from 'react';
+import {
+  Control,
+  FieldErrors,
+  useForm,
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch,
+} from 'react-hook-form';
 import { toast } from 'react-toastify';
 import useSWR from 'swr';
 
@@ -40,7 +48,7 @@ export default function MatchesIdRate({ id }: any) {
   return (
     <MainLayout>
       <>
-        {isLoading && <p>Ładownie...</p>}
+        {isLoading && <p>Ładownie...</p>} {/* TODO Add spinner */}
         {!isLoading && (
           <>
             <Header
@@ -120,19 +128,43 @@ function UserForm(props: { id: string; users?: GetMatchResponse['users'] }) {
     handleSubmit,
     reset,
     formState: { errors },
+    watch,
     setError,
+    setValue,
+    control,
   } = useForm();
 
   const onSubmit = (data: any) => {
-    console.log('data', data);
+    console.log(data);
 
     const userGrades: PutRatePlayerType[] = [];
     Object.keys(data).forEach((key) => {
-      userGrades.push({
-        user_id: Number(key),
-        rating: Number(data[key]),
-        is_mvp: false,
-      });
+      const [name, userId] = key.split(' ');
+      const userPayload = userGrades.find((user) => user.user_id === userId);
+
+      if (name === 'is_mvp') {
+        if (userPayload) {
+          userPayload.is_mvp = data[key];
+        } else {
+          userGrades.push({
+            user_id: userId,
+            [name]: data[key] ?? false,
+            rating: -1,
+          });
+        }
+      }
+
+      if (name === 'rating') {
+        if (userPayload) {
+          userPayload.rating = Number(data[key]);
+        } else {
+          userGrades.push({
+            user_id: userId,
+            [name]: Number(data[key]),
+            is_mvp: false,
+          });
+        }
+      }
     });
 
     putRatePlayers(props.id, userGrades)
@@ -145,11 +177,15 @@ function UserForm(props: { id: string; users?: GetMatchResponse['users'] }) {
       });
   };
 
+  if (!user) {
+    return null;
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {props.users
-          ?.filter((userMatch) => userMatch.user_id !== user?.id)
+          ?.filter((userMatch) => userMatch.user_id !== user.id)
           .map((user) => (
             <UserGrade
               key={user.user_id}
@@ -158,6 +194,9 @@ function UserForm(props: { id: string; users?: GetMatchResponse['users'] }) {
               lastName={user.user_last_name}
               register={register}
               errors={errors}
+              control={control}
+              watch={watch}
+              setValue={setValue}
             />
           ))}
       </div>
@@ -180,29 +219,62 @@ function UserForm(props: { id: string; users?: GetMatchResponse['users'] }) {
   );
 }
 
-// TODO add mvp checkbox
 function UserGrade(props: {
   userId: string;
   firstName: string;
   lastName: string;
   register: UseFormRegister<any>;
   errors: FieldErrors;
+  control: Control<any>;
+  watch: UseFormWatch<any>;
+  setValue: UseFormSetValue<any>;
 }) {
+  const [disabled, setDisabled] = useState(false);
+
+  /**
+   * Disable checkbox if user is not MVP and MVP is already selected.
+   */
+  useEffect(() => {
+    props.watch((value, { name }) => {
+      if (name && name.startsWith('is_mvp')) {
+        if (!name.includes(props.userId) && value[name]) {
+          setDisabled(true);
+        }
+
+        if (!name.includes(props.userId) && !value[name]) {
+          setDisabled(false);
+        }
+      }
+    });
+  }, [props]);
+
   return (
     <div className="flex flex-col gap-4 rounded-2xl bg-grey-100 p-6">
-      <div className="flex items-center gap-4">
-        <Avatar text={`${props.firstName} ${props.lastName}`} />
-        <p className="text-label-medium">
-          {props.firstName} {props.lastName}
-        </p>
+      <div className="flex flex-col justify-between gap-4 sm:flex-row">
+        <div className="flex items-center gap-4">
+          <Avatar text={`${props.firstName} ${props.lastName}`} />
+          <p className="text-label-medium">
+            {props.firstName} {props.lastName}
+          </p>
+        </div>
+        <DynamicCheckbox
+          label="MVP"
+          name={`is_mvp ${props.userId}`}
+          control={props.control}
+          disabled={disabled}
+        />
       </div>
       <TextField
         placeholder="Ocena zawodnika"
         type="number"
         min={1}
         max={10}
-        errorText={getFieldErrorText(props.userId, props.errors)}
-        {...props.register(props.userId, { required: true, min: 1, max: 10 })}
+        errorText={getFieldErrorText(`rating ${props.userId}`, props.errors)}
+        {...props.register(`rating ${props.userId}`, {
+          required: true,
+          min: 1,
+          max: 10,
+        })}
       />
     </div>
   );

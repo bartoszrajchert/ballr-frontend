@@ -32,7 +32,7 @@ export async function deleteTeamFromMatch(
 }
 
 export type PutRatePlayerType = {
-  user_id: number;
+  user_id: string;
   rating: number;
   is_mvp: boolean;
 };
