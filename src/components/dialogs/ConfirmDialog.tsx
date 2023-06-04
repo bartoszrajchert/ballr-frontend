@@ -2,17 +2,17 @@ import Button from '@/components/Button';
 import BaseDialog from '@/components/dialogs/BaseDialog';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 
-type Props = {
+export type ConfirmDialogProps = {
   trigger: JSX.Element;
   title: string;
   description: string;
   confirmValue: string;
   altConfirmValue?: string;
-  onConfirm: () => void;
+  onConfirm?: () => void;
   altOnConfirm?: () => void;
 };
 
-function ConfirmDialog(props: Props) {
+function ConfirmDialog(props: ConfirmDialogProps) {
   return (
     <BaseDialog
       trigger={props.trigger}
