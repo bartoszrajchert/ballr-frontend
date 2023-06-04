@@ -116,7 +116,7 @@ const MatchForm = () => {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="min-w-[200px]">
-        <CityDropdown control={control} hideLabel />
+        <CityDropdown control={control} hideLabel showPlaceholder />
       </div>
       <Button value="Szukaj" isSubmit />
     </form>

@@ -60,7 +60,7 @@ const Dropdown = (props: Props) => {
                   <span>
                     {props.data.find((data) => data.value === field.value)
                       ?.label ?? (
-                      <span className="text-grey-600">{props.placeholder}</span>
+                      <span className="text-grey-800">{props.placeholder}</span>
                     )}
                   </span>
                 </Select.Value>

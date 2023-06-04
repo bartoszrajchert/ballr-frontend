@@ -9,6 +9,7 @@ import useSWR from 'swr';
 type Props = {
   control: any;
   hideLabel?: boolean;
+  showPlaceholder?: boolean;
   errors?: any;
   rules?: RegisterOptions;
   onValueChange?: (value: string) => void;
@@ -37,6 +38,7 @@ function CityDropdown(props: Props) {
       }
       rules={props.rules}
       onValueChange={props.onValueChange}
+      placeholder={props.showPlaceholder ? 'Wybierz miasto' : undefined}
       data={
         (cities &&
           cities.items.map((city) => ({
