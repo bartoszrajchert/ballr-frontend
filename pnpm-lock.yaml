@@ -37,6 +37,7 @@ specifiers:
   react-firebase-hooks: ^5.1.1
   react-hook-form: ^7.43.9
   react-i18next: ^12.2.0
+  react-loading-skeleton: ^3.3.1
   react-paginate: ^8.2.0
   react-toastify: ^9.1.3
   swr: ^2.1.5
@@ -72,6 +73,7 @@ dependencies:
   react-firebase-hooks: 5.1.1_firebase@9.22.1+react@18.2.0
   react-hook-form: 7.44.3_react@18.2.0
   react-i18next: 12.3.1_1a49bbfbf7fcc0e32596761b428791d2
+  react-loading-skeleton: 3.3.1_react@18.2.0
   react-paginate: 8.2.0_react@18.2.0
   react-toastify: 9.1.3_react-dom@18.2.0+react@18.2.0
   swr: 2.1.5_react@18.2.0
@@ -4189,6 +4191,14 @@ packages:
 
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
+    dev: false
+
+  /react-loading-skeleton/3.3.1_react@18.2.0:
+    resolution: {integrity: sha512-NilqqwMh2v9omN7LteiDloEVpFyMIa0VGqF+ukqp0ncVlYu1sKYbYGX9JEl+GtOT9TKsh04zCHAbavnQ2USldA==}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-paginate/8.2.0_react@18.2.0:

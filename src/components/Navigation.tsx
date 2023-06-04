@@ -1,6 +1,7 @@
 import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
 import Tooltip from '@/components/Tooltip';
+import VerifyEmailBanner from '@/components/VerifyEmailBanner';
 import { ROUTES, QUERY_PARAMS } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
 import { UserContext } from '@/providers/UserProvider';
@@ -103,68 +104,71 @@ const navigationContent: CategoryContent = {
 
 function Navigation({ focusMode }: Props) {
   return (
-    <nav className="flex w-full py-4">
-      <div className="flex w-full justify-between">
-        <div className="flex h-[48px] w-[250px] items-center">
-          <NextLink href={ROUTES.HOME}>
-            <Image src={logo} alt="logo" height={22} />
-          </NextLink>
-        </div>
-        {focusMode ? (
-          <FocusModeButton />
-        ) : (
-          <div className="hidden w-full justify-between lg:flex">
-            <NavigationMenuPrimitive.Root className="relative flex-grow">
-              <NavigationMenuPrimitive.List className="flex flex-row justify-center space-x-2 rounded-lg p-2 text-label-medium">
-                {Object.keys(navigationContent).map((key) => (
-                  <NavigationItemTrigger
-                    key={key}
-                    label={navigationContent[key].title}
-                  >
-                    <NavigationDetailedLinks
-                      data={navigationContent[key].links}
-                    />
-                  </NavigationItemTrigger>
-                ))}
+    <>
+      <VerifyEmailBanner />
+      <nav className="flex w-full py-4">
+        <div className="flex w-full justify-between">
+          <div className="flex h-[48px] w-[250px] items-center">
+            <NextLink href={ROUTES.HOME}>
+              <Image src={logo} alt="logo" height={22} />
+            </NextLink>
+          </div>
+          {focusMode ? (
+            <FocusModeButton />
+          ) : (
+            <div className="hidden w-full justify-between lg:flex">
+              <NavigationMenuPrimitive.Root className="relative flex-grow">
+                <NavigationMenuPrimitive.List className="flex flex-row justify-center space-x-2 rounded-lg p-2 text-label-medium">
+                  {Object.keys(navigationContent).map((key) => (
+                    <NavigationItemTrigger
+                      key={key}
+                      label={navigationContent[key].title}
+                    >
+                      <NavigationDetailedLinks
+                        data={navigationContent[key].links}
+                      />
+                    </NavigationItemTrigger>
+                  ))}
 
-                <NavigationMenuPrimitive.Indicator
+                  <NavigationMenuPrimitive.Indicator
+                    className={clsx(
+                      'z-10',
+                      'top-[100%] flex h-2 items-end justify-center overflow-hidden',
+                      'radix-state-visible:animate-fade-in',
+                      'radix-state-hidden:animate-fade-out',
+                      'transition-[width_transform] duration-[250ms] ease-[ease]'
+                    )}
+                  >
+                    <div className="relative top-1 h-2 w-2 rotate-45 bg-grey-100" />
+                  </NavigationMenuPrimitive.Indicator>
+                </NavigationMenuPrimitive.List>
+                <div
                   className={clsx(
-                    'z-10',
-                    'top-[100%] flex h-2 items-end justify-center overflow-hidden',
-                    'radix-state-visible:animate-fade-in',
-                    'radix-state-hidden:animate-fade-out',
-                    'transition-[width_transform] duration-[250ms] ease-[ease]'
+                    'absolute flex justify-center',
+                    'left-[-20%] top-[100%] w-[140%]'
                   )}
                 >
-                  <div className="relative top-1 h-2 w-2 rotate-45 bg-grey-100" />
-                </NavigationMenuPrimitive.Indicator>
-              </NavigationMenuPrimitive.List>
-              <div
-                className={clsx(
-                  'absolute flex justify-center',
-                  'left-[-20%] top-[100%] w-[140%]'
-                )}
-              >
-                <NavigationMenuPrimitive.Viewport
-                  className={clsx(
-                    'relative z-10 mt-2 overflow-hidden rounded-md bg-grey-100 shadow-lg',
-                    'w-radix-navigation-menu-viewport',
-                    'h-radix-navigation-menu-viewport',
-                    'radix-state-open:animate-scale-in-content',
-                    'radix-state-closed:animate-scale-out-content',
-                    'origin-[top_center] transition-[width_height] duration-300 ease-[ease]'
-                  )}
-                />
-              </div>
-            </NavigationMenuPrimitive.Root>
-            <UserMenu />
+                  <NavigationMenuPrimitive.Viewport
+                    className={clsx(
+                      'relative z-10 mt-2 overflow-hidden rounded-md bg-grey-100 shadow-lg',
+                      'w-radix-navigation-menu-viewport',
+                      'h-radix-navigation-menu-viewport',
+                      'radix-state-open:animate-scale-in-content',
+                      'radix-state-closed:animate-scale-out-content',
+                      'origin-[top_center] transition-[width_height] duration-300 ease-[ease]'
+                    )}
+                  />
+                </div>
+              </NavigationMenuPrimitive.Root>
+              <UserMenu />
+            </div>
+          )}
+          <div className="flex items-center justify-center lg:hidden">
+            <HamburgerMenu />
           </div>
-        )}
-        <div className="flex items-center justify-center lg:hidden">
-          <HamburgerMenu />
         </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 }
 
