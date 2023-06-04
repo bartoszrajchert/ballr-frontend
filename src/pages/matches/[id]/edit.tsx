@@ -9,7 +9,11 @@ import {
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { GetMatchResponse } from '@/models/match.model';
 import { UserContext } from '@/providers/UserProvider';
-import { updateMatch, UpdateMatchPayload } from '@/repository/match.repository';
+import {
+  deleteMatch,
+  updateMatch,
+  UpdateMatchPayload,
+} from '@/repository/match.repository';
 import { useRouter } from 'next/router';
 import React, { useCallback, useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -21,7 +25,10 @@ const MatchesIdEdit = () => {
   const { id } = router.query;
   const { user } = useContext(UserContext);
   const { data: match } = useSWR<GetMatchResponse>(
-    `${BACKEND_ROUTES.MATCHES}/${id}`
+    `${BACKEND_ROUTES.MATCHES}/${id}`,
+    {
+      revalidateOnFocus: false,
+    }
   );
 
   const {
@@ -66,12 +73,18 @@ const MatchesIdEdit = () => {
       });
   };
 
-  // TODO: implement delete match
-  const deleteMatch = useCallback(() => {
+  const deleteMatchSubmit = useCallback(() => {
     if (!match) return;
 
-    console.log('delete');
-  }, [match]);
+    deleteMatch(match?.id)
+      .then(async () => {
+        toast.success('Pomyślnie usunięto mecz!');
+        await router.push(ROUTES.MATCHES);
+      })
+      .catch((err) => {
+        toast.error(`Nie udało się usunąć meczu: ${err}`);
+      });
+  }, [match, router]);
 
   return (
     <AuthFormLayout
@@ -105,7 +118,7 @@ const MatchesIdEdit = () => {
       buttonValue="Zapisz"
       buttonOnClick={() => resetKeepValues(reset)}
       cancelButtonValue="Usuń mecz"
-      cancelButtonOnClick={deleteMatch}
+      cancelButtonOnClick={deleteMatchSubmit}
       errorMessage={
         getFieldErrorText('root', errors) &&
         `Formularz zawiera błędy: ${getFieldErrorText('root', errors)}`

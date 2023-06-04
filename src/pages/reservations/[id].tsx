@@ -10,9 +10,10 @@ import {
   resetKeepValues,
   setUseReactFormErrors,
 } from '@/lib/helpers';
-import { ROUTES } from '@/lib/routes';
+import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { GetReservationResponse } from '@/models/reservation.model';
 import { createMatch, CreateMatchPayload } from '@/repository/match.repository';
+import { deleteReservation } from '@/repository/reservation.repository';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 import React, { useCallback } from 'react';
@@ -25,13 +26,21 @@ function ReservationsId() {
   const router = useRouter();
   const { id } = router.query;
   const { data: reservation } = useSWR<GetReservationResponse>(
-    `${ROUTES.RESERVATIONS}/${id}`
+    `${BACKEND_ROUTES.RESERVATIONS}/${id}`
   );
 
   const onSubmit = useCallback(() => {
-    // TODO: Delete reservation
-    console.log('Delete reservation');
-  }, []);
+    if (!id) return;
+
+    deleteReservation(String(id))
+      .then(async () => {
+        toast.success('Rezerwacja została usunięta');
+        await router.push(ROUTES.SETTINGS_RESERVATIONS);
+      })
+      .catch((err) => {
+        toast.error(`Nie udało się usunąć rezerwacji: ${err}`);
+      });
+  }, [id, router]);
 
   return (
     <MainLayout>

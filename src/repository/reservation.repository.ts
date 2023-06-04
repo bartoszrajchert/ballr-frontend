@@ -15,3 +15,7 @@ export async function createReservation(
     user_id: user_id,
   });
 }
+
+export async function deleteReservation(reservationId: string) {
+  return axios.delete(`${BACKEND_ROUTES.RESERVATIONS}/${reservationId}`);
+}
