@@ -3,6 +3,7 @@ export type GetReservationResponse = {
   end_time: string;
   is_paid: boolean;
   is_approved: boolean;
+  match_id?: number;
   user: {
     id: string;
     first_name: string;

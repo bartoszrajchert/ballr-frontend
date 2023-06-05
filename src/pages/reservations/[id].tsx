@@ -1,13 +1,17 @@
 import Button from '@/components/Button';
 import ImageHeader from '@/components/ImageHeader';
+import Spinner from '@/components/Spinner';
 import TextField from '@/components/TextField';
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog';
 import { DynamicCheckbox } from '@/components/dynamic/DynamicCheckbox';
+import { ErrorMessage } from '@/components/messages/ErrorMessage';
+import NoResultsMessage from '@/components/messages/NoResultsMessage';
 import MainLayout from '@/layouts/MainLayout';
 import {
   getAddressFromFacility,
   getFieldErrorText,
   getLocaleDateString,
+  is404,
   resetKeepValues,
   setUseReactFormErrors,
 } from '@/lib/helpers';
@@ -16,19 +20,21 @@ import { GetReservationResponse } from '@/models/reservation.model';
 import { createMatch, CreateMatchPayload } from '@/repository/match.repository';
 import { deleteReservation } from '@/repository/reservation.repository';
 import { IconInfoCircle } from '@tabler/icons-react';
+import { AxiosError } from 'axios';
+import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import useSWR from 'swr';
 
-// TODO: show match if assigned
-function ReservationsId() {
+function ReservationsId({ id }: { id: string }) {
   const router = useRouter();
-  const { id } = router.query;
-  const { data: reservation } = useSWR<GetReservationResponse>(
-    `${BACKEND_ROUTES.RESERVATIONS}/${id}`
-  );
+  const {
+    data: reservation,
+    isLoading,
+    error,
+  } = useSWR<GetReservationResponse>(`${BACKEND_ROUTES.RESERVATIONS}/${id}`);
 
   const onSubmit = useCallback(() => {
     if (!id) return;
@@ -43,44 +49,66 @@ function ReservationsId() {
       });
   }, [id, router]);
 
+  if (isLoading) return <Spinner />;
+
+  if (!reservation || is404(error))
+    return <NoResultsMessage message="Nie udało się znaleźć rezerwacji." />;
+
+  if (error) return <ErrorMessage error={error.message} />;
+
   return (
     <MainLayout>
       <div className="mt-10 space-y-16">
         <ImageHeader
-          href={`${ROUTES.FACILITIES}/${reservation?.field?.facility?.id}`}
-          hrefText={reservation?.field?.facility?.name ?? 'Error'}
-          title={getAddressFromFacility(reservation?.field?.facility)}
+          href={`${ROUTES.FACILITIES}/${reservation.field?.facility?.id}`}
+          hrefText={reservation.field?.facility?.name ?? 'Error'}
+          title={getAddressFromFacility(reservation.field?.facility)}
           iconDetails={[
             {
               icon: <IconInfoCircle />,
-              text: `Nazwa boiska: ${reservation?.field?.name}`,
+              text: `Nazwa boiska: ${reservation.field?.name}`,
             },
             {
               icon: <IconInfoCircle />,
               text: `Data rezerwacji: ${getLocaleDateString(
-                reservation?.start_time
-              )} - ${getLocaleDateString(reservation?.end_time)}`,
+                reservation.start_time
+              )} - ${getLocaleDateString(reservation.end_time)}`,
             },
           ]}
         >
-          <ConfirmDialog
-            title="Czy na pewno chcesz usunąć rezerwację?"
-            description="Jeśli jest przypisany mecz do tej rezerwacji to też zostanie usunięty. Ta operacja jest nieodwracalna."
-            trigger={<Button type="cancel" value="Usuń rezerwację" fullWidth />}
-            confirmValue="Usuń rezerwacje"
-            onConfirm={onSubmit}
-          />
-        </ImageHeader>
-        <section className="m-auto w-full lg:w-2/5">
-          <div className="mb-7 space-y-4">
-            <h3 className="text-heading-h3">Stwórz mecz</h3>
-            <p>
-              Mecz zostanie dostępny dla każdego zarejestrowanego użytkownika w
-              serwisie.
-            </p>
+          <div className="space-y-2">
+            {reservation.match_id && (
+              <Button
+                value="Przejdź do meczu"
+                onClick={() => {
+                  router.push(`${ROUTES.MATCHES}/${reservation.match_id}`);
+                }}
+                fullWidth
+              />
+            )}
+            <ConfirmDialog
+              title="Czy na pewno chcesz usunąć rezerwację?"
+              description="Jeśli jest przypisany mecz do tej rezerwacji to też zostanie usunięty. Ta operacja jest nieodwracalna."
+              trigger={
+                <Button type="cancel" value="Usuń rezerwację" fullWidth />
+              }
+              confirmValue="Usuń rezerwacje"
+              onConfirm={onSubmit}
+            />
           </div>
-          <Form />
-        </section>
+        </ImageHeader>
+        {!reservation.match_id && (
+          <section className="m-auto w-full lg:w-2/5">
+            <div className="mb-7 space-y-4">
+              <h3 className="text-heading-h3">Stwórz mecz</h3>
+              <p>
+                Mecz zostanie dostępny dla każdego zarejestrowanego użytkownika
+                w serwisie.
+              </p>
+            </div>
+            <Form />
+          </section>
+        )}
       </div>
     </MainLayout>
   );
@@ -153,5 +181,15 @@ function Form() {
     </form>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { id } = context.query;
+
+  return {
+    props: {
+      id,
+    },
+  };
+};
 
 export default ReservationsId;
