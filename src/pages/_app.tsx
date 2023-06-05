@@ -5,7 +5,6 @@ import '@/lib/firebase';
 import { ROUTES } from '@/lib/routes';
 import '@/styles/globals.css';
 import '@/styles/page-loader.css';
-import { appWithTranslation } from 'next-i18next';
 import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
@@ -84,4 +83,4 @@ function App({ Component, pageProps }: AppProps) {
   );
 }
 
-export default appWithTranslation(App);
+export default App;

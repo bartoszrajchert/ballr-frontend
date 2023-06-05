@@ -4,9 +4,6 @@ import CityDropdown from '@/components/dropdowns/CityDropdown';
 import MainLayout from '@/layouts/MainLayout';
 import { ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
-import { GetServerSideProps } from 'next';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -20,7 +17,6 @@ import multisport from '../../public/multisport.png';
 import footballImage1 from '../../public/prapoth-panchuea-_lTF9zrF1PY-unsplash.jpg';
 
 export default function Home() {
-  const { t } = useTranslation('common');
   const auth = useGetAuth();
   const [user] = useAuthState(auth);
 
@@ -33,9 +29,9 @@ export default function Home() {
       <MainLayout footerMargin={false}>
         <div className="mb-10 mt-12 space-y-5">
           <h1 className="m-auto max-w-[530px] text-center text-heading-title-desktop text-green-900">
-            {t('home-page.title')}
+            Weź udział w prawdziwej rozgrywce
           </h1>
-          <p className="text-center">{t('home-page.subtitle')}</p>
+          <p className="text-center">Zagraj najlepszy mecz swojego życia.</p>
         </div>
         <div className="flex flex-col items-center justify-center gap-3 rounded-3xl bg-green-900 p-8 sm:h-[190px]">
           <p className="text-center text-heading-h4 text-white sm:text-left">
@@ -124,9 +120,3 @@ const MatchForm = () => {
     </form>
   );
 };
-
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(locale ?? 'pl', ['common', 'footer'])),
-  },
-});
