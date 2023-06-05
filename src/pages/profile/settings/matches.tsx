@@ -1,7 +1,7 @@
 import Header from '@/components/Header';
 import Tile from '@/components/Tile';
 import MainLayout from '@/layouts/MainLayout';
-import { getAddressFromFacility, getLocaleDateString } from '@/lib/helpers';
+import { getAddressFromFacility } from '@/lib/helpers';
 import { ROUTES } from '@/lib/routes';
 import { UserContext } from '@/providers/UserProvider';
 import React, { useContext } from 'react';
@@ -12,7 +12,7 @@ function ProfileSettingsMatches() {
   return (
     <MainLayout>
       <Header value="Mecze" />
-      <>
+      <div className="flex flex-col gap-4">
         {user && user?.matches?.length <= 0 && (
           <div className="text-center text-gray-500">
             Nie masz żadnych meczy
@@ -26,7 +26,7 @@ function ProfileSettingsMatches() {
             description={[`Opis: ${match.match_description}`]}
           />
         ))}
-      </>
+      </div>
     </MainLayout>
   );
 }
