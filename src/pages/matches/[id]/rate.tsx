@@ -1,8 +1,10 @@
 import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
 import Header from '@/components/Header';
+import Spinner from '@/components/Spinner';
 import TextField from '@/components/TextField';
 import { DynamicCheckbox } from '@/components/dynamic/DynamicCheckbox';
+import { ErrorMessage } from '@/components/messages/ErrorMessage';
 import MainLayout from '@/layouts/MainLayout';
 import {
   getErrorMessage,
@@ -41,31 +43,32 @@ import useSWR from 'swr';
  * @constructor
  */
 export default function MatchesIdRate({ id }: any) {
-  const { data: match, isLoading } = useSWR<GetMatchResponse>(
-    `${BACKEND_ROUTES.MATCHES}/${id}`
-  );
+  const {
+    data: match,
+    isLoading,
+    error,
+  } = useSWR<GetMatchResponse>(`${BACKEND_ROUTES.MATCHES}/${id}`);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (error || !match) {
+    return <ErrorMessage error={error.message} />;
+  }
 
   return (
     <MainLayout>
-      <>
-        {isLoading && <p>Ładownie...</p>} {/* TODO Add spinner */}
-        {!isLoading && (
-          <>
-            <Header
-              value={
-                match?.for_team_only ? 'Protokół meczu' : 'Formularz oceniania'
-              }
-            />
-            <section className="m-auto max-w-[820px]">
-              {match?.for_team_only ? (
-                <ScoreForm id={String(id)} />
-              ) : (
-                <UserForm id={String(id)} users={match?.users} />
-              )}
-            </section>
-          </>
+      <Header
+        value={match.for_team_only ? 'Protokół meczu' : 'Formularz oceniania'}
+      />
+      <section className="m-auto max-w-[820px]">
+        {match.for_team_only ? (
+          <ScoreForm id={String(id)} />
+        ) : (
+          <UserForm id={String(id)} users={match.users} />
         )}
-      </>
+      </section>
     </MainLayout>
   );
 }
@@ -135,8 +138,6 @@ function UserForm(props: { id: string; users?: GetMatchResponse['users'] }) {
   } = useForm();
 
   const onSubmit = (data: any) => {
-    console.log(data);
-
     const userGrades: PutRatePlayerType[] = [];
     Object.keys(data).forEach((key) => {
       const [name, userId] = key.split(' ');
