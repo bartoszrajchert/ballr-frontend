@@ -46,6 +46,12 @@ function Content() {
     );
   }, [profile]);
 
+  const teamsWithoutBanned = useMemo(() => {
+    if (!profile) return [];
+
+    return profile.teams.filter((team) => !team.is_banned);
+  }, [profile]);
+
   if (!profile && isLoading) {
     return <div>Loading...</div>;
   }
@@ -98,9 +104,9 @@ function Content() {
             />
           </div>
         </Section>
-        <Section title={`Drużyny (${profile.teams.length})`}>
+        <Section title={`Drużyny (${teamsWithoutBanned.length})`}>
           <div className="flex w-full flex-col flex-wrap gap-5 sm:flex-row">
-            {profile.teams.map((team) => (
+            {teamsWithoutBanned.map((team) => (
               <EntityCard
                 key={team.team_id}
                 href={`${ROUTES.TEAMS}/${team.team_id}`}
