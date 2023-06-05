@@ -29,62 +29,71 @@ const AuthFormLayout = (props: Props) => {
   return (
     <MainLayout>
       <div
-        className={clsx('mt-6 sm:min-w-[400px]', {
+        className={clsx({
           'sm:centered': props.centered || props.centered === undefined,
-          'm-auto sm:max-w-[400px]': !props.centered,
         })}
       >
-        <div className="mb-10 space-y-2 text-center">
-          <h1 className="text-heading-h2 text-green-900">{props.header}</h1>
-          <p>{props.subheader}</p>
-        </div>
-        <form onSubmit={props.onSubmit}>
-          <div className="space-y-6">
-            <div className="space-y-4">{props.inputChildren}</div>
-            <Button
-              value={props.buttonValue}
-              isSubmit
-              fullWidth
-              disabled={props.buttonDisabled}
-              onClick={props.buttonOnClick}
-            />
-            {props.errorMessage && (
-              <p className="text-red">{props.errorMessage}</p>
-            )}
+        <div
+          className={clsx('my-6 sm:min-w-[400px]', {
+            'm-auto sm:max-w-[400px]': !props.centered,
+          })}
+        >
+          <div className="mb-10 space-y-2 text-center">
+            <h1 className="text-heading-h2 text-green-900">{props.header}</h1>
+            <p>{props.subheader}</p>
           </div>
-          {props.footerChildren && (
-            <p className="mt-10 text-center">{props.footerChildren}</p>
-          )}
-        </form>
-
-        {props.cancelButtonValue && (
-          <>
-            <hr className="my-5" />
-            {props.confirmDialog && (
-              <ConfirmDialog
-                trigger={
-                  <Button
-                    value={props.cancelButtonValue}
-                    type="cancel"
-                    fullWidth
-                  />
-                }
-                title={props.confirmDialog.title}
-                description={props.confirmDialog.description}
-                confirmValue={props.confirmDialog.confirmValue}
-                onConfirm={props.cancelButtonOnClick}
-              />
-            )}
-            {!props.confirmDialog && (
+          <form onSubmit={props.onSubmit}>
+            <div className="space-y-6">
+              <div className="space-y-4">{props.inputChildren}</div>
               <Button
-                value={props.cancelButtonValue}
-                type="cancel"
+                value={props.buttonValue}
+                isSubmit
                 fullWidth
-                onClick={props.cancelButtonOnClick}
+                disabled={props.buttonDisabled}
+                onClick={props.buttonOnClick}
               />
+              {props.errorMessage && (
+                <p className="mt-2 text-center text-red">
+                  {props.errorMessage}
+                </p>
+              )}
+            </div>
+            {props.footerChildren && (
+              <div className="mb-2 mt-10">
+                <p className="text-center">{props.footerChildren}</p>
+              </div>
             )}
-          </>
-        )}
+          </form>
+
+          {props.cancelButtonValue && (
+            <>
+              <hr className="my-5" />
+              {props.confirmDialog && (
+                <ConfirmDialog
+                  trigger={
+                    <Button
+                      value={props.cancelButtonValue}
+                      type="cancel"
+                      fullWidth
+                    />
+                  }
+                  title={props.confirmDialog.title}
+                  description={props.confirmDialog.description}
+                  confirmValue={props.confirmDialog.confirmValue}
+                  onConfirm={props.cancelButtonOnClick}
+                />
+              )}
+              {!props.confirmDialog && (
+                <Button
+                  value={props.cancelButtonValue}
+                  type="cancel"
+                  fullWidth
+                  onClick={props.cancelButtonOnClick}
+                />
+              )}
+            </>
+          )}
+        </div>
       </div>
     </MainLayout>
   );
