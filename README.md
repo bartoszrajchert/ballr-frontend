@@ -6,7 +6,7 @@ This is the frontend for the ballr project - a part of bachelor of engineering t
 1. TODO
 
 ## How to run analyze
-`cross-env ANALYZE=true next build`
+`ANALYZE=true next build`
 
 ## How to get a Firebase user token
 1. Open developer tools in your browser

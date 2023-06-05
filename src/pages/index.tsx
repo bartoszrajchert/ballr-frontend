@@ -4,7 +4,7 @@ import CityDropdown from '@/components/dropdowns/CityDropdown';
 import MainLayout from '@/layouts/MainLayout';
 import { ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
-import { GetStaticProps } from 'next';
+import { GetServerSideProps } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
@@ -125,7 +125,7 @@ const MatchForm = () => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {
     ...(await serverSideTranslations(locale ?? 'pl', ['common', 'footer'])),
   },
