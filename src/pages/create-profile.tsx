@@ -1,15 +1,15 @@
 import TextField from '@/components/TextField';
-import CityDropdown from '@/components/dropdowns/CityDropdown';
-import GenderDropdown from '@/components/dropdowns/GenderDropdown';
+import { DynamicDropdown } from '@/components/dynamic/DynamicDropdown';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
 import {
   getFieldErrorText,
   resetKeepValues,
   setUseReactFormErrors,
 } from '@/lib/helpers';
-import { QUERY_PARAMS, ROUTES } from '@/lib/routes';
+import { BACKEND_ROUTES, QUERY_PARAMS, ROUTES } from '@/lib/routes';
 import { createUser, CreateUpdateUserData } from '@/repository/user.repository';
 import { useRouter } from 'next/router';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
@@ -61,14 +61,29 @@ function ProfileCreate() {
             errorText={getFieldErrorText('birth_date', errors)}
             {...register('birth_date', { required: true })}
           />
-          <CityDropdown
+          <DynamicDropdown
+            label="Miasto"
+            name="city_id"
             control={control}
-            errors={errors}
+            dataType="pagination"
+            apiURL={BACKEND_ROUTES.CITIES}
+            mapper={({ name, id }: City) => ({
+              label: name,
+              value: id.toString(),
+            })}
             rules={{ required: true }}
           />
-          <GenderDropdown
+          <DynamicDropdown
+            label="Płeć"
+            name="gender_id"
             control={control}
-            errors={errors}
+            fieldErrors={errors}
+            dataType="pagination"
+            apiURL={BACKEND_ROUTES.GENDERS}
+            mapper={({ type, id }: Gender) => ({
+              label: type,
+              value: id.toString(),
+            })}
             rules={{ required: true }}
           />
         </>

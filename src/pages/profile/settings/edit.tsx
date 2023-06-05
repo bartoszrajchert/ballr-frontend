@@ -1,6 +1,5 @@
 import TextField from '@/components/TextField';
-import CityDropdown from '@/components/dropdowns/CityDropdown';
-import GenderDropdown from '@/components/dropdowns/GenderDropdown';
+import { DynamicDropdown } from '@/components/dynamic/DynamicDropdown';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
 import {
   formatDateTimeToInputFormat,
@@ -8,7 +7,7 @@ import {
   resetKeepValues,
   setUseReactFormErrors,
 } from '@/lib/helpers';
-import { ROUTES } from '@/lib/routes';
+import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { UserContext } from '@/providers/UserProvider';
 import { CreateUpdateUserData, updateUser } from '@/repository/user.repository';
 import { useRouter } from 'next/router';
@@ -81,14 +80,43 @@ const ProfileSettingsEdit = () => {
             errorText={getFieldErrorText('birth_date', errors)}
             {...register('birth_date', { required: true })}
           />
-          <CityDropdown
+          <DynamicDropdown
+            label="Miasto"
+            name="city_id"
+            fieldErrors={errors}
             control={control}
+            dataType="pagination"
+            apiURL={BACKEND_ROUTES.CITIES}
+            mapper={({ name, id }: City) => ({
+              label: name,
+              value: id.toString(),
+            })}
             rules={{ required: true }}
-            errors={errors}
           />
-          <GenderDropdown
+          <DynamicDropdown
+            label="Miasto"
+            name="city_id"
             control={control}
-            errors={errors}
+            fieldErrors={errors}
+            dataType="pagination"
+            apiURL={BACKEND_ROUTES.CITIES}
+            mapper={({ name, id }: City) => ({
+              label: name,
+              value: id.toString(),
+            })}
+            rules={{ required: true }}
+          />
+          <DynamicDropdown
+            label="Płeć"
+            name="gender_id"
+            control={control}
+            fieldErrors={errors}
+            dataType="pagination"
+            apiURL={BACKEND_ROUTES.GENDERS}
+            mapper={({ type, id }: Gender) => ({
+              label: type,
+              value: id.toString(),
+            })}
             rules={{ required: true }}
           />
         </>

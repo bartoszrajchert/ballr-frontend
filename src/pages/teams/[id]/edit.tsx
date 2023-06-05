@@ -3,8 +3,10 @@ import EntityCard from '@/components/EntityCard';
 import Section from '@/components/Section';
 import TextField from '@/components/TextField';
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog';
-import CityDropdown from '@/components/dropdowns/CityDropdown';
-import { DynamicDropdown } from '@/components/dynamic/DynamicDropdown';
+import {
+  DynamicDropdown,
+  DynamicStaticDropdown,
+} from '@/components/dynamic/DynamicDropdown';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
 import {
   getFieldErrorText,
@@ -107,11 +109,11 @@ function TeamsIdEdit() {
               errorText={getFieldErrorText('short_name', errors)}
               {...register('short_name', { required: true, maxLength: 5 })}
             />
-            <DynamicDropdown
+            <DynamicStaticDropdown
               label="Kapitan"
               name="new_captain"
               control={control}
-              errorText={getFieldErrorText('new_captain', errors)}
+              fieldErrors={errors}
               data={
                 team?.users.map((u) => {
                   return {
@@ -123,9 +125,17 @@ function TeamsIdEdit() {
                 }) || []
               }
             />
-            <CityDropdown
+            <DynamicDropdown
+              label="Miasto"
+              name="city_id"
               control={control}
-              errors={errors}
+              fieldErrors={errors}
+              dataType="pagination"
+              apiURL={BACKEND_ROUTES.CITIES}
+              mapper={({ name, id }: City) => ({
+                label: name,
+                value: id.toString(),
+              })}
               rules={{ required: true }}
             />
           </>

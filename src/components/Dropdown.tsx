@@ -1,4 +1,7 @@
 import Label from '@/components/Label';
+import { InlineErrorMessage } from '@/components/messages/ErrorMessage';
+import { getFieldErrorText } from '@/lib/helpers';
+import { Pagination } from '@/models/base.model';
 import * as Select from '@radix-ui/react-select';
 import {
   IconCheck,
@@ -7,24 +10,75 @@ import {
   IconExclamationCircle,
 } from '@tabler/icons-react';
 import clsx from 'clsx';
-import React from 'react';
-import { Control, Controller, RegisterOptions } from 'react-hook-form';
+import React, { useMemo } from 'react';
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  RegisterOptions,
+} from 'react-hook-form';
+import Skeleton from 'react-loading-skeleton';
+import useSWR from 'swr';
 
 type Props = {
   name: string;
   control: Control<any>;
-  data: { label: string; value: string }[];
   label?: string;
   resetField?: () => void;
   placeholder?: string;
   onValueChange?: (value: string) => void;
   rules?: RegisterOptions;
-  errorText?: string;
+  fieldErrors?: FieldErrors<any>;
+};
+
+type FetchProps = {
+  mapper: (data: any) => { label: string; value: string };
+  apiURL: string;
+  dataType: 'array' | 'pagination';
+  queryParams?: string;
+};
+
+type StaticProps = {
+  data: { label: string; value: string }[];
 };
 
 // TODO: disabled state
 
-const Dropdown = (props: Props) => {
+const Dropdown = (props: Props & FetchProps) => {
+  const { data, isLoading, error, isValidating } = useSWR<unknown>(
+    `${props.apiURL}?${props.queryParams ?? ''}`
+  );
+
+  const finalData = useMemo(() => {
+    if (data === undefined) return [];
+
+    if (props.dataType === 'array' && Array.isArray(data))
+      return data.map(props.mapper);
+
+    if (props.dataType === 'pagination' && 'items' in (data as Pagination<any>))
+      return (data as Pagination<any>).items.map(props.mapper);
+
+    return [];
+  }, [data, props.dataType, props.mapper]);
+
+  if (isLoading && !isValidating) return <Skeleton height={40} />;
+
+  if (error) return <InlineErrorMessage error={error.message} />;
+
+  return <DropdownContent {...props} data={finalData} />;
+};
+
+const DropdownStatic = (props: Props & StaticProps) => {
+  return <DropdownContent {...props} />;
+};
+
+const DropdownContent = (props: Props & StaticProps) => {
+  const errorText = useMemo(() => {
+    if (!props.fieldErrors) return undefined;
+
+    return getFieldErrorText(props.name, props.fieldErrors);
+  }, [props.fieldErrors, props.name]);
+
   return (
     <div className="w-full space-y-1">
       {props.label && <Label value={props.label} htmlFor={props.name} />}
@@ -35,7 +89,7 @@ const Dropdown = (props: Props) => {
         render={({ field }) => (
           <div
             className={clsx('flex flex-col gap-1', {
-              '!text-red': props.errorText,
+              '!text-red': errorText,
             })}
           >
             <Select.Root
@@ -51,8 +105,8 @@ const Dropdown = (props: Props) => {
                 className={clsx(
                   'flex h-[48px] w-full appearance-none items-center justify-between rounded-2 px-4 shadow-border-1px outline-none transition-shadow hover:shadow-border-2px focus:shadow-border-3px focus-visible:shadow-border-3px',
                   {
-                    '!shadow-red': props.errorText,
-                    '!shadow-green-900': !props.errorText,
+                    '!shadow-red': errorText,
+                    '!shadow-green-900': !errorText,
                   }
                 )}
               >
@@ -88,10 +142,10 @@ const Dropdown = (props: Props) => {
                 </Select.Content>
               </Select.Portal>
             </Select.Root>
-            {props.errorText && (
+            {errorText && (
               <div className="flex gap-1 text-red">
                 <IconExclamationCircle size={20} />
-                <small className="text-p-small">{props.errorText}</small>
+                <small className="text-p-small">{errorText}</small>
               </div>
             )}
           </div>
@@ -121,4 +175,4 @@ const SelectItem = React.forwardRef<
 
 SelectItem.displayName = 'SelectItem';
 
-export default Dropdown;
+export { Dropdown, DropdownStatic };

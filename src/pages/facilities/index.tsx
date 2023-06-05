@@ -1,7 +1,7 @@
 import Button from '@/components/Button';
 import Header from '@/components/Header';
 import Tile from '@/components/Tile';
-import CityDropdown from '@/components/dropdowns/CityDropdown';
+import { DynamicDropdown } from '@/components/dynamic/DynamicDropdown';
 import { DynamicListWithPagination } from '@/components/dynamic/DynamicListWithPagination';
 import MainLayout from '@/layouts/MainLayout';
 import { getAddressFromFacility } from '@/lib/helpers';
@@ -71,7 +71,14 @@ function Form() {
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-      <CityDropdown control={control} />
+      <DynamicDropdown
+        label="Miasto"
+        name="city_id"
+        control={control}
+        dataType="pagination"
+        apiURL={BACKEND_ROUTES.CITIES}
+        mapper={({ name, id }: City) => ({ label: name, value: id.toString() })}
+      />
       <div className="mt-4 flex w-full gap-1">
         <Button value="Szukaj" isSubmit fullWidth />
       </div>

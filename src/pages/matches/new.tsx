@@ -1,6 +1,6 @@
 import TextField from '@/components/TextField';
 import { DynamicCheckbox } from '@/components/dynamic/DynamicCheckbox';
-import { DynamicDropdown } from '@/components/dynamic/DynamicDropdown';
+import { DynamicStaticDropdown } from '@/components/dynamic/DynamicDropdown';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
 import {
   getFieldErrorText,
@@ -59,7 +59,7 @@ function MatchesNew() {
             errorText={getFieldErrorText('num_of_players', errors)}
             {...register('num_of_players', { required: true })}
           />
-          <DynamicDropdown
+          <DynamicStaticDropdown
             name="reservation_id"
             label="Identyfikator rezerwacji"
             control={control}
