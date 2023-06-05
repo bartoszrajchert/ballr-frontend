@@ -1,4 +1,8 @@
+import Button from '@/components/Button';
+import EntityCard from '@/components/EntityCard';
+import Section from '@/components/Section';
 import TextField from '@/components/TextField';
+import ConfirmDialog from '@/components/dialogs/ConfirmDialog';
 import CityDropdown from '@/components/dropdowns/CityDropdown';
 import { DynamicDropdown } from '@/components/dynamic/DynamicDropdown';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
@@ -10,27 +14,30 @@ import {
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { UserContext } from '@/providers/UserProvider';
 import {
+  banUserFromTeam,
   deleteTeam,
   editTeam,
   EditTeamPayload,
   GetTeamResponse,
 } from '@/repository/team.repository';
+import { IconX } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 import React, { useCallback, useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 
 function TeamsIdEdit() {
   const router = useRouter();
   const { id } = router.query;
   const { user } = useContext(UserContext);
-  const { data: team } = useSWR<GetTeamResponse>(
-    `${BACKEND_ROUTES.TEAMS}/${id}`,
-    {
-      revalidateOnFocus: false,
-    }
-  );
+  const {
+    data: team,
+    isLoading,
+    error,
+  } = useSWR<GetTeamResponse>(`${BACKEND_ROUTES.TEAMS}/${id}`, {
+    revalidateOnFocus: false,
+  });
 
   const {
     register,
@@ -77,59 +84,128 @@ function TeamsIdEdit() {
       });
   }, [router, setError, team]);
 
+  if (isLoading) return <p>Ładowanie...</p>;
+
+  if (error) return <p>Wystąpił błąd: {JSON.stringify(error)}</p>;
+
+  if (!team) return <p>Brak drużyny</p>;
+
   return (
-    <AuthFormLayout
-      header="Edytuj drużynę"
-      onSubmit={handleSubmit(onSubmit)}
-      inputChildren={
-        <>
-          <TextField
-            label="Nazwa"
-            errorText={getFieldErrorText('name', errors)}
-            {...register('name', { required: true })}
+    <>
+      <AuthFormLayout
+        header="Edytuj drużynę"
+        onSubmit={handleSubmit(onSubmit)}
+        inputChildren={
+          <>
+            <TextField
+              label="Nazwa"
+              errorText={getFieldErrorText('name', errors)}
+              {...register('name', { required: true })}
+            />
+            <TextField
+              label="Skrócona nazwa"
+              errorText={getFieldErrorText('short_name', errors)}
+              {...register('short_name', { required: true, maxLength: 5 })}
+            />
+            <DynamicDropdown
+              label="Kapitan"
+              name="new_captain"
+              control={control}
+              errorText={getFieldErrorText('new_captain', errors)}
+              data={
+                team?.users.map((u) => {
+                  return {
+                    label: `${u.user_first_name} ${u.user_last_name}${
+                      u.user_id === user?.id ? ' (Ty)' : ''
+                    }`,
+                    value: u.user_id,
+                  };
+                }) || []
+              }
+            />
+            <CityDropdown
+              control={control}
+              errors={errors}
+              rules={{ required: true }}
+            />
+          </>
+        }
+        buttonValue="Zapisz"
+        buttonOnClick={() => resetKeepValues(reset)}
+        cancelButtonValue="Usuń drużynę"
+        cancelButtonOnClick={deleteTeamSubmit}
+        confirmDialog={{
+          title: 'Czy na pewno chcesz usunąć drużynę?',
+          description: 'Ta operacja jest nieodwracalna.',
+          confirmValue: 'Usuń drużynę',
+        }}
+        errorMessage={
+          getFieldErrorText('root', errors) &&
+          `Formularz zawiera błędy: ${getFieldErrorText('root', errors)}`
+        }
+        centered={false}
+      />
+      <UnbanSection data={team} />
+    </>
+  );
+}
+
+function UnbanSection(props: { data: GetTeamResponse }) {
+  const { data } = props;
+
+  return (
+    <Section title="Zablokowani gracze" className="mb-14 text-center">
+      <div className="flex flex-wrap gap-4">
+        {data.banned_users.length === 0 && (
+          <p className="m-auto text-gray-500">Brak zablokowanych graczy</p>
+        )}
+        {data.banned_users.map((bannedUser) => (
+          <EntityCard
+            key={bannedUser.user_id}
+            href={`${ROUTES.PROFILE}/${bannedUser.user_id}`}
+            title={`${bannedUser.user_first_name} ${bannedUser.user_last_name}`}
+            avatar={{
+              text: `${bannedUser.user_first_name} ${bannedUser.user_last_name}`,
+            }}
+            actionChildren={<UnbanUserDialog bannedUser={bannedUser} />}
           />
-          <TextField
-            label="Skrócona nazwa"
-            errorText={getFieldErrorText('short_name', errors)}
-            {...register('short_name', { required: true, maxLength: 5 })}
-          />
-          <DynamicDropdown
-            label="Kapitan"
-            name="new_captain"
-            control={control}
-            errorText={getFieldErrorText('new_captain', errors)}
-            data={
-              team?.users.map((u) => {
-                return {
-                  label: `${u.user_first_name} ${u.user_last_name}${
-                    u.user_id === user?.id ? ' (Ty)' : ''
-                  }`,
-                  value: u.user_id,
-                };
-              }) || []
-            }
-          />
-          <CityDropdown
-            control={control}
-            errors={errors}
-            rules={{ required: true }}
-          />
-        </>
-      }
-      buttonValue="Zapisz"
-      buttonOnClick={() => resetKeepValues(reset)}
-      cancelButtonValue="Usuń drużynę"
-      cancelButtonOnClick={deleteTeamSubmit}
-      confirmDialog={{
-        title: 'Czy na pewno chcesz usunąć drużynę?',
-        description: 'Ta operacja jest nieodwracalna.',
-        confirmValue: 'Usuń drużynę',
-      }}
-      errorMessage={
-        getFieldErrorText('root', errors) &&
-        `Formularz zawiera błędy: ${getFieldErrorText('root', errors)}`
-      }
-      centered={false}
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+function UnbanUserDialog({
+  bannedUser,
+}: {
+  bannedUser: GetTeamResponse['banned_users'][0];
+}) {
+  const router = useRouter();
+  const { id } = router.query;
+  const { mutate } = useSWRConfig();
+
+  const handleDelete = useCallback(() => {
+    if (!id) return null;
+
+    banUserFromTeam(String(id), bannedUser.user_id.toString(), false)
+      .then(() => {
+        toast.success(`Odblokowano gracza!`);
+      })
+      .catch((err) => {
+        toast.error(`Nie udało się odblokować gracza: ${err}`);
+      })
+      .finally(async () => {
+        await mutate(`${BACKEND_ROUTES.TEAMS}/${id}`);
+      });
+  }, [id, mutate, bannedUser.user_id]);
+
+  return (
+    <ConfirmDialog
+      trigger={<Button type="tertiary" icon={<IconX />} />}
+      title={`Czy na pewno chcesz odblokować gracza ${bannedUser.user_first_name} ${bannedUser.user_last_name}?`}
+      description="Po odblokowaniu gracz będzie mógł dołączyć do drużyny."
+      confirmValue="Odblokuj gracza"
+      onConfirm={handleDelete}
     />
   );
 }
