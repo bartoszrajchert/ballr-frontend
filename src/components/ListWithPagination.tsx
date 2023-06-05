@@ -1,3 +1,5 @@
+import { ErrorMessage } from '@/components/messages/ErrorMessage';
+import NoResultsMessage from '@/components/messages/NoResultsMessage';
 import SkeletonListWithPagination from '@/components/skeletons/SkeletonListWithPagination';
 import { Pagination } from '@/models/base.model';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
@@ -31,30 +33,32 @@ function ListWithPagination(props: Props) {
     setPageIndex(selectedItem.selected + 1);
   };
 
+  if (isLoading) return <SkeletonListWithPagination />;
+
+  if (error) return <ErrorMessage error={error} />;
+
+  if (!error && !isLoading && (!data || data.total <= 0))
+    return <NoResultsMessage />;
+
   return (
     <>
       <div className={clsx('mb-8', props.listClassName)}>
         {data && !error && data.items.map((item: unknown) => props.child(item))}
       </div>
-      {error && <p>Błąd: {JSON.stringify(error)}</p>}
-      {isLoading && <SkeletonListWithPagination />}
-      {!error && !isLoading && (!data || data.total <= 0) && <p>Brak meczy</p>}
-      {!error && (
-        <ReactPaginate
-          pageCount={pageCount}
-          pageRangeDisplayed={pageSize}
-          onPageChange={handlePageClick}
-          renderOnZeroPageCount={null}
-          forcePage={pageIndex - 1}
-          className="mt-2 flex items-center justify-center gap-3"
-          pageLinkClassName="p-2 link"
-          activeLinkClassName="--underline text-green-600"
-          previousLinkClassName="flex p-3 rounded-full bg-green-400 hover:bg-green-500 transition-colors"
-          nextLinkClassName="flex p-3 rounded-full bg-green-400 hover:bg-green-500 transition-colors"
-          previousLabel={<IconChevronLeft />}
-          nextLabel={<IconChevronRight />}
-        />
-      )}
+      <ReactPaginate
+        pageCount={pageCount}
+        pageRangeDisplayed={pageSize}
+        onPageChange={handlePageClick}
+        renderOnZeroPageCount={null}
+        forcePage={pageIndex - 1}
+        className="mt-2 flex items-center justify-center gap-3"
+        pageLinkClassName="p-2 link"
+        activeLinkClassName="--underline text-green-600"
+        previousLinkClassName="flex p-3 rounded-full bg-green-400 hover:bg-green-500 transition-colors"
+        nextLinkClassName="flex p-3 rounded-full bg-green-400 hover:bg-green-500 transition-colors"
+        previousLabel={<IconChevronLeft />}
+        nextLabel={<IconChevronRight />}
+      />
     </>
   );
 }
