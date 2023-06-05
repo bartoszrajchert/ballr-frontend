@@ -15,6 +15,7 @@ export type GetUserResponse = {
   };
   teams: {
     is_captain: boolean;
+    is_banned: boolean;
     start_date: string;
     end_date?: string;
     team_name: string;
