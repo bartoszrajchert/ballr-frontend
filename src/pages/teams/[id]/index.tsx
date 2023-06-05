@@ -2,10 +2,14 @@ import AvatarHeader from '@/components/AvatarHeader';
 import Button from '@/components/Button';
 import EntityCard from '@/components/EntityCard';
 import Section from '@/components/Section';
+import Spinner from '@/components/Spinner';
 import TextInformation from '@/components/TextInformation';
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog';
+import { ErrorMessage } from '@/components/messages/ErrorMessage';
+import NoResultsMessage from '@/components/messages/NoResultsMessage';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
+import { is404 } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { UserContext } from '@/providers/UserProvider';
 import {
@@ -54,15 +58,15 @@ function Content() {
   }, [team, user]);
 
   if (!team && isLoading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
+  }
+
+  if (!team || is404(error)) {
+    return <NoResultsMessage message="Drużyna nie istnieje" />;
   }
 
   if (error) {
-    return <div>Error</div>;
-  }
-
-  if (!team) {
-    return <div>Team not found</div>;
+    return <ErrorMessage error={error.message} />;
   }
 
   return (

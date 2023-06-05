@@ -48,6 +48,8 @@ enum MatchStatus {
  * This page has a refresh interval of 5 seconds. It is used to update the match status.
  *
  * TODO: Koordynator can delete users and referees from the match.
+ * TODO: Refactor this page.
+ * TODO: Handle loading and error states.
  *
  * @param fallback - Fallback data for SWR.
  * @constructor

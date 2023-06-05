@@ -1,12 +1,16 @@
 import Button from '@/components/Button';
 import ImageHeader from '@/components/ImageHeader';
+import Spinner from '@/components/Spinner';
 import TextField from '@/components/TextField';
+import { ErrorMessage } from '@/components/messages/ErrorMessage';
+import NoResultsMessage from '@/components/messages/NoResultsMessage';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
 import {
   concatenateDateAndTime,
   getAddressFromFacility,
   getFieldErrorText,
+  is404,
   resetKeepValues,
   setUseReactFormErrors,
 } from '@/lib/helpers';
@@ -32,7 +36,18 @@ function FieldsId({ fallback }: { fallback: any }) {
 function Content() {
   const router = useRouter();
   const { id } = router.query;
-  const { data: field } = useSWR<Field>(`${ROUTES.FIELDS}/${id}`);
+  const {
+    data: field,
+    isLoading,
+    error,
+  } = useSWR<Field>(`${ROUTES.FIELDS}/${id}`);
+
+  if (isLoading) return <Spinner />;
+
+  if (!field || is404(error))
+    return <NoResultsMessage message="Nie udało się znaleźć boiska." />;
+
+  if (error) return <ErrorMessage error={error.message} />;
 
   return (
     <MainLayout>
