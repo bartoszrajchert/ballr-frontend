@@ -83,6 +83,11 @@ module.exports = {
         'border-3px': 'inset 0 0 0 3px',
       },
       keyframes: {
+        // Spinner
+        spin: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
         // Dialog
         'overlay-show': {
           '0%': { opacity: 0 },
@@ -145,6 +150,9 @@ module.exports = {
       },
     },
     animation: {
+      // Spinner
+      spin: 'spin 1s linear infinite',
+
       // Dialog
       'overlay-show': 'overlay-show 150ms cubic-bezier(0.16, 1, 0.3, 1)',
       'content-show': 'content-show 150ms cubic-bezier(0.16, 1, 0.3, 1)',
