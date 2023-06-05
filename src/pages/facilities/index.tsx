@@ -42,7 +42,6 @@ function FacilitiesContainer() {
           description={[
             getAddressFromFacility(data),
             `Godziny otwarcia: ${data.open_time} - ${data.close_time}`,
-            // TODO: Liczba boisk
           ]}
         />
       )}

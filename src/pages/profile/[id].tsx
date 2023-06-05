@@ -2,10 +2,13 @@ import AvatarHeader from '@/components/AvatarHeader';
 import Button from '@/components/Button';
 import EntityCard from '@/components/EntityCard';
 import Section from '@/components/Section';
+import Spinner from '@/components/Spinner';
 import TextInformation from '@/components/TextInformation';
+import { ErrorMessage } from '@/components/messages/ErrorMessage';
+import NoResultsMessage from '@/components/messages/NoResultsMessage';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
-import { getLocaleDateString } from '@/lib/helpers';
+import { getLocaleDateString, is404 } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { GetUserResponse } from '@/models/user.model';
 import { UserContext } from '@/providers/UserProvider';
@@ -51,15 +54,15 @@ function Content() {
   }, [profile]);
 
   if (!profile && isLoading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
+  }
+
+  if (!profile || is404(error)) {
+    return <NoResultsMessage message="Nie udało się znaleźć użytkownika." />;
   }
 
   if (error) {
-    return <div>Error</div>;
-  }
-
-  if (!profile) {
-    return <div>Profile not found</div>;
+    return <ErrorMessage error={error.message} />;
   }
 
   return (

@@ -20,7 +20,6 @@ import { GetReservationResponse } from '@/models/reservation.model';
 import { createMatch, CreateMatchPayload } from '@/repository/match.repository';
 import { deleteReservation } from '@/repository/reservation.repository';
 import { IconInfoCircle } from '@tabler/icons-react';
-import { AxiosError } from 'axios';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import React, { useCallback } from 'react';
