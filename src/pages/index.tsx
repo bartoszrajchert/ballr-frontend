@@ -1,8 +1,8 @@
 import Button from '@/components/Button';
 import FullWidthBackgroundColor from '@/components/FullWidthBackgroundColor';
-import CityDropdown from '@/components/dropdowns/CityDropdown';
+import { DynamicDropdown } from '@/components/dynamic/DynamicDropdown';
 import MainLayout from '@/layouts/MainLayout';
-import { ROUTES } from '@/lib/routes';
+import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -114,7 +114,17 @@ const MatchForm = () => {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="min-w-[200px]">
-        <CityDropdown control={control} hideLabel showPlaceholder />
+        <DynamicDropdown
+          placeholder="Wybierz miasto"
+          name="city_id"
+          control={control}
+          dataType="pagination"
+          apiURL={BACKEND_ROUTES.CITIES}
+          mapper={({ name, id }: City) => ({
+            label: name,
+            value: id.toString(),
+          })}
+        />
       </div>
       <Button value="Szukaj" isSubmit />
     </form>

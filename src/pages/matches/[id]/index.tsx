@@ -3,14 +3,13 @@ import EntityCard from '@/components/EntityCard';
 import ImageHeader from '@/components/ImageHeader';
 import Section from '@/components/Section';
 import TextInformation from '@/components/TextInformation';
-import { DynamicDropdown } from '@/components/dynamic/DynamicDropdown';
+import { DynamicStaticDropdown } from '@/components/dynamic/DynamicDropdown';
 import MainLayout from '@/layouts/MainLayout';
 import { MAX_NUMBER_OF_TEAMS } from '@/lib/constants';
 import { fetcherBackend } from '@/lib/fetchers';
 import {
   getAddressFromFacility,
   getErrorMessage,
-  getFieldErrorText,
   getLocaleDateString,
 } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
@@ -491,12 +490,12 @@ function TeamForm(props: { match: GetMatchResponse; numberOfTeams: number }) {
     >
       <div className="flex flex-col gap-2 lg:flex-row">
         {!mySignedTeam && (
-          <DynamicDropdown
+          <DynamicStaticDropdown
             name="team_id"
             placeholder="Wybierz drużynę"
             control={control}
             rules={{ required: true }}
-            errorText={getFieldErrorText('team_id', errors)}
+            fieldErrors={errors}
             data={
               user?.teams
                 ?.filter((team) => team.is_captain)
