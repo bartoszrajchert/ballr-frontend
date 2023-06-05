@@ -111,3 +111,7 @@ export function getInitialsOrChars(input: string): string {
 
   return input.substring(0, 5);
 }
+
+export function is404(err: AxiosError): boolean {
+  return err.response?.status === 404;
+}
