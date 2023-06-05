@@ -2,7 +2,6 @@ import Button from '@/components/Button';
 import Header from '@/components/Header';
 import TextField from '@/components/TextField';
 import Tile from '@/components/Tile';
-import CityDropdown from '@/components/dropdowns/CityDropdown';
 import { DynamicCheckbox } from '@/components/dynamic/DynamicCheckbox';
 import { DynamicDropdown } from '@/components/dynamic/DynamicDropdown';
 import { DynamicListWithPagination } from '@/components/dynamic/DynamicListWithPagination';
@@ -10,7 +9,6 @@ import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
 import { getAddressFromFacility, getLocaleDateString } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
-import { Pagination } from '@/models/base.model';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
@@ -92,13 +90,6 @@ function Form() {
   const { register, handleSubmit, control, reset } = useForm();
   const [cityId, setCityId] = React.useState<string>('');
 
-  const { data: facilities } = useSWR<Pagination<Facility>>(
-    `${BACKEND_ROUTES.FACILITIES}?${cityId && `city_id=${cityId}`}`
-  );
-  const { data: benefits } = useSWR<Pagination<Benefit>>(
-    BACKEND_ROUTES.BENEFITS
-  );
-
   useEffect(() => {
     reset(router.query);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -121,8 +112,13 @@ function Form() {
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-      <CityDropdown
+      <DynamicDropdown
+        label="Miasto"
+        name="city_id"
         control={control}
+        dataType="pagination"
+        apiURL={BACKEND_ROUTES.CITIES}
+        mapper={({ name, id }: City) => ({ label: name, value: id.toString() })}
         onValueChange={(value) => {
           setCityId(value);
         }}
@@ -131,14 +127,13 @@ function Form() {
         label="Obiekt"
         name="facility_id"
         control={control}
-        data={
-          (facilities &&
-            facilities.items.map((facility) => ({
-              label: facility.name,
-              value: facility.id.toString(),
-            }))) ||
-          []
-        }
+        dataType="pagination"
+        apiURL={BACKEND_ROUTES.FACILITIES}
+        queryParams={`${cityId && `city_id=${cityId}`}`}
+        mapper={({ name, id }: Facility) => ({
+          label: name,
+          value: id.toString(),
+        })}
       />
       <TextField
         label="Ilość graczy"
@@ -157,14 +152,12 @@ function Form() {
         label="Karta beneficyjna"
         name="benefit_id"
         control={control}
-        data={
-          (benefits &&
-            benefits.items.map((benefit) => ({
-              label: benefit.name,
-              value: benefit.id.toString(),
-            }))) ||
-          []
-        }
+        dataType="pagination"
+        apiURL={BACKEND_ROUTES.BENEFITS}
+        mapper={({ name, id }: Benefit) => ({
+          label: name,
+          value: id.toString(),
+        })}
       />
       <DynamicCheckbox
         label="Otwarte dla sędziów"

@@ -1,12 +1,12 @@
 import TextField from '@/components/TextField';
-import CityDropdown from '@/components/dropdowns/CityDropdown';
+import { DynamicDropdown } from '@/components/dynamic/DynamicDropdown';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
 import {
   getFieldErrorText,
   resetKeepValues,
   setUseReactFormErrors,
 } from '@/lib/helpers';
-import { ROUTES } from '@/lib/routes';
+import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { createTeam, CreateTeamPayload } from '@/repository/team.repository';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -53,9 +53,17 @@ function TeamsNew() {
             helperText="Maksymalnie 5 znaków"
             {...register('short_name', { required: true, maxLength: 5 })}
           />
-          <CityDropdown
+          <DynamicDropdown
+            label="Miasto"
+            name="city_id"
             control={control}
-            errors={errors}
+            fieldErrors={errors}
+            dataType="pagination"
+            apiURL={BACKEND_ROUTES.CITIES}
+            mapper={({ name, id }: City) => ({
+              label: name,
+              value: id.toString(),
+            })}
             rules={{ required: true }}
           />
         </>
