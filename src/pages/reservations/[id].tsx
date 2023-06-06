@@ -127,6 +127,7 @@ function Form() {
     control,
     formState: { errors },
     setError,
+    watch,
   } = useForm<CreateMatchPayload>();
 
   const onSubmit = (data: CreateMatchPayload) => {
@@ -150,6 +151,7 @@ function Form() {
         {...register('description', { required: true })}
       />
       <TextField
+        disabled={watch('for_team_only')}
         label="Ilość graczy"
         type="number"
         errorText={getFieldErrorText('num_of_players', errors)}
