@@ -23,6 +23,8 @@ enum ROUTES {
   SETTINGS_MATCHES = '/profile/settings/matches',
 
   RESERVATIONS = '/reservations',
+
+  PRIVACY_POLICY = '/privacy-policy',
 }
 
 enum BACKEND_ROUTES {

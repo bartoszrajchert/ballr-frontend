@@ -1,4 +1,5 @@
 import FullWidthBackgroundColor from '@/components/FullWidthBackgroundColor';
+import { ROUTES } from '@/lib/routes';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -12,13 +13,8 @@ function Footer() {
           <p className="pb-4 text-label-medium">Dla Ciebie</p>
           <ul className="space-y-3">
             <li>
-              <Link className="link --underline" href={'/'}>
+              <Link className="link --underline" href={ROUTES.PRIVACY_POLICY}>
                 Polityka prywatności
-              </Link>
-            </li>
-            <li>
-              <Link className="link --underline" href={'/'}>
-                Regulamin
               </Link>
             </li>
           </ul>
@@ -27,7 +23,7 @@ function Footer() {
           <p className="pb-4 text-label-medium">Kontakt</p>
           <ul>
             <li>
-              <a className="link --underline" href="mailto:kontakt@ballr.com">
+              <a className="link --underline" href="mailto:kontakt@ballr.pl">
                 E-mail: kontakt@ballr.pl
               </a>
             </li>
