@@ -38,6 +38,7 @@ export default function Login() {
 
   return (
     <AuthFormLayout
+      title="Logowanie"
       header="Zaloguj się Ballerze"
       subheader={
         <>

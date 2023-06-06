@@ -96,6 +96,7 @@ function TeamsIdEdit() {
   return (
     <>
       <AuthFormLayout
+        title={`Edycja ${team?.name}`}
         header="Edytuj drużynę"
         onSubmit={handleSubmit(onSubmit)}
         inputChildren={

@@ -43,6 +43,7 @@ function MatchesNew() {
 
   return (
     <AuthFormLayout
+      title="Nowy mecz"
       header="Stwórz nowy mecz"
       onSubmit={handleSubmit(onSubmit)}
       inputChildren={

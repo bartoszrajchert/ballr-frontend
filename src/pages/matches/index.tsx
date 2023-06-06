@@ -34,7 +34,7 @@ type Props = {
 function Matches({ fallback }: Props) {
   return (
     <SWRConfig value={{ fallback }}>
-      <MainLayout>
+      <MainLayout title="Mecze">
         <Header value="Mecze" />
         <div className="flex flex-col gap-5 lg:flex-row">
           <aside className="lg:w-2/5">

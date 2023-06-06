@@ -42,6 +42,7 @@ function ProfileCreate() {
 
   return (
     <AuthFormLayout
+      title="Stwórz konto"
       header="Uzupełnij dane"
       onSubmit={handleSubmit(onSubmit)}
       inputChildren={

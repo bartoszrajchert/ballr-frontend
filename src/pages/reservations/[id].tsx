@@ -56,7 +56,11 @@ function ReservationsId({ id }: { id: string }) {
   if (error) return <ErrorMessage error={error.message} />;
 
   return (
-    <MainLayout>
+    <MainLayout
+      title={`Rezerwacja - ${getAddressFromFacility(
+        reservation.field.facility
+      )}`}
+    >
       <div className="mt-10 space-y-16">
         <ImageHeader
           href={`${ROUTES.FACILITIES}/${reservation.field?.facility?.id}`}

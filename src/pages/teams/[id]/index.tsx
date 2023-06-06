@@ -70,7 +70,7 @@ function Content() {
   }
 
   return (
-    <MainLayout>
+    <MainLayout title={`${team.name} (${team.short_name})`}>
       <>
         {amIBanned && (
           <div className="mt-4 flex w-full items-center justify-center rounded-xl bg-red bg-opacity-10 px-4 py-4 text-center">

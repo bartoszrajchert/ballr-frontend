@@ -35,6 +35,7 @@ const Security = () => {
 
   return (
     <AuthFormLayout
+      title="Ustawienia"
       header="Bezpieczeństwo"
       onSubmit={handleSubmit(onSubmit)}
       inputChildren={

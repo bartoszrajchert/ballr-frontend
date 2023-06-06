@@ -26,7 +26,7 @@ function Content() {
   );
 
   return (
-    <MainLayout>
+    <MainLayout title={`Obiekt - ${facility?.name}`}>
       <Header value={facility?.name} />
       <section className="flex w-full flex-col flex-wrap gap-2 sm:flex-row">
         <TextInformation

@@ -61,6 +61,7 @@ const ProfileSettingsEdit = () => {
 
   return (
     <AuthFormLayout
+      title="Edytuj konto"
       header="Dane osobowe"
       onSubmit={handleSubmit(onSubmit)}
       inputChildren={

@@ -147,7 +147,7 @@ const Content = () => {
   ]);
 
   return (
-    <MainLayout>
+    <MainLayout title={`Mecz - ${match?.id}`}>
       <div className="mt-10 space-y-16">
         <ImageHeader
           href={`${ROUTES.FACILITIES}/${match?.reservation?.field?.facility.id}`}

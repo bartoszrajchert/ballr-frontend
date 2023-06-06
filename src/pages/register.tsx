@@ -47,6 +47,7 @@ export default function Login() {
 
   return (
     <AuthFormLayout
+      title="Rejestracja"
       header="Stwórz konto Ballerze"
       subheader={
         <>
