@@ -23,9 +23,6 @@ enum ROUTES {
   SETTINGS_MATCHES = '/profile/settings/matches',
 
   RESERVATIONS = '/reservations',
-
-  PROTECTED_PAGE = '/protected-page',
-  REQUESTS_TEST_PAGE = '/requests-test-page',
 }
 
 enum BACKEND_ROUTES {
