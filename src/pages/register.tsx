@@ -96,12 +96,8 @@ export default function Login() {
       buttonDisabled={loading}
       footerChildren={
         <>
-          Rejestrując się akceptujesz nasz {/* TODO: Links */}
-          <Link className="link --underline" href="/">
-            Regulamin
-          </Link>{' '}
-          oraz{' '}
-          <Link className="link --underline" href="/">
+          Rejestrując się akceptujesz naszą{' '}
+          <Link className="link --underline" href={ROUTES.PRIVACY_POLICY}>
             Politykę prywatności
           </Link>
         </>
