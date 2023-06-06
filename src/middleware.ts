@@ -4,11 +4,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
-  const protectedExactRoutes = [ROUTES.PROTECTED_PAGE];
   const protectedFamilyRoutes = [ROUTES.SETTINGS];
-  const isPathProtected =
-    protectedExactRoutes.some((route) => route === pathname) ||
-    protectedFamilyRoutes.some((route) => pathname.startsWith(route));
+  const isPathProtected = protectedFamilyRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
 
   const res = NextResponse.next();
   const token = req.cookies.get(COOKIES.TOKEN)?.value;

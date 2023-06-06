@@ -85,21 +85,6 @@ const navigationContent: CategoryContent = {
       },
     ],
   },
-  testPages: {
-    title: 'Test Pages',
-    links: [
-      {
-        label: 'Protected Page',
-        desc: 'Page that requires authentication',
-        href: ROUTES.PROTECTED_PAGE,
-      },
-      {
-        label: 'Requests Test Page',
-        desc: 'Page that tests requests',
-        href: ROUTES.REQUESTS_TEST_PAGE,
-      },
-    ],
-  },
 };
 
 function Navigation({ focusMode }: Props) {
@@ -211,6 +196,7 @@ const HamburgerMenu = () => {
           onClick={() => setIsHamburgerMenuOpen(!isHamburgerMenuOpen)}
         />
       )}
+
       {isHamburgerMenuOpen && (
         <div
           className={clsx(
@@ -267,21 +253,7 @@ const HamburgerMenu = () => {
  */
 const UserMenu = () => {
   const router = useRouter();
-  const auth = useGetAuth();
   const { user, error, firebaseUser } = useContext(UserContext);
-  const [signOut, _, errorSignOut] = useSignOut(auth);
-
-  useEffect(() => {
-    if (errorSignOut) {
-      toast.error(`Wystąpił błąd: ${errorSignOut.message}`);
-    }
-  }, [errorSignOut]);
-
-  const signOutHandler = async () => {
-    await signOut();
-    await router.push(ROUTES.HOME);
-    toast.success('Wylogowano pomyślnie');
-  };
 
   return (
     <div className="flex justify-end lg:w-[250px]">
@@ -311,6 +283,7 @@ const UserMenu = () => {
           </li>
         </ul>
       )}
+
       {error && (
         <div className="mr-2 flex items-center">
           <Tooltip
@@ -329,6 +302,7 @@ const UserMenu = () => {
           </Tooltip>
         </div>
       )}
+
       {firebaseUser && (
         <div className="flex items-center gap-2">
           {user && (
@@ -336,11 +310,7 @@ const UserMenu = () => {
               <Avatar text={`${user.first_name} ${user.last_name}`} clickable />
             </NextLink>
           )}
-          <Button
-            icon={<IconLogout />}
-            onClick={signOutHandler}
-            type="tertiary"
-          />
+          <SignOutButton />
         </div>
       )}
     </div>
@@ -417,24 +387,10 @@ const FocusModeButton = () => {
   const isCancelRedirect = router.query[QUERY_PARAMS.CANCEL_REDIRECT] as string;
 
   const { firebaseUser } = useContext(UserContext);
-  const auth = useGetAuth();
-  // TODO: handle error
-  const [signOut] = useSignOut(auth);
-  const signOutHandler = async () => {
-    await signOut();
-    await router.push(ROUTES.HOME);
-    toast.success('Wylogowano pomyślnie');
-  };
 
   return (
     <div className="hidden lg:flex lg:gap-2">
-      {firebaseUser && (
-        <Button
-          icon={<IconLogout />}
-          onClick={signOutHandler}
-          type="tertiary"
-        />
-      )}
+      {firebaseUser && <SignOutButton />}
       <Button
         icon={<IconX />}
         onClick={() => router.push(isCancelRedirect ? ROUTES.HOME : redirect)}
@@ -443,6 +399,28 @@ const FocusModeButton = () => {
     </div>
   );
 };
+
+function SignOutButton() {
+  const router = useRouter();
+  const auth = useGetAuth();
+  const [signOut, _, errorSignOut] = useSignOut(auth);
+
+  useEffect(() => {
+    if (errorSignOut) {
+      toast.error(`Wystąpił błąd: ${errorSignOut.message}`);
+    }
+  }, [errorSignOut]);
+
+  const signOutHandler = async () => {
+    await signOut();
+    await router.push(ROUTES.HOME);
+    toast.success('Wylogowano pomyślnie');
+  };
+
+  return (
+    <Button icon={<IconLogout />} onClick={signOutHandler} type="tertiary" />
+  );
+}
 
 /**
  * Link component.
