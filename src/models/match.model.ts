@@ -1,3 +1,80 @@
+import { City, Gender } from '@/models/base.model';
+
+export type GetMatchesResponse = {
+  match: {
+    for_team_only: boolean;
+    description: string;
+    num_of_players: number;
+    open_for_referee: boolean;
+    score?: number;
+    opponent_score?: number;
+    reservation: {
+      start_time: string;
+      end_time: string;
+      is_paid: boolean;
+      is_approved: boolean;
+      field: {
+        name: string;
+        length: number;
+        width: number;
+        roof: boolean;
+        facility: {
+          name: string;
+          street: string;
+          postcode: string;
+          street_number: number;
+          is_verified: boolean;
+          open_time: string;
+          close_time: string;
+          city: City;
+          id: number;
+        };
+        id: number;
+      };
+      id: number;
+      user: {
+        id: string;
+        first_name: string;
+        last_name: string;
+        email: string;
+        birth_date: string;
+        notification_preference: boolean;
+        gender: Gender;
+        city: City;
+      };
+    };
+    id: number;
+    // tournament: null;
+    // tournament_phase: null;
+    team: {
+      name: string;
+      short_name: string;
+      is_active: boolean;
+      city: City;
+      id: number;
+      creation_date: string;
+    };
+    opponent_team: {
+      name: string;
+      short_name: string;
+      is_active: boolean;
+      city: City;
+      id: number;
+      creation_date: string;
+    };
+    winner_team?: {
+      name: string;
+      short_name: string;
+      is_active: boolean;
+      city: City;
+      id: number;
+      creation_date: string;
+    };
+  };
+  benefits: string[];
+  signed_users: number;
+};
+
 export type GetMatchResponse = {
   start_date: string;
   for_team_only: boolean;

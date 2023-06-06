@@ -14,6 +14,7 @@ import {
   setUseReactFormErrors,
 } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
+import { City } from '@/models/base.model';
 import { UserContext } from '@/providers/UserProvider';
 import {
   banUserFromTeam,

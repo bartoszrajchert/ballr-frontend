@@ -5,6 +5,7 @@ import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
 import { getAddressFromFacility } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
+import { GetFacilityResponse } from '@/models/facility.model';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import useSWR, { SWRConfig } from 'swr';
@@ -20,7 +21,7 @@ function FacilitiesId({ fallback }: { fallback: any }) {
 function Content() {
   const router = useRouter();
   const { id } = router.query;
-  const { data: facility } = useSWR<Facility>(
+  const { data: facility } = useSWR<GetFacilityResponse>(
     `${BACKEND_ROUTES.FACILITIES}/${id}`
   );
 

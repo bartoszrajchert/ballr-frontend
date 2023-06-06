@@ -4,6 +4,7 @@ import { DynamicDropdown } from '@/components/dynamic/DynamicDropdown';
 import MainLayout from '@/layouts/MainLayout';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
+import { City } from '@/models/base.model';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';

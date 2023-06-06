@@ -388,12 +388,9 @@ function ButtonForm(props: {
   disabled: boolean;
 }) {
   const { mutate } = useSWRConfig();
-  const { user } = useContext(UserContext); // TODO: remove this
 
   const submitAddUser = async () => {
-    if (!user) return toast.error('Musisz być zalogowany'); // TODO: remove this
-
-    addUserToMatch(props.id, user.id, props.isReferee)
+    addUserToMatch(props.id, props.isReferee)
       .then(() => {
         toast.success('Zapisano na mecz');
       })
