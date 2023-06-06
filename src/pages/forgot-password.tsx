@@ -43,6 +43,7 @@ function ForgotPassword() {
 
   return (
     <AuthFormLayout
+      title="Przywróć hasło"
       header="Przywróć hasło"
       subheader={
         <>Po wysłaniu formularza otrzymasz email z linkiem do zmiany hasła.</>

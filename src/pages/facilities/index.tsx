@@ -15,7 +15,7 @@ import { useForm } from 'react-hook-form';
 
 function Facilities() {
   return (
-    <MainLayout>
+    <MainLayout title="Obiekty">
       <Header value="Obiekty" />
       <div className="flex flex-col gap-5 lg:flex-row">
         <aside className="lg:w-2/5">

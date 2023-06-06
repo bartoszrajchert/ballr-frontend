@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import React from 'react';
 
 type Props = {
+  title: string;
   header: string;
   subheader?: string | JSX.Element | JSX.Element[];
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
@@ -27,7 +28,7 @@ type Props = {
 
 const AuthFormLayout = (props: Props) => {
   return (
-    <MainLayout>
+    <MainLayout title={props.title}>
       <div
         className={clsx({
           'sm:centered': props.centered || props.centered === undefined,

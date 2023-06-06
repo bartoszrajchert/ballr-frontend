@@ -50,7 +50,7 @@ function Content() {
   if (error) return <ErrorMessage error={error.message} />;
 
   return (
-    <MainLayout>
+    <MainLayout title={`Boisko - ${field?.name}`}>
       <div className="mt-10 space-y-16">
         <ImageHeader
           href={`${ROUTES.FACILITIES}/${field?.facility?.id}`}

@@ -7,7 +7,7 @@ import { GetTeamsResponse } from '@/repository/team.repository';
 
 function Teams() {
   return (
-    <MainLayout>
+    <MainLayout title="Drużyny">
       <Header value="Drużyny" />
       <DynamicListWithPagination
         listClassName="flex flex-wrap gap-4 content-stretch"

@@ -10,7 +10,7 @@ function ProfileSettingsReservations() {
   const { user } = useContext(UserContext);
 
   return (
-    <MainLayout>
+    <MainLayout title="Moje rezerwacje">
       <Header value="Moje rezerwacje" />
       <div className="flex flex-col gap-4">
         {user && user?.reservations?.length <= 0 && (

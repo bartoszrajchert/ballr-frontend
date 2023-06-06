@@ -121,3 +121,7 @@ export function getInitialsOrChars(input: string): string {
 export function is404(err?: AxiosError): boolean {
   return err?.response?.status === 404;
 }
+
+export function pageTitle(title: string): string {
+  return `${title} | Ballr.pl`;
+}

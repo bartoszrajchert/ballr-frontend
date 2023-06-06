@@ -86,6 +86,7 @@ const MatchesIdEdit = () => {
 
   return (
     <AuthFormLayout
+      title="Edytuj mecz"
       header="Edytuj mecz"
       onSubmit={handleSubmit(onSubmit)}
       inputChildren={

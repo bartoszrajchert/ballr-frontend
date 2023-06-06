@@ -66,7 +66,7 @@ function Content() {
   }
 
   return (
-    <MainLayout>
+    <MainLayout title={`${profile.first_name} ${profile.last_name}`}>
       <AvatarHeader
         avatarText={`${profile.first_name} ${profile.last_name}`}
         title={`${profile.first_name} ${profile.last_name}`}

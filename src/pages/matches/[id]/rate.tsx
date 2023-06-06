@@ -55,7 +55,7 @@ export default function MatchesIdRate({ id }: any) {
   }
 
   return (
-    <MainLayout>
+    <MainLayout title="Ocenianie zawodników/drużyny">
       <Header
         value={match.for_team_only ? 'Protokół meczu' : 'Formularz oceniania'}
       />

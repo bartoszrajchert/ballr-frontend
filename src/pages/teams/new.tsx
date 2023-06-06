@@ -39,6 +39,7 @@ function TeamsNew() {
 
   return (
     <AuthFormLayout
+      title="Stwórz drużynę"
       header="Stwórz nową drużynę"
       onSubmit={handleSubmit(onSubmit)}
       inputChildren={

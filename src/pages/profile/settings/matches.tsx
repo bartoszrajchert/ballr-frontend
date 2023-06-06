@@ -10,7 +10,7 @@ function ProfileSettingsMatches() {
   const { user } = useContext(UserContext);
 
   return (
-    <MainLayout>
+    <MainLayout title="Mecze">
       <Header value="Mecze" />
       <div className="flex flex-col gap-4">
         {user && user?.matches?.length <= 0 && (

@@ -10,7 +10,7 @@ const Settings = () => {
   const router = useRouter();
 
   return (
-    <MainLayout>
+    <MainLayout title="Ustawienia">
       <Header value="Ustawienia" />
       <Section
         title="Zajęcia"
