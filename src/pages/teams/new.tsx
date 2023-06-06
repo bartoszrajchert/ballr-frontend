@@ -7,6 +7,7 @@ import {
   setUseReactFormErrors,
 } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
+import { City } from '@/models/base.model';
 import { createTeam, CreateTeamPayload } from '@/repository/team.repository';
 import { useRouter } from 'next/router';
 import React from 'react';

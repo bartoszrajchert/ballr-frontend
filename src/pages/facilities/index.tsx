@@ -6,6 +6,8 @@ import { DynamicListWithPagination } from '@/components/dynamic/DynamicListWithP
 import MainLayout from '@/layouts/MainLayout';
 import { getAddressFromFacility } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
+import { City } from '@/models/base.model';
+import { GetFacilitiesResponse } from '@/models/facility.model';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
 import React, { useEffect } from 'react';
@@ -34,7 +36,7 @@ function FacilitiesContainer() {
   return (
     <DynamicListWithPagination
       listClassName="flex w-full flex-col gap-4"
-      child={(data: Facility) => (
+      child={(data: GetFacilitiesResponse) => (
         <Tile
           key={data.id}
           href={`${ROUTES.FACILITIES}/${data.id}`}

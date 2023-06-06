@@ -15,6 +15,7 @@ import {
   setUseReactFormErrors,
 } from '@/lib/helpers';
 import { ROUTES } from '@/lib/routes';
+import { GetFieldResponse } from '@/models/field.model';
 import { createReservation } from '@/repository/reservation.repository';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
@@ -39,7 +40,7 @@ function Content() {
     data: field,
     isLoading,
     error,
-  } = useSWR<Field>(`${ROUTES.FIELDS}/${id}`);
+  } = useSWR<GetFieldResponse>(`${ROUTES.FIELDS}/${id}`);
 
   if (isLoading) return <Spinner />;
 

@@ -8,6 +8,7 @@ import {
   setUseReactFormErrors,
 } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
+import { City, Gender } from '@/models/base.model';
 import { UserContext } from '@/providers/UserProvider';
 import { CreateUpdateUserData, updateUser } from '@/repository/user.repository';
 import { useRouter } from 'next/router';

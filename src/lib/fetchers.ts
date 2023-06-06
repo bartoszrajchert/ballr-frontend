@@ -5,10 +5,10 @@ import nookies from 'nookies';
 
 const globalFetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-const fetcherBackend = (
+const fetcherBackend = <T>(
   url: BACKEND_ROUTES | string,
   context: GetServerSidePropsContext
-) => {
+): Promise<T> => {
   const token = nookies.get(context).token;
 
   return axios

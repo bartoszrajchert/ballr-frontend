@@ -9,12 +9,15 @@ import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
 import { getAddressFromFacility, getLocaleDateString } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
+import { Benefit, City } from '@/models/base.model';
+import { GetFacilitiesResponse } from '@/models/facility.model';
+import { GetMatchesResponse } from '@/models/match.model';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import useSWR, { SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 
 type Props = {
   fallback: any;
@@ -50,7 +53,7 @@ function Matches({ fallback }: Props) {
 function MatchesContainer() {
   const router = useRouter();
 
-  const tags = ({ match, signed_users }: MatchesData) => {
+  const tags = ({ match, signed_users }: GetMatchesResponse) => {
     const tags = [];
     if (match.open_for_referee) {
       tags.push('Otwarte dla sędziów');
@@ -67,7 +70,7 @@ function MatchesContainer() {
   return (
     <DynamicListWithPagination
       listClassName="flex w-full flex-col gap-4"
-      child={({ match, benefits, signed_users }: MatchesData) => (
+      child={({ match, benefits, signed_users }: GetMatchesResponse) => (
         <Tile
           key={match.id}
           href={`${ROUTES.MATCHES}/${match.id}`}
@@ -130,7 +133,7 @@ function Form() {
         dataType="pagination"
         apiURL={BACKEND_ROUTES.FACILITIES}
         queryParams={`${cityId && `city_id=${cityId}`}`}
-        mapper={({ name, id }: Facility) => ({
+        mapper={({ name, id }: GetFacilitiesResponse) => ({
           label: name,
           value: id.toString(),
         })}

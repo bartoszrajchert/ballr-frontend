@@ -1,8 +1,14 @@
 import { ErrorData } from '@/lib/types';
+import {
+  GetFacilitiesResponse,
+  GetFacilityResponse,
+} from '@/models/facility.model';
 import { AxiosError } from 'axios';
 import { FieldErrors, UseFormReset, UseFormSetError } from 'react-hook-form';
 
-export function getAddressFromFacility(facility?: Facility) {
+export function getAddressFromFacility(
+  facility?: GetFacilityResponse | GetFacilitiesResponse
+) {
   return `${facility?.street} ${facility?.street_number}, ${facility?.postcode} ${facility?.city?.name}`;
 }
 

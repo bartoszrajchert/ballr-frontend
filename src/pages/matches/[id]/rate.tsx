@@ -34,9 +34,6 @@ import {
 import { toast } from 'react-toastify';
 import useSWR from 'swr';
 
-// TODO Give access to this page only to players who are in the match
-// TODO Add spinner when loading
-
 /**
  * This page is used to rate players after the match.
  * It can be accessed by all players, however the server will check if the user is in the match.
@@ -139,7 +136,7 @@ function UserForm(props: { id: string; users?: GetMatchResponse['users'] }) {
 
   const onSubmit = (data: any) => {
     const userGrades: PutRatePlayerType[] = [];
-    Object.keys(data).forEach((key) => {
+    Object.keys(data)?.forEach((key) => {
       const [name, userId] = key.split(' ');
       const userPayload = userGrades.find((user) => user.user_id === userId);
 

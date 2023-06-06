@@ -5,3 +5,18 @@ export interface Pagination<T> {
   size: number;
   total: number;
 }
+
+export interface Gender {
+  id: number;
+  type: string;
+}
+
+export interface City {
+  id: number;
+  name: string;
+}
+
+export interface Benefit {
+  id: number;
+  name: string;
+}

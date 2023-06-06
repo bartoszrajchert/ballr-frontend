@@ -7,6 +7,7 @@ import {
   setUseReactFormErrors,
 } from '@/lib/helpers';
 import { BACKEND_ROUTES, QUERY_PARAMS, ROUTES } from '@/lib/routes';
+import { City, Gender } from '@/models/base.model';
 import { createUser, CreateUpdateUserData } from '@/repository/user.repository';
 import { useRouter } from 'next/router';
 import React from 'react';
