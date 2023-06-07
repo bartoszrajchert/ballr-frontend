@@ -10,14 +10,14 @@ type Props = {
   paragraph?: string;
   className?: string;
   leadingIcon?: JSX.Element;
-  actionChildren?: JSX.Element;
+  actionChildren?: JSX.Element | false;
 };
 
 function EntityCard(props: Props) {
   return (
     <div className={clsx(props.className, 'relative')}>
       <Link href={props.href} className="h-full w-full">
-        <div className="flex h-full w-full flex-col items-center justify-center rounded-2xl bg-grey-100 p-7 shadow-border-1px shadow-grey-300 hover:bg-green-100">
+        <div className="flex h-full w-full flex-col items-center justify-center rounded-2xl bg-grey-100 p-7 shadow-border-1px shadow-grey-300 transition-colors hover:bg-green-100">
           {props.avatar && <Avatar {...props.avatar} className="mb-4" />}
           <p className="flex items-center justify-center gap-1 text-label-medium">
             {props.leadingIcon}
