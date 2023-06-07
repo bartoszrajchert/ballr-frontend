@@ -16,11 +16,10 @@ export type EditTeamPayload = {
 };
 
 export async function createTeam(data: CreateTeamPayload) {
-  // TODO: Remove this
-  // @ts-ignore
-  data.is_active = true;
-
-  return axios.post(`${BACKEND_ROUTES.TEAMS}`, data);
+  return axios.post(`${BACKEND_ROUTES.TEAMS}`, {
+    ...data,
+    is_active: true, // TODO: Remove this
+  });
 }
 
 export async function addUserToTeam(teamId: string) {
@@ -50,7 +49,6 @@ export async function banUserFromTeam(
 ) {
   return axios.put(`${BACKEND_ROUTES.TEAMS}/${teamId}/users/${userId}`, {
     is_banned: isBanned,
-    is_captain: false, // TODO: Remove this after backend fix
   });
 }
 
