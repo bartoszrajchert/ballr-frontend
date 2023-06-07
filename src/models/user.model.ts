@@ -57,6 +57,7 @@ export type GetUserResponse = {
     end_time: string;
     is_paid: boolean;
     is_approved: boolean;
+    match_id?: number;
     field: {
       name: string;
       length: number;

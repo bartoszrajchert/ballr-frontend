@@ -65,16 +65,17 @@ function MatchesNew() {
             label="Identyfikator rezerwacji"
             control={control}
             data={
-              // TODO: filter out reservations that are already taken
-              user?.reservations.map((res) => {
-                return {
-                  label: `${res.reservation_id}. ${getLocaleDateString(
-                    res.start_time,
-                    true
-                  )}`,
-                  value: res.reservation_id.toString(),
-                };
-              }) ?? []
+              user?.reservations
+                .filter((res) => !res.match_id)
+                .map((res) => {
+                  return {
+                    label: `${res.reservation_id}. ${getLocaleDateString(
+                      res.start_time,
+                      true
+                    )}`,
+                    value: res.reservation_id.toString(),
+                  };
+                }) ?? []
             }
           />
           <DynamicCheckbox
