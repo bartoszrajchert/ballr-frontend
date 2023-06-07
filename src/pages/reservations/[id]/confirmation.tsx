@@ -5,9 +5,15 @@ import MainLayout from '@/layouts/MainLayout';
 import { ROUTES } from '@/lib/routes';
 import { acceptReservation } from '@/repository/reservation.repository';
 import { IconCircleCheck } from '@tabler/icons-react';
+import { AxiosError } from 'axios';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+
+enum Errors400 {
+  TOKEN_NOT_VALID = 'Confirmation token is not valid',
+  ALREADY_CONFIRMED = 'Reservation confirmation has already been recorded',
+}
 
 export default function ReservationConfirmation({
   accept,
@@ -19,7 +25,13 @@ export default function ReservationConfirmation({
   id: string;
 }) {
   const [reqDone, setReqDone] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<AxiosError | null>(null);
+
+  const error400 = useMemo(() => {
+    if (!error) return null;
+    // @ts-ignore
+    return error.response?.data?.detail;
+  }, [error]);
 
   useEffect(() => {
     if (reqDone) return;
@@ -27,7 +39,7 @@ export default function ReservationConfirmation({
     acceptReservation(id, token, accept === 'true')
       .then((res) => {})
       .catch((err) => {
-        setError(err.message);
+        setError(err);
       })
       .finally(() => {
         setReqDone(true);
@@ -38,19 +50,51 @@ export default function ReservationConfirmation({
     return <Spinner />;
   }
 
+  if (
+    error &&
+    error.response?.status === 400 &&
+    Object.values(Errors400).includes(error400)
+  ) {
+    return (
+      <MainLayout title="Potwierdzenie rezerwacji">
+        <div className="flex flex-col items-center justify-center gap-4">
+          <div className="flex w-full flex-col items-center justify-center gap-2 rounded-xl bg-grey-100 p-4 text-gray-500">
+            <h3 className="text-center text-heading-h5 sm:text-heading-h3">
+              {error400 === Errors400.ALREADY_CONFIRMED &&
+                'Przepraszamy, już zanotowaliśmy Twoją odpowiedź.'}
+              {error400 === Errors400.TOKEN_NOT_VALID &&
+                'Token jest nieprawidłowy.'}
+            </h3>
+            <p>
+              W razie problemów skontaktuj się z{' '}
+              <a href="mailto:kontakt@ballr.pl" className="link --underline">
+                kontakt@ballr.pl
+              </a>
+            </p>
+          </div>
+          <Link href={ROUTES.HOME}>
+            <Button value="Powrót na stronę główną" />
+          </Link>
+        </div>
+      </MainLayout>
+    );
+  }
+
   if (error) {
     return (
-      <div className="space-y-3">
-        <ErrorMessage error={error} />
-        <Button
-          className="m-auto"
-          value="Kliknij aby spróbować ponownie"
-          onClick={() => {
-            setReqDone(false);
-            setError(null);
-          }}
-        />
-      </div>
+      <MainLayout title="Potwierdzenie rezerwacji">
+        <div className="space-y-3">
+          <ErrorMessage error={error?.message} />
+          <Button
+            className="m-auto"
+            value="Kliknij aby spróbować ponownie"
+            onClick={() => {
+              setReqDone(false);
+              setError(null);
+            }}
+          />
+        </div>
+      </MainLayout>
     );
   }
 
