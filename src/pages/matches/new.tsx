@@ -9,8 +9,9 @@ import {
   setUseReactFormErrors,
 } from '@/lib/helpers';
 import { ROUTES } from '@/lib/routes';
+import { CreateMatchPayload } from '@/models/match.model';
 import { UserContext } from '@/providers/UserProvider';
-import { createMatch, CreateMatchPayload } from '@/repository/match.repository';
+import { createMatch } from '@/repository/match.repository';
 import { useRouter } from 'next/router';
 import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';

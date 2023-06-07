@@ -16,8 +16,9 @@ import {
   setUseReactFormErrors,
 } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
+import { CreateMatchPayload } from '@/models/match.model';
 import { GetReservationResponse } from '@/models/reservation.model';
-import { createMatch, CreateMatchPayload } from '@/repository/match.repository';
+import { createMatch } from '@/repository/match.repository';
 import { deleteReservation } from '@/repository/reservation.repository';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';

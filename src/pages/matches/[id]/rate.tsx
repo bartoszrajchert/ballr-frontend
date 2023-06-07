@@ -13,11 +13,10 @@ import {
   setUseReactFormErrors,
 } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
-import { GetMatchResponse } from '@/models/match.model';
+import { GetMatchResponse, PutRatePlayerType } from '@/models/match.model';
 import { UserContext } from '@/providers/UserProvider';
 import {
   putRatePlayers,
-  PutRatePlayerType,
   updateMatchScore,
 } from '@/repository/match.repository';
 import { GetServerSideProps } from 'next';
