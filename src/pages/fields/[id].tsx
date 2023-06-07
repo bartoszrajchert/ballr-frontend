@@ -20,7 +20,7 @@ import { createReservation } from '@/repository/reservation.repository';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { SetStateAction, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import useSWR, { SWRConfig } from 'swr';
@@ -36,15 +36,18 @@ function FieldsId({ fallback }: { fallback: any }) {
 function Content() {
   const router = useRouter();
   const { id } = router.query;
+  const [date, setDate] = useState<string | null>(null);
   const {
     data: field,
     isLoading,
     error,
-  } = useSWR<GetFieldResponse>(`${ROUTES.FIELDS}/${id}`);
+  } = useSWR<GetFieldResponse>(
+    `${ROUTES.FIELDS}/${id}?${date ? `date=${date}` : ''}`
+  );
 
-  if (isLoading) return <Spinner />;
+  if (isLoading && !date) return <Spinner />;
 
-  if (!field || is404(error))
+  if ((!field || is404(error)) && !date)
     return <NoResultsMessage message="Nie udało się znaleźć boiska." />;
 
   if (error) return <ErrorMessage error={error.message} />;
@@ -79,14 +82,20 @@ function Content() {
               najszybciej ją potwierdzić
             </p>
           </div>
-          <Form />
+          <Form field={field} setDate={setDate} />
         </section>
       </div>
     </MainLayout>
   );
 }
 
-function Form() {
+function Form({
+  field,
+  setDate,
+}: {
+  field?: GetFieldResponse;
+  setDate: SetStateAction<any>;
+}) {
   const router = useRouter();
   const { id } = router.query;
   const {
@@ -119,6 +128,7 @@ function Form() {
         type="date"
         errorText={getFieldErrorText('date', errors)}
         {...register('date', { required: true })}
+        onChange={(e) => setDate(e.target.value)}
       />
       <div className="row-input">
         <TextField
@@ -134,6 +144,13 @@ function Form() {
           {...register('end_time', { required: true })}
         />
       </div>
+      {field && field.taken_hours && field.taken_hours.length > 0 && (
+        <div>
+          <p>
+            <b>Niedostępne godziny:</b> {field.taken_hours.join(', ')}
+          </p>
+        </div>
+      )}
       <div className="mt-4 flex w-full gap-1">
         <Button
           value="Rezerwuj"
