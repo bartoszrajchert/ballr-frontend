@@ -9,8 +9,9 @@ import {
 } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { City, Gender } from '@/models/base.model';
+import { CreateUpdateUserData } from '@/models/user.model';
 import { UserContext } from '@/providers/UserProvider';
-import { CreateUpdateUserData, updateUser } from '@/repository/user.repository';
+import { updateUser } from '@/repository/user.repository';
 import { useRouter } from 'next/router';
 import React, { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
