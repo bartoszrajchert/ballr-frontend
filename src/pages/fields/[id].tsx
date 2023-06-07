@@ -102,7 +102,7 @@ function Form({
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting, isSubmitted },
+    formState: { errors },
     setError,
   } = useForm();
 

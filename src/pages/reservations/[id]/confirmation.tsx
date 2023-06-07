@@ -37,7 +37,7 @@ export default function ReservationConfirmation({
     if (reqDone) return;
 
     acceptReservation(id, token, accept === 'true')
-      .then((res) => {})
+      .then(() => {})
       .catch((err) => {
         setError(err);
       })
