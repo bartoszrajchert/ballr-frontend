@@ -82,3 +82,12 @@ export type GetUserResponse = {
     reservation_id: number;
   }[];
 };
+
+export type CreateUpdateUserData = {
+  first_name: string;
+  last_name: string;
+  birth_date: string; // Backend doesn't have update for this field
+  notification_preference: boolean;
+  gender_id: number;
+  city_id: number;
+};
