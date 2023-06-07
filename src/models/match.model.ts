@@ -154,6 +154,7 @@ export type GetMatchResponse = {
   };
   winner_team?: number;
   users: {
+    is_player: boolean;
     is_match_creator: boolean;
     is_referee: boolean;
     is_mvp: boolean;
@@ -172,3 +173,21 @@ export type GetMatchResponse = {
   benefits: string[];
   signed_users: number;
 };
+
+export type PutRatePlayerType = {
+  user_id: string;
+  rating: number;
+  is_mvp: boolean;
+};
+
+export type CreateMatchPayload = {
+  for_team_only: boolean;
+  description: string;
+  num_of_players?: number;
+  open_for_referee: boolean;
+  reservation_id: number;
+};
+
+export type UpdateMatchPayload = Partial<
+  Omit<CreateMatchPayload, 'reservation_id'>
+>;

@@ -7,12 +7,8 @@ import {
   setUseReactFormErrors,
 } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
-import { GetMatchResponse } from '@/models/match.model';
-import {
-  deleteMatch,
-  updateMatch,
-  UpdateMatchPayload,
-} from '@/repository/match.repository';
+import { GetMatchResponse, UpdateMatchPayload } from '@/models/match.model';
+import { deleteMatch, updateMatch } from '@/repository/match.repository';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
