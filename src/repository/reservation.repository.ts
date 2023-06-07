@@ -17,3 +17,16 @@ export async function createReservation(
 export async function deleteReservation(reservationId: string) {
   return axios.delete(`${BACKEND_ROUTES.RESERVATIONS}/${reservationId}`);
 }
+
+export async function acceptReservation(
+  reservationId: string,
+  confirmationToken: string,
+  accept: boolean
+) {
+  return axios.put(
+    `${BACKEND_ROUTES.RESERVATIONS}/${reservationId}/${confirmationToken}`,
+    {
+      is_approved: accept,
+    }
+  );
+}

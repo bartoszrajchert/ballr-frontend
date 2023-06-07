@@ -100,7 +100,7 @@ function ReservationsId({ id }: { id: string }) {
             />
           </div>
         </ImageHeader>
-        {!reservation.match_id && (
+        {!reservation.match_id && reservation.is_approved && (
           <section className="m-auto w-full lg:w-2/5">
             <div className="mb-7 space-y-4">
               <h3 className="text-heading-h3">Stwórz mecz</h3>
@@ -110,6 +110,15 @@ function ReservationsId({ id }: { id: string }) {
               </p>
             </div>
             <Form />
+          </section>
+        )}
+
+        {!reservation.is_approved && (
+          <section className="m-auto w-full space-y-2 rounded-xl bg-grey-100 p-6 text-center">
+            <h3 className="text-heading-h4">
+              Rezerwacja nie została jeszcze potwierdzona. Prosimy czekać.
+            </h3>
+            <p>Po potwierdzeniu rezerwacji będzie można stworzyć mecz.</p>
           </section>
         )}
       </div>
