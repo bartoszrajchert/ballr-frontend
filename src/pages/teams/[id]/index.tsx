@@ -11,11 +11,11 @@ import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
 import { is404 } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
+import { GetTeamResponse } from '@/models/team.model';
 import { UserContext } from '@/providers/UserProvider';
 import {
   addUserToTeam,
   banUserFromTeam,
-  GetTeamResponse,
   removeMeFromTeam,
   removeUserFromTeam,
 } from '@/repository/team.repository';

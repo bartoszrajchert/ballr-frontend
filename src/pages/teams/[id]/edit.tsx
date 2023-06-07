@@ -15,13 +15,12 @@ import {
 } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { City } from '@/models/base.model';
+import { EditTeamPayload, GetTeamResponse } from '@/models/team.model';
 import { UserContext } from '@/providers/UserProvider';
 import {
   banUserFromTeam,
   deleteTeam,
   editTeam,
-  EditTeamPayload,
-  GetTeamResponse,
 } from '@/repository/team.repository';
 import { IconX } from '@tabler/icons-react';
 import { useRouter } from 'next/router';

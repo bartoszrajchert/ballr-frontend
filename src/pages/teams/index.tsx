@@ -3,7 +3,7 @@ import Header from '@/components/Header';
 import { DynamicListWithPagination } from '@/components/dynamic/DynamicListWithPagination';
 import MainLayout from '@/layouts/MainLayout';
 import { BACKEND_ROUTES } from '@/lib/routes';
-import { GetTeamsResponse } from '@/repository/team.repository';
+import { GetTeamsResponse } from '@/models/team.model';
 
 function Teams() {
   return (
