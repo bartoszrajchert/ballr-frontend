@@ -113,12 +113,24 @@ function ReservationsId({ id }: { id: string }) {
           </section>
         )}
 
-        {!reservation.is_approved && (
+        {reservation.is_approved == null && (
           <section className="m-auto w-full space-y-2 rounded-xl bg-grey-100 p-6 text-center">
             <h3 className="text-heading-h4">
               Rezerwacja nie została jeszcze potwierdzona. Prosimy czekać.
             </h3>
             <p>Po potwierdzeniu rezerwacji będzie można stworzyć mecz.</p>
+          </section>
+        )}
+
+        {!reservation.is_approved && (
+          <section className="m-auto w-full space-y-2 rounded-xl bg-grey-100 p-6 text-center">
+            <h3 className="text-heading-h4 text-red">
+              Rezerwacja została odrzucona przez właściciela obiektu.
+            </h3>
+            <p>
+              Nie można stworzyć meczu. Prosimy o kontakt z właścicielem
+              obiektu.
+            </p>
           </section>
         )}
       </div>
