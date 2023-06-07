@@ -100,7 +100,9 @@ const MatchesIdEdit = () => {
             disabled={watch('for_team_only')}
             label="Ilość graczy"
             errorText={getFieldErrorText('num_of_players', errors)}
-            {...register('num_of_players', { required: true })}
+            {...register('num_of_players', {
+              required: !watch('for_team_only'),
+            })}
           />
           <DynamicCheckbox
             label="Tylko dla drużyn"
