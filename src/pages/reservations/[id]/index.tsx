@@ -164,7 +164,7 @@ function Form() {
         label="Ilość graczy"
         type="number"
         errorText={getFieldErrorText('num_of_players', errors)}
-        {...register('num_of_players', { required: true })}
+        {...register('num_of_players', { required: !watch('for_team_only') })}
       />
       <DynamicCheckbox
         label="Tylko dla drużyn"
