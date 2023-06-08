@@ -7,7 +7,13 @@ import { DynamicDropdown } from '@/components/dynamic/DynamicDropdown';
 import { DynamicListWithPagination } from '@/components/dynamic/DynamicListWithPagination';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
-import { getAddressFromFacility, getLocaleDateString } from '@/lib/helpers';
+import {
+  getAddressFromFacility,
+  getFieldErrorText,
+  getLocaleDateString,
+  validateDateOrder,
+  validateTimeOrder,
+} from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { Benefit, City } from '@/models/base.model';
 import { GetFacilitiesResponse } from '@/models/facility.model';
@@ -90,7 +96,14 @@ function MatchesContainer() {
 
 function Form() {
   const router = useRouter();
-  const { register, handleSubmit, control, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    watch,
+    reset,
+  } = useForm();
   const [cityId, setCityId] = React.useState<string>('');
 
   useEffect(() => {
@@ -144,11 +157,25 @@ function Form() {
         {...register('number_of_players')}
       />
       <div className="row-input">
-        <TextField label="Data od" type="date" {...register('date_from')} />
+        <TextField
+          label="Data od"
+          type="date"
+          errorText={getFieldErrorText('date_from', errors)}
+          {...register('date_from', {
+            validate: (value) => validateDateOrder(value, watch('date_to')),
+          })}
+        />
         <TextField label="Data do" type="date" {...register('date_to')} />
       </div>
       <div className="row-input">
-        <TextField label="Godzina od" type="time" {...register('time_from')} />
+        <TextField
+          label="Godzina od"
+          type="time"
+          errorText={getFieldErrorText('time_from', errors)}
+          {...register('time_from', {
+            validate: (value) => validateTimeOrder(value, watch('time_to')),
+          })}
+        />
         <TextField label="Godzina do" type="time" {...register('time_to')} />
       </div>
       <DynamicDropdown
