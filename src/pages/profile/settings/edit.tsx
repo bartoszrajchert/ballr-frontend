@@ -86,19 +86,6 @@ const ProfileSettingsEdit = () => {
           <DynamicDropdown
             label="Miasto"
             name="city_id"
-            fieldErrors={errors}
-            control={control}
-            dataType="pagination"
-            apiURL={BACKEND_ROUTES.CITIES}
-            mapper={({ name, id }: City) => ({
-              label: name,
-              value: id.toString(),
-            })}
-            rules={{ required: true }}
-          />
-          <DynamicDropdown
-            label="Miasto"
-            name="city_id"
             control={control}
             fieldErrors={errors}
             dataType="pagination"
