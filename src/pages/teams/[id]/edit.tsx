@@ -62,9 +62,14 @@ function TeamsIdEdit() {
   const onSubmit = (data: EditTeamPayload) => {
     if (!team) return;
 
+    if (data.new_captain === team?.users.find((u) => u.is_captain)?.user_id) {
+      delete data.new_captain;
+    }
+
     editTeam(team?.id.toString(), data)
-      .then(() => {
+      .then(async () => {
         toast.success('Dane zostały zaktualizowane');
+        await router.push(`${ROUTES.TEAMS}/${team?.id}`);
       })
       .catch((err) => {
         setUseReactFormErrors(err, setError);

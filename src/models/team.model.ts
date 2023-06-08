@@ -46,9 +46,9 @@ export type CreateTeamPayload = {
 };
 
 export type EditTeamPayload = {
-  name: string;
-  short_name: string;
-  is_active: boolean;
-  city_id: number;
-  new_captain: string;
+  name?: string;
+  short_name?: string;
+  is_active?: boolean;
+  city_id?: number;
+  new_captain?: string;
 };
