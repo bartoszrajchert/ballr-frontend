@@ -13,7 +13,9 @@ function ErrorMessage({ error }: Props) {
         Przepraszamy, wystąpił błąd
       </h3>
       <p>Prosimy spróbować ponownie później.</p>
-      <p>Treść błędu: {JSON.stringify(error)}</p>
+      <p className="hyphens-manual break-all">
+        Treść błędu: {JSON.stringify(error)}
+      </p>
     </div>
   );
 }
