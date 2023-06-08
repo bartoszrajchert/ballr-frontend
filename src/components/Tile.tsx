@@ -13,7 +13,7 @@ type Props = {
 function Tile(props: Props) {
   return (
     <Link href={props.href}>
-      <div className="flex w-full cursor-pointer flex-col gap-5 rounded-2xl border border-gray-300 bg-grey-100 p-4 hover:bg-green-100 sm:flex-row">
+      <div className="flex w-full cursor-pointer flex-col gap-5 rounded-2xl border border-gray-300 bg-grey-100 p-4 transition-colors hover:bg-green-100 sm:flex-row">
         <div className="relative h-full w-full sm:w-[220px]">
           <Image
             className="aspect-video rounded-2xl bg-green-900 object-cover"

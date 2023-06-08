@@ -12,7 +12,7 @@ const BigButton = (props: Props) => {
   return (
     <button
       className={clsx(
-        'space-y-1.5 rounded-2xl border border-green-900 p-6 text-left',
+        'space-y-1.5 rounded-2xl border border-green-900 p-6 text-left transition-colors',
         props.className,
         {
           'hover:bg-green-100': props.onClick,
