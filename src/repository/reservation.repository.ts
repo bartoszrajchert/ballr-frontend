@@ -24,9 +24,10 @@ export async function acceptReservation(
   accept: boolean
 ) {
   return axios.put(
-    `${BACKEND_ROUTES.RESERVATIONS}/${reservationId}/${confirmationToken}`,
+    `${BACKEND_ROUTES.RESERVATIONS}/${reservationId}/confirmation`,
     {
       is_approved: accept,
+      confirmation_token: confirmationToken,
     }
   );
 }
