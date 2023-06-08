@@ -13,6 +13,7 @@ import {
   is404,
   resetKeepValues,
   setUseReactFormErrors,
+  validateTimeOrder,
 } from '@/lib/helpers';
 import { ROUTES } from '@/lib/routes';
 import { GetFieldResponse } from '@/models/field.model';
@@ -20,8 +21,8 @@ import { createReservation } from '@/repository/reservation.repository';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import React, { SetStateAction, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { SetStateAction, useEffect, useMemo, useState } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import useSWR, { SWRConfig } from 'swr';
 
@@ -104,7 +105,34 @@ function Form({
     reset,
     formState: { errors },
     setError,
-  } = useForm();
+    trigger,
+    control,
+    watch,
+  } = useForm({ mode: 'onChange' });
+
+  const minDate = useMemo(() => new Date().toISOString().split('T')[0], []);
+  const maxDate = useMemo(
+    () =>
+      new Date(
+        new Date().getFullYear() + 1,
+        new Date().getMonth(),
+        new Date().getDate()
+      )
+        .toISOString()
+        .split('T')[0],
+    []
+  );
+
+  const watchDate = useWatch({ control, name: 'date' });
+  useEffect(() => {
+    if (!watchDate) return;
+
+    trigger('date').then((result) => {
+      if (result) {
+        setDate(watchDate);
+      }
+    });
+  }, [setDate, trigger, watchDate]);
 
   const onSubmit = (data: any) => {
     const { date, start_time, end_time } = data;
@@ -124,24 +152,32 @@ function Form({
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
       <TextField
-        label="Data od"
+        label="Data"
         type="date"
         errorText={getFieldErrorText('date', errors)}
-        {...register('date', { required: true })}
-        onChange={(e) => setDate(e.target.value)}
+        {...register('date', {
+          min: minDate,
+          max: maxDate,
+          required: true,
+        })}
       />
       <div className="row-input">
         <TextField
           label="Godzina od"
           type="time"
           errorText={getFieldErrorText('start_time', errors)}
-          {...register('start_time', { required: true })}
+          {...register('start_time', {
+            required: true,
+            validate: (value) => validateTimeOrder(value, watch('end_time')),
+          })}
         />
         <TextField
           label="Godzina do"
           type="time"
           errorText={getFieldErrorText('end_time', errors)}
-          {...register('end_time', { required: true })}
+          {...register('end_time', {
+            required: true,
+          })}
         />
       </div>
       {field && field.taken_hours && field.taken_hours.length > 0 && (

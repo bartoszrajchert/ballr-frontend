@@ -53,6 +53,22 @@ export function getFieldErrorText(name: string, errors: FieldErrors) {
     if (error?.message === 'repeatPassword') {
       return 'Hasła muszą być takie same';
     }
+
+    if (error?.message === 'fromTimeBeforeToTime') {
+      return 'Czas rozpoczęcia musi być przed czasem zakończenia';
+    }
+
+    if (error?.message === 'fromDateBeforeToDate') {
+      return 'Data rozpoczęcia musi być przed datą zakończenia';
+    }
+  }
+
+  if (error?.type === 'max') {
+    return 'Wartość jest za duża';
+  }
+
+  if (error?.type === 'min') {
+    return 'Wartość jest za mała';
   }
 
   if (error?.message) {
@@ -124,4 +140,22 @@ export function is404(err?: AxiosError): boolean {
 
 export function pageTitle(title: string): string {
   return `${title} | Ballr.pl`;
+}
+
+export function validateTimeOrder(fromTime: string, toTime: string) {
+  if (fromTime && toTime) {
+    if (fromTime >= toTime) {
+      return 'fromTimeBeforeToTime';
+    }
+  }
+  return true;
+}
+
+export function validateDateOrder(fromDate: string, toDate: string) {
+  if (fromDate && toDate) {
+    if (new Date(fromDate) >= new Date(toDate)) {
+      return 'fromDateBeforeToDate';
+    }
+  }
+  return true;
 }
