@@ -107,6 +107,10 @@ function Form() {
   const [cityId, setCityId] = React.useState<string>('');
 
   useEffect(() => {
+    if (router.query.city_id) {
+      setCityId(router.query.city_id as string);
+    }
+
     reset(router.query);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
