@@ -64,8 +64,8 @@ const navigationContent: CategoryContent = {
     title: 'Obiekty',
     links: [
       {
-        label: 'Przeglądaj obiekty',
-        desc: 'Przeglądaj mecze i dołącz do nich',
+        label: 'Przeglądaj obiekty i zarezerwuj',
+        desc: 'Przeglądaj obiekty i zarezerwuj aby rozegrać mecz z przyjaciółmi lub drużyną',
         href: ROUTES.FACILITIES,
       },
     ],
@@ -82,6 +82,16 @@ const navigationContent: CategoryContent = {
         label: 'Przeglądaj drużyny',
         desc: 'Dołącz do drużyny i graj mecze w zgranym zespole',
         href: ROUTES.TEAMS,
+      },
+    ],
+  },
+  tournaments: {
+    title: 'Turnieje',
+    links: [
+      {
+        label: 'Przeglądaj turnieje',
+        desc: 'Przeglądaj turnieje i dołącz do nich',
+        href: ROUTES.TOURNAMENTS,
       },
     ],
   },

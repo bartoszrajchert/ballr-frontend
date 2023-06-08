@@ -14,6 +14,8 @@ enum ROUTES {
   TEAMS = '/teams',
   TEAMS_NEW = '/teams/new',
 
+  TOURNAMENTS = '/tournaments',
+
   PROFILE = '/profile',
 
   SETTINGS = '/profile/settings',
