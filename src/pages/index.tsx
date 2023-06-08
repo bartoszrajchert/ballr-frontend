@@ -31,7 +31,7 @@ export default function Home() {
       </div>
       <div className="flex flex-col items-center justify-center gap-3 rounded-3xl bg-green-900 p-8 sm:h-[190px]">
         <p className="text-center text-heading-h4 text-white sm:text-left">
-          Wyszukaj zajęcia po lokalizacji
+          Wyszukaj mecze po lokalizacji
         </p>
         <MatchForm />
       </div>
@@ -74,7 +74,7 @@ export default function Home() {
           </div>
           <div className="flex justify-center">
             {user ? (
-              <Link href={'/create-team'}>
+              <Link href={ROUTES.TEAMS_NEW}>
                 <Button value="Stwórz drużynę" type="primary-dark" />
               </Link>
             ) : (
