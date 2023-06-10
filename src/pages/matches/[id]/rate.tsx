@@ -45,7 +45,7 @@ export default function MatchesIdRate({ id }: any) {
     error,
   } = useSWR<GetMatchResponse>(`${BACKEND_ROUTES.MATCHES}/${id}`);
 
-  if (isLoading) {
+  if (!match && isLoading) {
     return <Spinner />;
   }
 
