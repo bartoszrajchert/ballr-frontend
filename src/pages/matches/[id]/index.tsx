@@ -296,7 +296,7 @@ const Content = ({ id }: { id: string }) => {
                       text: `${userName}`,
                     }}
                     title={`${userName}`}
-                    paragraph={`Ocena: ${user.user_score}`}
+                    paragraph={`Ocena: ${user.user_score ?? 'Brak'}`}
                     actionChildren={
                       me?.is_match_creator &&
                       me?.user_id !== user.user_id && (
