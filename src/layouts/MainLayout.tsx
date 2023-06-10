@@ -1,4 +1,5 @@
 import { pageTitle } from '@/lib/helpers';
+import { withCreatedProfile } from '@/lib/withCreatedProfile';
 import clsx from 'clsx';
 import Head from 'next/head';
 import React from 'react';
@@ -20,4 +21,4 @@ function MainLayout({ footerMargin = true, ...props }: Props) {
   );
 }
 
-export default MainLayout;
+export default withCreatedProfile(MainLayout);

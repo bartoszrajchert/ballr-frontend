@@ -104,9 +104,13 @@ function Navigation({ focusMode }: Props) {
       <nav className="flex w-full py-4">
         <div className="flex w-full justify-between">
           <div className="flex h-[48px] w-[250px] items-center">
-            <NextLink href={ROUTES.HOME}>
+            {focusMode ? (
               <Image src={logo} alt="logo" height={22} />
-            </NextLink>
+            ) : (
+              <NextLink href={ROUTES.HOME}>
+                <Image src={logo} alt="logo" height={22} />
+              </NextLink>
+            )}
           </div>
           {focusMode ? (
             <FocusModeButton />
