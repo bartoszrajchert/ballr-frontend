@@ -49,14 +49,14 @@ function ReservationsId({ id }: { id: string }) {
       });
   }, [id, router]);
 
-  if (!reservation && isLoading) {
+  if (!reservation && isLoading && !error) {
     return <Spinner />;
   }
 
-  if (!reservation || is404(error))
+  if (is404(error))
     return <NoResultsMessage message="Nie udało się znaleźć rezerwacji." />;
 
-  if (error) return <ErrorMessage error={error.message} />;
+  if (!reservation || error) return <ErrorMessage error={error.message} />;
 
   return (
     <MainLayout

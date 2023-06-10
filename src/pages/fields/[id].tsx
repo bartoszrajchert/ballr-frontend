@@ -48,10 +48,10 @@ function Content() {
 
   if (isLoading && !date) return <Spinner />;
 
-  if ((!field || is404(error)) && !date)
+  if (is404(error) && !date)
     return <NoResultsMessage message="Nie udało się znaleźć boiska." />;
 
-  if (error) return <ErrorMessage error={error.message} />;
+  if (!field || error) return <ErrorMessage error={error.message} />;
 
   return (
     <MainLayout title={`Boisko - ${field?.name}`}>

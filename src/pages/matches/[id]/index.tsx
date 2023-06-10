@@ -132,15 +132,15 @@ const Content = ({ id }: { id: string }) => {
     [match?.users, user?.id]
   );
 
-  if (!match && matchLoading) {
+  if (!match && matchLoading && !matchError) {
     return <Spinner />;
   }
 
-  if (!match || is404(matchError)) {
+  if (is404(matchError)) {
     return <NoResultsMessage message="Nie znaleziono meczu." />;
   }
 
-  if (matchError) {
+  if (!match || matchError) {
     return <ErrorMessage error={matchError.message} />;
   }
 
