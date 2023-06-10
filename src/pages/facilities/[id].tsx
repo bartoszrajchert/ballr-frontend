@@ -1,13 +1,17 @@
 import Header from '@/components/Header';
+import Spinner from '@/components/Spinner';
 import TextInformation from '@/components/TextInformation';
 import Tile from '@/components/Tile';
+import { ErrorMessage } from '@/components/messages/ErrorMessage';
+import NoResultsMessage from '@/components/messages/NoResultsMessage';
 import MainLayout from '@/layouts/MainLayout';
 import { fetcherBackend } from '@/lib/fetchers';
-import { getAddressFromFacility } from '@/lib/helpers';
+import { getAddressFromFacility, is404 } from '@/lib/helpers';
 import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
 import { GetFacilityResponse } from '@/models/facility.model';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
+import React from 'react';
 import useSWR, { SWRConfig } from 'swr';
 
 function FacilitiesId({ fallback }: { fallback: any }) {
@@ -21,9 +25,23 @@ function FacilitiesId({ fallback }: { fallback: any }) {
 function Content() {
   const router = useRouter();
   const { id } = router.query;
-  const { data: facility } = useSWR<GetFacilityResponse>(
-    `${BACKEND_ROUTES.FACILITIES}/${id}`
-  );
+  const {
+    data: facility,
+    error,
+    isLoading,
+  } = useSWR<GetFacilityResponse>(`${BACKEND_ROUTES.FACILITIES}/${id}`);
+
+  if (!facility && isLoading && !error) {
+    return <Spinner />;
+  }
+
+  if (is404(error)) {
+    return <NoResultsMessage message="Nie znaleziono obiektu." />;
+  }
+
+  if (!facility || error) {
+    return <ErrorMessage error={error.message} />;
+  }
 
   return (
     <MainLayout title={`Obiekt - ${facility?.name}`}>

@@ -53,15 +53,15 @@ function Content() {
     return profile.teams.filter((team) => !team.is_banned);
   }, [profile]);
 
-  if (!profile && isLoading) {
+  if (!profile && isLoading && !error) {
     return <Spinner />;
   }
 
-  if (!profile || is404(error)) {
+  if (is404(error)) {
     return <NoResultsMessage message="Nie udało się znaleźć użytkownika." />;
   }
 
-  if (error) {
+  if (!profile || error) {
     return <ErrorMessage error={error.message} />;
   }
 

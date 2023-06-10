@@ -57,15 +57,15 @@ function Content() {
     );
   }, [team, user]);
 
-  if (!team && isLoading) {
+  if (!team && isLoading && !error) {
     return <Spinner />;
   }
 
-  if (!team || is404(error)) {
+  if (is404(error)) {
     return <NoResultsMessage message="Drużyna nie istnieje" />;
   }
 
-  if (error) {
+  if (!team || error) {
     return <ErrorMessage error={error.message} />;
   }
 
