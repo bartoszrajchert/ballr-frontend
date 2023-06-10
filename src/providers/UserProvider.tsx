@@ -1,18 +1,18 @@
 import { COOKIES } from '@/lib/cookies';
 import { globalFetcher } from '@/lib/fetchers';
-import { BACKEND_ROUTES, ROUTES } from '@/lib/routes';
+import { BACKEND_ROUTES } from '@/lib/routes';
 import useGetAuth from '@/lib/useGetAuth';
 import { GetUserResponse } from '@/models/user.model';
+import { AxiosError } from 'axios';
 import { onIdTokenChanged, User as FirebaseUser } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import nookies from 'nookies';
 import React, { useEffect, useState } from 'react';
 import { useIdToken } from 'react-firebase-hooks/auth';
-import { toast } from 'react-toastify';
 
 export const UserContext = React.createContext<{
   user: GetUserResponse | null;
-  error: Error | null;
+  error: AxiosError | null;
   firebaseUser: FirebaseUser | null | undefined;
   firebaseLoading: boolean;
   firebaseError: Error | undefined;
@@ -33,7 +33,7 @@ function UserProvider(props: Props) {
   const router = useRouter();
   const [firebaseUser, firebaseLoading, firebaseError] = useIdToken(auth);
   const [user, setUser] = useState<GetUserResponse | null>(null);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<AxiosError | null>(null);
 
   useEffect(() => {
     const unsubscribe = onIdTokenChanged(auth, async (user) => {
@@ -59,15 +59,6 @@ function UserProvider(props: Props) {
           setError(null);
         })
         .catch(async (err) => {
-          if (
-            err.response &&
-            err.response.status === 404 &&
-            router.pathname !== ROUTES.CREATE_PROFILE
-          ) {
-            toast.info('Prosimy o uzupełnienie danych o profilu.');
-            await router.push(ROUTES.CREATE_PROFILE);
-          }
-
           setError(err);
         });
     } else {
