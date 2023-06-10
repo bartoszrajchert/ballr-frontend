@@ -49,7 +49,9 @@ function ReservationsId({ id }: { id: string }) {
       });
   }, [id, router]);
 
-  if (isLoading) return <Spinner />;
+  if (!reservation && isLoading) {
+    return <Spinner />;
+  }
 
   if (!reservation || is404(error))
     return <NoResultsMessage message="Nie udało się znaleźć rezerwacji." />;

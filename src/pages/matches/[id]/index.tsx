@@ -132,7 +132,7 @@ const Content = ({ id }: { id: string }) => {
     [match?.users, user?.id]
   );
 
-  if (matchLoading) {
+  if (!match && matchLoading) {
     return <Spinner />;
   }
 
