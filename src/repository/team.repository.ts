@@ -5,7 +5,7 @@ import axios from 'axios';
 export async function createTeam(data: CreateTeamPayload) {
   return axios.post(`${BACKEND_ROUTES.TEAMS}`, {
     ...data,
-    is_active: true, // TODO: Remove this
+    is_active: true,
   });
 }
 

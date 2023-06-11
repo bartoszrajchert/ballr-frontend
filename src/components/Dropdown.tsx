@@ -42,8 +42,6 @@ type StaticProps = {
   data: { label: string; value: string }[];
 };
 
-// TODO: disabled state
-
 const Dropdown = (props: Props & FetchProps) => {
   const { data, isLoading, error, isValidating } = useSWR<unknown>(
     `${props.apiURL}?${props.queryParams ?? ''}`
