@@ -3,10 +3,14 @@
 This is the frontend for the ballr project - a part of bachelor of engineering thesis. It is using the Next.js framework.
 
 ## How to run dev
-1. TODO
+1. Install Node.js
+2. Install dependencies `npm install`
+3. Run dev server `npm run dev`
 
 ## How to run analyze
-`ANALYZE=true next build`
+1. Install Node.js
+2. Install dependencies `npm install`
+3. Run analyze `ANALYZE=true next build`
 
 ## How to get a Firebase user token
 1. Open developer tools in your browser
