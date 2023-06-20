@@ -1,8 +1,12 @@
+import Spinner from '@/components/Spinner';
 import TextField from '@/components/TextField';
 import { DynamicCheckbox } from '@/components/dynamic/DynamicCheckbox';
+import { ErrorMessage } from '@/components/messages/ErrorMessage';
+import NoResultsMessage from '@/components/messages/NoResultsMessage';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
 import {
   getFieldErrorText,
+  is404,
   resetKeepValues,
   setUseReactFormErrors,
 } from '@/lib/helpers';
@@ -18,12 +22,13 @@ import useSWR from 'swr';
 const MatchesIdEdit = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { data: match } = useSWR<GetMatchResponse>(
-    `${BACKEND_ROUTES.MATCHES}/${id}`,
-    {
-      revalidateOnFocus: false,
-    }
-  );
+  const {
+    data: match,
+    error,
+    isLoading,
+  } = useSWR<GetMatchResponse>(`${BACKEND_ROUTES.MATCHES}/${id}`, {
+    revalidateOnFocus: false,
+  });
 
   const {
     register,
@@ -79,6 +84,18 @@ const MatchesIdEdit = () => {
         toast.error(`Nie udało się usunąć meczu: ${err}`);
       });
   }, [match, router]);
+
+  if (!match && isLoading && !error) {
+    return <Spinner />;
+  }
+
+  if (error && !is404(error)) {
+    return <ErrorMessage error={error.message} />;
+  }
+
+  if (!match || is404(error)) {
+    return <NoResultsMessage message="Nie udało się znaleźć użytkownika." />;
+  }
 
   return (
     <AuthFormLayout

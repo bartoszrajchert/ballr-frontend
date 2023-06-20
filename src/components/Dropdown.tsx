@@ -61,7 +61,7 @@ const Dropdown = (props: Props & FetchProps) => {
 
   if (isLoading && !isValidating) return <Skeleton height={40} />;
 
-  if (error) return <InlineErrorMessage error={error.message} />;
+  if (error) return <InlineErrorMessage error={error?.message} />;
 
   return <DropdownContent {...props} data={finalData} />;
 };

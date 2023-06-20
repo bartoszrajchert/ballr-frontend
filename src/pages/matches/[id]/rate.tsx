@@ -5,10 +5,12 @@ import Spinner from '@/components/Spinner';
 import TextField from '@/components/TextField';
 import { DynamicCheckbox } from '@/components/dynamic/DynamicCheckbox';
 import { ErrorMessage } from '@/components/messages/ErrorMessage';
+import NoResultsMessage from '@/components/messages/NoResultsMessage';
 import MainLayout from '@/layouts/MainLayout';
 import {
   getErrorMessage,
   getFieldErrorText,
+  is404,
   resetKeepValues,
   setUseReactFormErrors,
 } from '@/lib/helpers';
@@ -49,8 +51,12 @@ export default function MatchesIdRate({ id }: any) {
     return <Spinner />;
   }
 
-  if (error || !match) {
-    return <ErrorMessage error={error.message} />;
+  if (error && !is404(error)) {
+    return <ErrorMessage error={error?.message} />;
+  }
+
+  if (!match || is404(error)) {
+    return <NoResultsMessage message="Nie znaleziono meczu." />;
   }
 
   return (

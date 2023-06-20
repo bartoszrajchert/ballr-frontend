@@ -1,15 +1,19 @@
 import Button from '@/components/Button';
 import EntityCard from '@/components/EntityCard';
 import Section from '@/components/Section';
+import Spinner from '@/components/Spinner';
 import TextField from '@/components/TextField';
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog';
 import {
   DynamicDropdown,
   DynamicStaticDropdown,
 } from '@/components/dynamic/DynamicDropdown';
+import { ErrorMessage } from '@/components/messages/ErrorMessage';
+import NoResultsMessage from '@/components/messages/NoResultsMessage';
 import AuthFormLayout from '@/layouts/AuthFormLayout';
 import {
   getFieldErrorText,
+  is404,
   resetKeepValues,
   setUseReactFormErrors,
 } from '@/lib/helpers';
@@ -87,15 +91,21 @@ function TeamsIdEdit() {
       })
       .catch((err) => {
         setUseReactFormErrors(err, setError);
-        toast.error(`Wystąpił błąd: ${err.message}`);
+        toast.error(`Wystąpił błąd: ${err?.message}`);
       });
   }, [router, setError, team]);
 
-  if (isLoading) return <p>Ładowanie...</p>;
+  if (!team && isLoading && !error) {
+    return <Spinner />;
+  }
 
-  if (error) return <p>Wystąpił błąd: {JSON.stringify(error)}</p>;
+  if (error && !is404(error)) {
+    return <ErrorMessage error={error.message} />;
+  }
 
-  if (!team) return <p>Brak drużyny</p>;
+  if (!team || is404(error)) {
+    return <NoResultsMessage message="Nie udało się znaleźć użytkownika." />;
+  }
 
   return (
     <>

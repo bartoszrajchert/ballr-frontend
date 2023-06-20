@@ -99,7 +99,7 @@ export function setUseReactFormErrors(
     return;
   }
 
-  setError('root', { message: err.message });
+  setError('root', { message: err?.message });
 }
 
 export function resetKeepValues(reset: UseFormReset<any>) {
@@ -119,7 +119,7 @@ export function getErrorMessage(err: AxiosError): string {
     return data.detail;
   }
 
-  return err.message;
+  return err?.message;
 }
 
 export function getInitialsOrChars(input: string): string {

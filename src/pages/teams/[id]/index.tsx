@@ -61,12 +61,12 @@ function Content() {
     return <Spinner />;
   }
 
-  if (is404(error)) {
-    return <NoResultsMessage message="Drużyna nie istnieje" />;
+  if (error && !is404(error)) {
+    return <ErrorMessage error={error?.message} />;
   }
 
-  if (!team || error) {
-    return <ErrorMessage error={error.message} />;
+  if (!team || is404(error)) {
+    return <NoResultsMessage message="Drużyna nie istnieje" />;
   }
 
   return (
