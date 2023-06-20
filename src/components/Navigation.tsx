@@ -311,7 +311,7 @@ const UserMenu = () => {
             }
           >
             <p className="max-w-[300px]">
-              Błąd przy pobieraniu informacji o użytkowniku: {error.message}
+              Błąd przy pobieraniu informacji o użytkowniku: {error?.message}
             </p>
           </Tooltip>
         </div>
@@ -421,7 +421,7 @@ function SignOutButton() {
 
   useEffect(() => {
     if (errorSignOut) {
-      toast.error(`Wystąpił błąd: ${errorSignOut.message}`);
+      toast.error(`Wystąpił błąd: ${errorSignOut?.message}`);
     }
   }, [errorSignOut]);
 

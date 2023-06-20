@@ -35,12 +35,12 @@ function Content() {
     return <Spinner />;
   }
 
-  if (is404(error)) {
-    return <NoResultsMessage message="Nie znaleziono obiektu." />;
+  if (error && !is404(error)) {
+    return <ErrorMessage error={error?.message} />;
   }
 
-  if (!facility || error) {
-    return <ErrorMessage error={error.message} />;
+  if (!facility || is404(error)) {
+    return <NoResultsMessage message="Nie znaleziono obiektu." />;
   }
 
   return (

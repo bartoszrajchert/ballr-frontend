@@ -53,10 +53,10 @@ function ReservationsId({ id }: { id: string }) {
     return <Spinner />;
   }
 
-  if (is404(error))
-    return <NoResultsMessage message="Nie udało się znaleźć rezerwacji." />;
+  if (error && !is404(error)) return <ErrorMessage error={error.message} />;
 
-  if (!reservation || error) return <ErrorMessage error={error.message} />;
+  if (!reservation || is404(error))
+    return <NoResultsMessage message="Nie udało się znaleźć rezerwacji." />;
 
   return (
     <MainLayout

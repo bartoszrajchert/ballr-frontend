@@ -136,12 +136,12 @@ const Content = ({ id }: { id: string }) => {
     return <Spinner />;
   }
 
-  if (is404(matchError)) {
-    return <NoResultsMessage message="Nie znaleziono meczu." />;
+  if (matchError && !is404(matchError)) {
+    return <ErrorMessage error={matchError?.message} />;
   }
 
-  if (!match || matchError) {
-    return <ErrorMessage error={matchError.message} />;
+  if (!match || is404(matchError)) {
+    return <NoResultsMessage message="Nie znaleziono meczu." />;
   }
 
   return (

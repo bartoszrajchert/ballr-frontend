@@ -57,12 +57,12 @@ function Content() {
     return <Spinner />;
   }
 
-  if (is404(error)) {
-    return <NoResultsMessage message="Nie udało się znaleźć użytkownika." />;
+  if (error && !is404(error)) {
+    return <ErrorMessage error={error.message} />;
   }
 
-  if (!profile || error) {
-    return <ErrorMessage error={error.message} />;
+  if (!profile || is404(error)) {
+    return <NoResultsMessage message="Nie udało się znaleźć użytkownika." />;
   }
 
   return (
