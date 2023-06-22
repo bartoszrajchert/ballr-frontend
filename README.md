@@ -2,6 +2,9 @@
 
 This is the frontend for the ballr project - a part of bachelor of engineering thesis. It is using the Next.js framework.
 
+Application is available under:
+  - [https://ballr.pl](https://ballr.pl)
+
 ## How to run dev
 1. Install Node.js
 2. Install dependencies `npm install`
